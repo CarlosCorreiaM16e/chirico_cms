@@ -1,0 +1,209 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<div class="page_contents_div">
+    <div class="block_content_panel main_panel app_panel">
+        <h2>Bem-vindo ao Sistema de Inquéritos da Pontis</h2>
+
+        <div style="background-color: #effdff; padding: 0.1em 1em 0.5em 1em; min-height: 20em; border: solid 1px #DDDDFF;">
+            {{if not auth.user: }}
+                <p>
+                    Se já está inscrito no nosso painel
+                    <a href="{{=URL( c='default', f='user', args=[ 'login' ] ) }}">clique nesta ligação para se autenticar</a>.
+                </p>
+                <p>
+                    Se ainda não faz parte do nosso painel, por favor,
+                    <a href="{{=URL( c='default',
+                                     f='user',
+                                     args=[ 'register' ],
+                                     vars={ '_next': URL( c='user', f='verify_email' ) } ) }}">registe-se</a> primeiro.
+                </p>
+            {{pass}}
+            <p>
+                <b>Inscreva-se no painel online da Pontis e ganhe dinheiro que será depositado num cartão de compras,
+                    para utilizar em lojas do grupo Sonae, que lhe enviaremos.</b>
+            </p>
+            <br/>
+            <button onclick="jQuery( '#faq_div' ).toggle();" class="btn btn-primary">
+                Clique para mais informações
+            </button>
+            <br/>
+            <br/>
+            <div id="faq_div">
+                <div class="panel-group" id="accordion_faq_div">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse"
+                                   data-parent="#accordion_faq_div"
+                                   href="#accordion_faq_div_1">1. Como funciona o painel online?</a>
+                            </h4>
+                        </div>
+                        <div id="accordion_faq_div_1" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                {{=MARKMIN( '''
+            Depois de fazer a sua inscrição começará a receber convites para responder a questionários no
+            endereço electrónico que nos indicar. Nesses convites tem um link para aceder ao questionário,
+            bem como informação sobre a duração do questionários e o dinheiro que receberá.
+
+            Cada vez que responder a um questionário é creditado esse dinheiro na sua conta.
+
+            O pagamento varia de questionário para questionário, consoante a sua duração.
+            Quanto maior for o questionário, mais receberá. Há questionários que demoram entre 5 e 10
+            minutos e outros que podem chegar ou mesmo ultrapassar os 30 minutos.
+            A duração do questionário também depende da velocidade do seu acesso à Internet.
+
+            Só recebe o pagamento se responder a todo o questionário. Questionários
+            preenchidos parcialmente não darão direito a qualquer pagamento.
+
+            Quando atingir os 15€ creditados na sua conta pode solicitar o pagamento e enviaremos
+            um cartão de compras para a morada registada nos seus dados pessoais.
+            Por essa razão tenha sempre a sua morada actualizada.
+
+            Depois do envio do cartão de compras no primeiro pagamento que nos solicitar, os
+            pagamentos posteriores serão creditados no mesmo cartão. No caso de
+            perder esse cartão de compras terá de solicitar um novo cartão na sua área pessoal.
+
+            Os pagamentos só serão efectuados para valores iguais ou superiores a 15€
+            e serão pagos num prazo de 1 mês a contar da data em que faz o pedido.
+
+            Pode ainda convidar amigos na página "Convidar amigos". Por cada amigo que convidar e que
+            conclua a sua inscrição recebe mais 1€ na sua conta pessoal.
+
+            Para convidar amigos basta colocar o endereço de e-mail de cada amigo,
+            clicar em "Adicionar" e em seguida "Submeter". Pode convidar mais de um amigo ao mesmo tempo.
+
+            Em caso de dúvida contactar graca.melo@boostr.pt
+            ''' ) }}
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse"
+                                   data-parent="#accordion_faq_div"
+                                   href="#accordion_faq_div_2">2. Sou obrigado a responder aos questionários?</a>
+                            </h4>
+                        </div>
+                        <div id="accordion_faq_div_2" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                {{=MARKMIN( '''
+            Não é obrigado a responder, mas quanto mais responder, mais ganhará.
+
+            Pode responder quando quiser e pode interromper o preenchimento e continuar mais tarde.
+
+            No entanto, todos os questionários têm um prazo de validade, que é habitualmente curto.
+            Por norma ficam disponíveis entre 2 a 10 dias. Se se atrasar muito a responder ao
+            questionário este pode deixar de estar disponível, por já termos todas as respostas necessárias.
+            E se o seu questionário estiver a meio, não será considerado válido.
+
+            Por todas estas razões aconselhamos a que seja breve a responder aos questionários e que,
+            se possível, o preencha todo de uma só vez.
+            ''' ) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse"
+                                   data-parent="#accordion_faq_div"
+                                   href="#accordion_faq_div_3">3. Com que frequência recebo questionários?</a>
+                            </h4>
+                        </div>
+                        <div id="accordion_faq_div_3" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                {{=MARKMIN( '''
+            Por norma não enviamos mais do que um questionário por mês para não cansarmos os participantes e
+            para darmos oportunidade a todo o painel de participar.
+
+            Não podemos também assegurar um envio regular de questionários, uma vez que depende do nº de estudos
+            que estamos a desenvolver. Pode haver alturas em que recebe bastantes questionários e outras alturas
+            em que não recebe nenhum.
+
+            Pode também haver questionários que exigem um perfil de participante muito específico e em que o seu
+            perfil não se encaixe. Pode acontecer que quando está a responder às perguntas surja uma mensagem
+            que diz que o seu perfil não corresponde ao pretendido.
+
+            Nestes casos em que só responde a algumas perguntas iniciais e em que o seu perfil não
+            corresponde ao pretendido, não são atribuídos pagamentos, uma vez que não chega efectivamente a
+            responder ao questionário.
+
+            Não tente acertar nas respostas para poder responder ao questionário. Nem sempre os perfis
+            pretendidos são os mais óbvios e quando mente numa pergunta corre iguais riscos de ficar de
+            fora do questionário. Além disso, ao mentir nas respostas está a prejudicar gravemente o nosso
+            trabalho e quando detectarmos participantes que o fazem estes serão retirados do painel.
+            ''' ) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse"
+                                   data-parent="#accordion_faq_div"
+                                   href="#accordion_faq_div_4">4. A Pontis garante a confidencialidade dos meus dados?</a>
+                            </h4>
+                        </div>
+                        <div id="accordion_faq_div_4" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                {{=MARKMIN( '''
+            A Pontis tem a sua base de dados registada na Comissão Nacional de Protecção de Dados (CNPD) (www.cnpd.pt)
+            e esta entidade controla e fiscaliza o processamento de dados pessoais, de acordo com a lei.
+            Os seus dados pessoais serão mantidos sob confidencialidade e não serão transmitidos a nenhuma outra entidade.
+
+            As suas respostas aos questionários estão igualmente sujeitas a confidencialidade. Serão apenas
+            tratadas estatisticamente, em conjunto com as respostas de todos os outros participantes, sendo
+            impossível identificar a sua resposta em particular.
+            ''' ) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse"
+                                   data-parent="#accordion_faq_div"
+                                   href="#accordion_faq_div_5">5. Posso anular a minha inscrição quando quiser?</a>
+                            </h4>
+                        </div>
+                        <div id="accordion_faq_div_5" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                {{=MARKMIN( '''
+            Pode anular a sua conta a qualquer momento e pode congelá-la por um determinado período de tempo.
+            Neste caso, quando estiver novamente disponível para responder aos questionários, pode
+            descongelar a conta.
+
+            Para qualquer uma destas operações vá à sua área de “Dados Pessoais”.
+            ''' ) }}
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+  $(function() {
+    $( "#faq_div" ).hide();
+  });
+</script>
+
+<!-- Share ============================y============ -->
+<script src="{{=URL('static','js/share.js',vars=dict(static=URL('static','images')))}}"></script>
+
+
+{{block right_sidebar}}
+{{end}}
+

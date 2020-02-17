@@ -1,0 +1,35 @@
+    {{user_message_board = globals().get('user_message_board',False) }}
+    {{if user_message_board: }}
+        {{import m16e.kommon }}
+        <div id="user_message_board" class="user_message_board">
+            <ul>
+                {{for um in user_message_board: }}
+                    <li>
+                        <div class="row" id="{{='um_%d' % um.id }}">
+                            <div class="col-md-10">
+                                <b>{{=um.msg_title }}:</b>
+                                {{=XML( um.msg_text,
+                                        sanitize=False,
+                                        permitted_tags=m16e.kommon.HTML_PERMITED_TAGS,
+                                        allowed_attributes=m16e.kommon.HTML_ALLOWED_ATTRIBUTES ) }}
+                            </div>
+                            <div class="col-md-2">
+                                {{
+                                    onclick = '''
+                                        ajax( '%(url)s', [], ':eval' );
+                                    ''' % { 'url': URL( c='users',
+                                                        f='ajax_ack_message',
+                                                        args=[ um.id ] ) }
+                                    inp = INPUT( _value=T( 'Acknowledge' ),
+                                                 _type='button',
+                                                 _class='btn btn-mini btn-info',
+                                                 _onclick=onclick )
+                                    =inp
+                                }}
+                            </div>
+                        </div>
+                    </li>
+                {{pass}}
+            </ul>
+        </div>
+    {{pass}}

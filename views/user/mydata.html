@@ -1,0 +1,170 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<div style="width: 100%; max-width: 1024px; margin: 0 auto;">
+
+    <h3> {{=T( 'User data' )}} </h3>
+
+    {{if unfilled_list: }}
+        <div class="warning_msg">
+            {{=T( 'Please fill the fields marked with ' ) }}<b class="not_empty">*</b>
+        </div>
+    {{pass}}
+
+    {{=form.custom.begin}}
+
+    {{if ent:}}
+        {{for f in db.ent.fields:}}
+            {{fld = 'org__' + f}}
+            <input name="{{=fld}}" type="hidden" value="{{=ent[f]}}">
+        {{pass}}
+    {{pass}}
+
+    <div class="row">
+        <div class="col-md-2">
+            <label for="id">{{=T( 'User #' )}}:</label>
+        </div>
+        <div class="col-md-1">
+            {{=form.custom.widget.id}}
+        </div>
+        <div class="col-md-2 text-right">
+            <label for="country_id">{{=T( 'Country' )}}:</label>
+        </div>
+        <div class="col-md-7">
+            {{=form.custom.widget.country_id}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label for="name">{{=T( 'Name' )}}:</label>
+        </div>
+        <div class="col-md-10">
+            {{=form.custom.widget.name }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label for="email_1">{{=T( 'E-mail' )}}:</label>
+        </div>
+        <div class="col-md-4">
+            {{=form.custom.widget.email_1 }}
+        </div>
+        <div class="col-md-2">
+            <label for="nif">
+                {{=T( 'Fiscal ID' )}}:
+                {{if 'nif' in unfilled_list: }}
+                    <span class="not_empty">*</span>
+                {{pass}}
+            </label>
+        </div>
+        <div class="col-md-4">
+            {{=form.custom.widget.nif}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label for="address_1">
+                {{=T( 'Address' )}}:
+                {{if 'address_1' in unfilled_list: }}
+                    <span class="not_empty">*</span>
+                {{pass}}
+            </label>
+        </div>
+        <div class="col-md-10">
+            {{=form.custom.widget.address_1}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label for="address_2">{{=T( 'Address (line 2)' )}}:</label>
+        </div>
+        <div class="col-md-10"> {{=form.custom.widget.address_2}} </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label for="zip_code">
+                {{=T( 'Zip code' )}}:
+                {{if 'zip_code' in unfilled_list: }}
+                    <span class="not_empty">*</span>
+                {{pass}}
+            </label>
+        </div>
+        <div class="col-md-4">
+            {{=form.custom.widget.zip_code }}
+            <div id="zip_code_helper"
+                 style="position: absolute"
+                 class="autocompletion">
+            </div>
+            {{=jscript }}
+        </div>
+        <div class="col-md-2">
+            <label>
+                {{=T( 'City' )}}:
+            </label>
+        </div>
+        <div class="col-md-4" id="ent_city">
+            {{=ent_city }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label>
+                {{=T( 'District' )}}:
+            </label>
+        </div>
+        <div class="col-md-4" id="ent_district_name">
+            {{=ent_district_name }}
+        </div>
+        <div class="col-md-2">
+            <label>
+                {{=T( 'County' )}}:
+            </label>
+        </div>
+        <div class="col-md-4" id="ent_county_name">
+            {{=ent_county_name }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label for="phone_1">
+                {{=T( 'Mobile phone' )}}:
+                {{if 'phone_1' in unfilled_list: }}
+                    <span class="not_empty">*</span>
+                {{pass}}
+            </label>
+        </div>
+        <div class="col-md-4">
+            {{=form.custom.widget.phone_1}}
+        </div>
+        <div class="col-md-2">
+            <label for="phone_2">
+                {{=T( 'Other phone' )}}:
+                {{if 'phone_2' in unfilled_list: }}
+                    <span class="not_empty">*</span>
+                {{pass}}
+            </label>
+        </div>
+        <div class="col-md-4">
+            {{=form.custom.widget.phone_2}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <button
+                name="action" type="submit"
+                value="act_submit"
+                class="btn btn-primary">
+                {{=T('Update data')}}
+            </button>
+        </div>
+    </div>
+
+    {{=form.custom.end}}
+
+</div>
+
+
+
+
+
+

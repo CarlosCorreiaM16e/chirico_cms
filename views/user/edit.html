@@ -1,0 +1,185 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<div id="add_to_group_form_dialog" title="{{=T( 'Add user to group' ) }}">
+    <h3>{{=T( 'Add user to group' ) }}</h3>
+    <form action name="add_to_group_form" id="add_to_group_form" enctype="multipart/form-data">
+        <label for="add_to_group_id">{{=T( 'Group' ) }}</label>
+        <select name="add_to_group_id" class="generic-widget">
+            <option value="0"></option>
+            {{for grp in new_grp_list: }}
+                {{if grp.id not in [ g.id for g in grp_list ]: }}
+                    <option value="{{=grp.id }}">{{=grp.description }}</option>
+                {{pass}}
+            {{pass}}
+            grp_list
+        </select>
+
+    </form>
+</div>
+
+<a href="{{=URL( c='user', f='list_users' ) }}">{{=T( 'User list' ) }}</a>
+
+<h3>
+    {{=T( 'Edit user' )}}
+</h3>
+
+{{=form.custom.begin}}
+
+{{for f in db.auth_user.fields:}}
+    {{fld = 'org__' + f}}
+    <input name="{{=fld}}" type="hidden" value="{{=auth_user[f]}}">
+{{pass}}
+
+<table class="w100pct">
+    <tr>
+        <td class="w75pct">
+            <table class="w100pct">
+                <tr>
+                    <th class="w15pct"><label for="id">{{=T( 'User #' )}}:</label></th>
+                    <td class="w35pct">
+                        {{=form.custom.widget.id}}
+                    </td>
+                    <th class="w15pct"><label for="email">{{=T( 'E-mail' )}}:</label></th>
+                    <td class="w35pct">
+                        {{=form.custom.widget.email}}
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="first_name">{{=T( 'Name' )}}:</label></th>
+                    <td colspan="3">
+                        {{=form.custom.widget.first_name}}
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="registration_key">{{=T( 'Registration key' )}}:</label></th>
+                    <td>
+                        {{=form.custom.widget.registration_key}}
+                    </td>
+                    <th><label for="ctime">{{=T( 'Since' )}}:</label></th>
+                    <td>
+                        {{=form.custom.widget.ctime}}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="center_align">
+                        <table class="w100pct table_bt_border">
+                            <tr>
+                                <td>
+                                    <button
+                                        name="action" title="{{=T( 'Save user' )}}" type="submit"
+                                        class="btn btn-primary"
+                                        value="act_submit">
+                                        {{=T( 'Save User' )}}
+                                    </button>
+                                    <button
+                                        name="action" title="{{=T( 'Impersonate' )}}" type="submit"
+                                        class="btn btn-success"
+                                        value="act_impersonate_user">
+                                        {{=T( 'Impersonate user' )}}
+                                    </button>
+                                    {{if ent: }}
+                                        <a href="{{=URL( c='ent', f='edit', args=[ ent.id ] ) }}"
+                                           class="btn btn-info">{{=T( 'Entity' ) }}</a>
+                                    {{pass}}
+                                    <button
+                                        name="action" title="{{=T( 'Activate' )}}" type="submit"
+                                        class="btn btn-success"
+                                        value="act_activate_user">
+                                        {{=T( 'Send password recover mail' )}}
+                                    </button>
+                                </td>
+                                <td>
+                                    <span>
+                                        {{=T( 'delete' )}}
+                                    </span>
+                                    <input name="chk_del_user" type="checkbox"/>
+                                    <button
+                                        name="action" title="Delete user" type="submit"
+                                        value="act_delete_user"
+                                        class="btn btn-danger"
+                                        onclick="confirm( '{{=delete_user_msg }}' )">
+                                        {{=T( 'Delete user' )}}
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td class="w25pct">
+            {{if response.meta.is_admin: }}
+                <h4>{{=T( 'User groups' ) }}</h4>
+                <table>
+                    {{for g in grp_list: }}
+                        <tr>
+                            <td>
+                                <i class="glyphicon glyphicon-minus"></i>
+                                {{=A( '%s' % g.description,
+                                      _href=URL( c='user',
+                                                 f='edit_group',
+                                                 args=[ g.id ] ) ) }}
+                            </td>
+                            <td>
+                                {{=A( T( 'Remove from group' ),
+                                      _href=URL( c='user',
+                                                 f='remove_from_group',
+                                                 args=[ auth_user.id, g.id ] ),
+                                      _class='btn btn-mini btn-danger' ) }}
+                            </td>
+                        </tr>
+                    {{pass}}
+                    <tr>
+                        <td colspan="2" class="align_center">
+                            <button
+                                name="action"
+                                title="{{=T( 'Add to group' )}}"
+                                type="submit"
+                                id="act_add_to_group"
+                                value="act_add_to_group"
+                                class="btn btn-mini btn-primary">
+                                {{=T( 'Add to group' )}}
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            {{pass}}
+        </td>
+    </tr>
+
+</table>
+
+
+{{=form.custom.end}}
+
+<script type="text/javascript">
+    jQuery(function() {
+        jQuery( '#act_add_to_group' ).click( function() {
+            jQuery( '#add_to_group_form_dialog' ).dialog( 'open' );
+            return false;
+        } );
+
+        jQuery( '#add_to_group_form_dialog' ).dialog( {
+            autoOpen: false,
+            height: 300,
+            width: 350,
+            modal: true,
+            buttons: {
+                "{{=T( 'Submit' ) }}": function() {
+                    jQuery( this ).dialog( 'close' );
+/*                    jQuery( '#add_to_group_form' ).submit(); */
+                    ajax(
+                        '{{=URL( c="users", f="ajax_add_user_to_group", args=[ auth_user.id ] ) }}',
+                        [ 'add_to_group_id' ], ':eval' );
+
+                },
+                "{{=T( 'Cancel' ) }}": function() {
+                    jQuery( this ).dialog( 'close' );
+                }
+            }
+        } );
+
+    });
+</script>
+

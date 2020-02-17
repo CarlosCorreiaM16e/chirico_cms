@@ -1,0 +1,226 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+{{=A( T( 'Gallery' ), _href=URL( c='gallery', f='grid' ) ) }}
+
+{{=form.custom.begin}}
+
+<div class="row">
+	<div class="col-md-6">
+		{{if attach:}}
+			<h2>{{=T( 'Edit image #%(id)s', dict( id=attach.id ) ) }}</h2>
+		{{else: }}
+			<h2>{{=T( 'Add image' ) }}</h2>
+		{{pass}}
+	</div>
+	<div class="col-md-6 text-right">
+		{{if attach and not is_file_in_static: }}
+			<span class="red"><b style="font-size: 14px; margin-right: 1em;">{{=T( 'File not in static/ folder!' ) }}</b></span>
+			<button
+				name="action" title="{{=T( 'Dump to static' )}}" type="submit"
+				value="dump_to_static" class="btn btn-info btn-sm">
+			  {{=T( 'Dump to static' )}}
+			</button>
+
+		{{pass}}
+	</div>
+</div>
+
+
+<div id="errors">{{=errors }}</div>
+
+{{if attach:}}
+    {{for f in db.attach.fields:}}
+        {{fld = 'org__' + f}}
+        <input name="{{=fld}}" type="hidden" value="{{=attach[f]}}">
+    {{pass}}
+{{pass}}
+
+<div class="row">
+	<div class="col-md-2">
+		<label for="attached">{{=T( 'Attached' ) }}:</label>
+	</div>
+	<div class="col-md-4">
+		{{=form.custom.widget.attached}}
+		{{if not attach.attached: }}
+			<img src="#"
+				 id="attached_thumb"
+				 alt="{{=T( 'No file selected' ) }}"
+				 style="width:100%; max-width: 200px;" />
+		{{pass}}
+	</div>
+	<div class="col-md-2">
+		<label for="unit_type_id">{{=T( 'Unit type' ) }}:</label>
+	</div>
+	<div class="col-md-4">
+		{{=form.custom.widget.unit_type_id}}
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-2">
+		<label for="short_description">{{=T( 'Short description' ) }}:</label>
+	</div>
+	<div class="col-md-10">
+		{{=form.custom.widget.short_description}}
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-2">
+		<label for="long_description">{{=T( 'Long description' ) }}:</label>
+	</div>
+	<div class="col-md-10">
+		{{=form.custom.widget.long_description}}
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-2">
+		<label for="created_on">{{=T( 'Created on' ) }}:</label>
+	</div>
+	<div class="col-md-4">
+		{{=form.custom.widget.created_on}}
+	</div>
+	<div class="col-md-2">
+		<label for="created_by">{{=T( 'Created by' ) }}:</label>
+	</div>
+	<div class="col-md-4">
+		{{=form.custom.widget.created_by}}
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-2">
+		<label for="path">{{=T( 'Path' ) }}:</label>
+	</div>
+	<div class="col-md-4">
+		{{=form.custom.widget.path}}
+	</div>
+	<div class="col-md-2">
+		<label for="filename">{{=T( 'Filename' ) }}:</label>
+	</div>
+	<div class="col-md-4">
+		{{=form.custom.widget.filename}}
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-2">
+		<label for="mime_type_id">{{=T( 'Mime type' ) }}:</label>
+	</div>
+	<div class="col-md-4">
+		{{=form.custom.widget.mime_type_id}}
+	</div>
+	<div class="col-md-2">
+		<label for="attach_type_id">{{=T( 'Attach type' ) }}:</label>
+	</div>
+	<div class="col-md-4">
+		{{=form.custom.widget.attach_type_id}}
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-2">
+		<label for="img_width">{{=T( 'Width' ) }}:</label>
+		{{=span_resize }}
+	</div>
+	<div class="col-md-4">
+		{{=form.custom.widget.img_width}}
+	</div>
+	<div class="col-md-2">
+		<label for="img_height">{{=T( 'Height' ) }}:</label>
+	</div>
+	<div class="col-md-4">
+		{{=form.custom.widget.img_height}}
+	</div>
+</div>
+
+{{if attach.org_attach_id: }}
+	<div class="row">
+		<div class="col-md-12">
+			<a href="{{=URL( c='gallery', f='edit', args=[ attach.org_attach_id ] ) }}">
+				{{=T( 'Original image' ) }}
+				({{='%dx%d' % (attach.org_attach_id.img_width, attach.org_attach_id.img_height) }})
+			</a>
+		</div>
+	</div>
+{{pass}}
+
+<div class="row">
+    <div class="col-md-12 text-center" style="margin: 2px 0;">
+        <button
+          name="action" title="{{=T( 'Save image' )}}" type="submit"
+          value="act_submit" class="btn btn-submit">
+          {{=T( 'Submit' )}}
+        </button>
+		{{if attach: }}
+			<button
+			  name="action" title="{{=T( 'Resize image' )}}" type="submit"
+			  value="act_resize_img" class="btn btn-info"
+			  onclick="return confirm( '{{=T( 'Are you sure?' ) }}' );">
+			  {{=T( 'Resize' )}}
+			</button>
+			<button
+			  name="action" title="{{=T( 'Clone and resize image' )}}" type="submit"
+			  value="act_clone_img" class="btn btn-success">
+			  {{=T( 'Clone and resize' )}}
+			</button>
+			<button
+			  name="action" title="{{=T( 'Dump to static' )}}" type="submit"
+			  value="dump_to_static" class="btn btn-info">
+			  {{=T( 'Dump to static' )}}
+			</button>
+			<button
+			  	name="action" title="{{=T( 'Delete image' )}}" type="submit"
+			  	value="act_delete_record" class="btn btn-danger"
+				onclick="return confirm( '{{=T( 'Are you sure?' ) }}' )">
+			  {{=T( 'Delete' )}}
+			</button>
+		{{pass}}
+	</div>
+</div>
+
+{{=form.custom.end }}
+
+{{if children: }}
+	<h3>{{=T( 'Other sizes' ) }}</h3>
+	{{first = True }}
+	{{for c in children: }}
+		{{if first: }}
+			{{first = False }}
+		{{else: }}
+			,&nbsp;;
+		{{pass}}
+		<a href="{{=URL( c='gallery', f='edit', args=[ c.id ] ) }}">{{='%dx%d' % (c.img_width, c.img_height) }}</a>
+		{{if c.is_in_disk: }}
+			<span class="glyphicon glyphicon-floppy-saved"></span>
+		{{pass}}
+	{{pass}}
+{{pass}}
+
+<p>
+	{{if attach: }}
+		{{if attach.attach_type_id.meta_name in ('images', 'webshop'): }}
+			{{=IMG( _src=img_url,
+					_class='site_image' ) }}
+		{{pass}}
+	{{pass}}
+</p>
+
+
+{{block right_sidebar}}
+{{end}}
+
+<script>
+jQuery( function () {
+    jQuery( "#attach_attached" ).change( function () {
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = imageIsLoaded;
+            reader.readAsDataURL(this.files[0]);
+            var filename = this.value.split(/(\\|\/)/g).pop();
+            var new_filename = sanitize_filename( filename );
+			jQuery( '#attach_filename' ).val( new_filename );
+        }
+    });
+});
+
+function imageIsLoaded(e) {
+    $('#attached_thumb').attr('src', e.target.result);
+};
+</script>

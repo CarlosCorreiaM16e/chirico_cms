@@ -1,0 +1,17 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h3>{{=form_title }}</h3>
+
+{{=form }}
+
+
+
+{{block right_sidebar}}
+{{end}}
+
+<script>
+    jQuery( function() {
+        jQuery( '#nav_tab_tabs a:first' ).tab( 'show' );
+    } )
+</script>

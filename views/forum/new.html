@@ -1,0 +1,49 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h1>
+    {{=T( 'New thread' )}}
+</h1>
+
+{{=form.custom.begin}}
+
+<div class="row">
+    <div class="col-md-2">
+        {{=T( 'Type' ) }}:
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.thread_type_id }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        {{=T( 'Title' ) }}:
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.thread_title }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        {{=T( 'Text' ) }}:
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.thread_msg }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 text-center" style="margin: 2px 0;">
+        <button
+          name="action" title="{{=T( 'Add comment' )}}" type="submit"
+          value="act_submit" class="btn btn-submit">
+          {{=T( 'Add comment' )}}
+        </button>
+    </div>
+</div>
+
+{{=form.custom.end}}
+
+{{block right_sidebar}}
+{{end}}
+

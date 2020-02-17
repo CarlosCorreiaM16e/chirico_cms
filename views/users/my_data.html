@@ -1,0 +1,274 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h3>{{=T( 'My data' ) }}</h3>
+
+
+{{if my_apps: }}
+    <table>
+        <tr>
+            <th>{{=T( 'Name' ) }}</th>
+            <th>{{=T( 'Version' ) }}</th>
+            <th>{{=T( 'Since' ) }}</th>
+        </tr>
+        {{for app in my_apps: }}
+            <tr>
+                <td>{{=app.app_name}}</td>
+                <td>{{=app.app_version}}</td>
+                <td>{{=app.install_date}}</td>
+            </tr>
+        {{pass}}
+    </table>
+{{else:}}
+    <p>{{=T( 'No apps defined' ) }}</p>
+{{pass}}
+<a href="{{=URL( c='users', f='edit_app', args=[ 0 ] ) }}" class="button">{{=T( 'Add application' ) }}</a>
+
+{{=form.custom.begin}}
+
+{{if gps_ent:}}
+    {{for f in db.gps_ent.fields:}}
+        {{fld = 'org__' + f}}
+        <input name="{{=fld}}" type="hidden" value="{{=gps_ent[f]}}">
+    {{pass}}
+{{pass}}
+
+
+<table class="table_border w100pct">
+    <tr>
+        <th class="w20pct"><label>{{=T( 'Customer #' )}}:</label></th>
+        <td>
+            {{=form.custom.widget.id}}
+        </td>
+        <th><label>{{=T( 'Company Name' )}}:<span class="requiered_value">*</span></label></th>
+        <td>
+            <div style="margin-right: 3px;">
+                <div style="padding-right: 3px;">
+                    {{=form.custom.widget.name}}
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th><label>{{=T( 'Application' )}}:<span class="requiered_value">*</span></label></th>
+        <td>
+            <div style="margin-right: 3px;">
+                <div style="padding-right: 3px;">
+                    {{=form.custom.widget.app_name}}
+                </div>
+            </div>
+        </td>
+        <th>
+            <label>
+                {{if is_admin: }}
+                    {{=T( 'Belmiro app. name' )}}:
+                {{pass}}
+            </label>
+        </th>
+        <td>
+            {{if is_admin: }}
+                <div style="margin-right: 3px;">
+                    <div style="padding-right: 3px;">
+                        {{=form.custom.widget.belmiro_app_name}}
+                    </div>
+                </div>
+            {{pass}}
+        </td>
+    </tr>
+    <tr>
+        <th><label>{{=T( 'Company full name' )}}:</label></th>
+        <td colspan="3">
+            <div style="margin-right: 3px;">
+                <div style="padding-right: 3px;">
+                    {{=form.custom.widget.long_name}}
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th><label>{{=T( 'Contact name' )}}:</label></th>
+        <td colspan="3">
+            <div style="margin-right: 3px;">
+                <div style="padding-right: 3px;">
+                    {{=form.custom.widget.contact_name}}
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th><label>{{=T( 'E-mail' )}}:<span class="requiered_value">*</span></label></th>
+        <td>
+            <div style="margin-right: 3px;">
+                <div style="padding-right: 3px;">
+                    {{=form.custom.widget.email_1}}
+                </div>
+            </div>
+        </td>
+        <th></th>
+        <td></td>
+    </tr>
+    <tr>
+        <th><label>{{=T( 'Address (line 1)' )}}:<span class="requiered_value">*</span></label></th>
+        <td colspan="3">
+            <div style="margin-right: 3px;">
+                <div style="padding-right: 3px;">
+                    {{=form.custom.widget.address_1}}
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th><label>{{=T( 'Address (line 2)' )}}:</label></th>
+        <td colspan="3">
+                <div style="margin-right: 3px;">
+                        <div style="padding-right: 3px;">
+            {{=form.custom.widget.address_2}}
+                        </div>
+                </div>
+        </td>
+    </tr>
+    <tr>
+        <th><label>{{=T( 'Zip' )}}:<span class="requiered_value">*</span></label></th>
+        <td>
+            <div style="margin-right: 3px;">
+                <div style="padding-right: 3px;">
+                    {{=form.custom.widget.zip_code}}
+                </div>
+            </div>
+        </td>
+        <th><label>{{=T( 'City' )}}:<span class="requiered_value">*</span></label></th>
+        <td>
+            <div style="margin-right: 3px;">
+                <div style="padding-right: 3px;">
+                    {{=form.custom.widget.city}}
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th><label>{{=T( 'Phone #1' )}}:<span class="requiered_value">*</span></label></th>
+        <td>
+            <div style="margin-right: 3px;">
+                <div style="padding-right: 3px;">
+                    {{=form.custom.widget.phone_1}}
+                </div>
+            </div>
+        </td>
+        <th><label>{{=T( 'Phone #2' )}}:</label></th>
+        <td>
+            <div style="margin-right: 3px;">
+                <div style="padding-right: 3px;">
+                    {{=form.custom.widget.phone_2}}
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th><label>{{=T( 'Fiscal ID' )}}:<span class="requiered_value">*</span></label></th>
+        <td>
+            <div style="margin-right: 3px;">
+                <div style="padding-right: 3px;">
+                    {{=form.custom.widget.nif }}
+                </div>
+            </div>
+        </td>
+        <th><label>{{=T( 'SAF-T Company ID' )}}:</label></th>
+        <td>
+            <div style="margin-right: 3px;">
+                <div style="padding-right: 3px;">
+                    {{=form.custom.widget.saft_company_id }}
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label>{{=T( 'Header for documents' )}}:</label>
+            <br>
+            <span style="white-space: normal">
+                {{=T( 'This will be printed in document\'s header to identify the company' ) }}
+            </span>
+        </td>
+        <td colspan="3">
+                <div style="margin-right: 3px;">
+                        <div style="padding-right: 3px;">
+            {{=form.custom.widget.doc_header_1 }}
+                        </div>
+                </div>
+        </td>
+    </tr>
+    <tr>
+        <th colspan="4">
+            {{=T( 'These fields must hold the authentication data to your SMTP server.' ) }}
+            {{=T( 'If you leave them blank, a default mail account (facturacao@memoriapersistente.pt) will be used instead.' ) }}
+        </th>
+    </tr>
+    <tr>
+        <th><label>{{=T( 'SMTP server' )}}:</label></th>
+        <td>
+                <div style="margin-right: 3px;">
+                        <div style="padding-right: 3px;">
+            {{=form.custom.widget.mail_smtp_server }}
+                        </div>
+                </div>
+        </td>
+        <th><label>{{=T( 'Mail account (sender)' )}}:</label></th>
+        <td>
+                <div style="margin-right: 3px;">
+                        <div style="padding-right: 3px;">
+            {{=form.custom.widget.mail_smtp_account }}
+                        </div>
+                </div>
+        </td>
+    </tr>
+    <tr>
+        <th><label>{{=T( 'SMTP user' )}}:</label></th>
+        <td>
+                <div style="margin-right: 3px;">
+                        <div style="padding-right: 3px;">
+            {{=form.custom.widget.mail_smtp_user }}
+                        </div>
+                </div>
+        </td>
+        <th><label>{{=T( 'SMTP password' )}}:</label></th>
+        <td>
+                <div style="margin-right: 3px;">
+                        <div style="padding-right: 3px;">
+            {{=form.custom.widget.mail_smtp_password }}
+                        </div>
+                </div>
+        </td>
+    </tr>
+    <tr>
+        <th><label>{{=T( 'SMTP port' )}}:</label></th>
+        <td>
+                <div style="margin-right: 3px;">
+                        <div style="padding-right: 3px;">
+            {{=form.custom.widget.mail_smtp_port }}
+                        </div>
+                </div>
+        </td>
+        <th><label>{{=T( 'Use SSL?' )}}:</label></th>
+        <td>
+                <div style="margin-right: 3px;">
+                        <div style="padding-right: 3px;">
+            {{=form.custom.widget.mail_smtp_ssl }}
+                        </div>
+                </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4" class="table_border w100pct text-center">
+            <button
+                name="action" type="submit"
+                value="submit_ent">
+                {{=T('Submit')}}
+            </button>
+        </td>
+</table>
+
+{{=form.custom.end}}
+
+
+{{block right_sidebar}}
+{{end}}

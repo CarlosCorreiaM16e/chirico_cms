@@ -1,0 +1,195 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<a href="{{=URL( c='users', f='list' ) }}">{{=T( 'Users' ) }}</a>
+
+{{if auth_user:}}
+    <h3>{{=T( 'Editing user' ) }}</h3>
+{{else:}}
+    <h3>{{=T( 'Adding user' ) }}</h3>
+{{pass}}
+
+{{=form.custom.begin}}
+
+{{if auth_user:}}
+    {{for f in db.auth_user.fields:}}
+        {{fld = 'org__' + f}}
+        <input name="{{=fld}}" type="hidden" value="{{=auth_user[f]}}">
+    {{pass}}
+{{pass}}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row" style="padding-top: 2px; padding-bottom: 4px;">
+                <div class="col-md-2">
+                    <label for="id">{{=T( 'User #' )}}:</label>
+                </div>
+                <div class="col-md-2">
+                    {{=form.custom.widget.id }}
+                </div>
+                <div class="col-md-2">
+                    <label for="email">{{=T( 'E-mail' )}}:</label>
+                </div>
+                <div class="col-md-6">
+                    {{=form.custom.widget.email }}
+                </div>
+            </div>
+            <div class="row" style="padding-top: 2px; padding-bottom: 4px;">
+                <div class="col-md-2">
+                    <label for="first_name">{{=T( 'Name' ) }}:</label>
+                </div>
+                <div class="col-md-10">
+                    {{=form.custom.widget.first_name }}
+                </div>
+            </div>
+            {{if response.meta.is_dev: }}
+                <div class="row" style="padding-top: 2px; padding-bottom: 4px;">
+                    <div class="col-md-2">
+                        <label for="registration_key">{{=T( 'Registration key' )}}:</label>
+                    </div>
+                    <div class="col-md-10">
+                        {{=form.custom.widget.registration_key}}
+                    </div>
+                </div>
+            {{pass}}
+            <div class="row">
+                <div class="col-md-8">
+                    {{if auth_user: }}
+                        <button
+                            name="action" title="{{=T( 'Save user' )}}" type="submit"
+                            class="btn btn-primary"
+                            value="act_submit">
+                            {{=T( 'Save User' )}}
+                        </button>
+                    {{else: }}
+                        <button
+                            name="action" title="{{=T( 'Add user' )}}" type="submit"
+                            class="btn btn-primary"
+                            value="act_submit">
+                            {{=T( 'Add User' )}}
+                        </button>
+                    {{pass}}
+                    <button
+                        name="action" title="{{=T( 'Impersonate' )}}" type="submit"
+                        class="btn btn-success"
+                        value="act_impersonate_user">
+                        {{=T( 'Impersonate user' )}}
+                    </button>
+                    <button
+                        name="action" title="{{=T( 'Activate' )}}" type="submit"
+                        class="btn btn-success"
+                        value="act_activate_user">
+                        {{=T( 'Send password recover mail' )}}
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    {{if auth_user: }}
+                        {{=T( 'delete' )}}
+                        <input name="chk_del_user" type="checkbox"/>
+                        <button
+                            name="action" title="Delete user" type="submit"
+                            value="act_delete_user"
+                            class="btn btn-danger"
+                            onclick="confirm( '{{=T( 'Confirm remove user?' ) }}' )">
+                            {{=T( 'Delete user' )}}
+                        </button>
+                    {{pass}}
+                </div>
+            </div>
+        </div>
+        {{if response.meta.is_admin: }}
+            <div class="col-md-4">
+                <div class="row" style="padding-top: 2px; padding-bottom: 4px;">
+                    <div class="col-md-12">
+                        <h4>{{=T( 'User groups' ) }}</h4>
+                    </div>
+                </div>
+                {{for g in grp_list: }}
+                    <div class="row" style="padding-top: 2px; padding-bottom: 4px;">
+                        <div class="col-md-6">
+                            <i class="glyphicon glyphicon-minus"></i>
+                            {{=A( '%s' % g.description,
+                                  _href=URL( c='users',
+                                             f='edit_group',
+                                             args=[ g.id ] ) ) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{=A( T( 'Remove from group' ),
+                                  _href=URL( c='users',
+                                             f='remove_from_group',
+                                             args=[ auth_user.id, g.id ] ),
+                                  _class='btn btn-mini btn-danger' ) }}
+                        </div>
+                    </div>
+                {{pass}}
+                <div class="row" style="padding-top: 2px; padding-bottom: 4px;">
+                    <div class="col-md-12">
+                        <button
+                            name="action"
+                            title="{{=T( 'Add to group' )}}"
+                            type="submit"
+                            id="act_add_to_group"
+                            value="act_add_to_group"
+                            class="btn btn-mini btn-primary">
+                            {{=T( 'Add to group' )}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {{pass}}
+    </div>
+</div>
+
+
+{{=form.custom.end}}
+
+{{if auth_user: }}
+    <div id="add_to_group_form_dialog" title="{{=T( 'Add user' ) }}">
+        <h3>{{=T( 'Add user to group' ) }}</h3>
+        <form action name="add_to_group_form" id="add_to_group_form" enctype="multipart/form-data">
+            <label for="add_to_group_id">{{=T( 'Group' ) }}</label>
+            <select name="add_to_group_id" class="generic-widget">
+                <option value="0"></option>
+                {{for grp in new_grp_list: }}
+                    {{if grp.id not in [ g.id for g in grp_list ]: }}
+                        <option value="{{=grp.id }}">{{=grp.description }}</option>
+                    {{pass}}
+                {{pass}}
+                grp_list
+            </select>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        jQuery(function() {
+            jQuery( '#act_add_to_group' ).click( function() {
+                jQuery( '#add_to_group_form_dialog' ).dialog( 'open' );
+                return false;
+            } );
+
+            jQuery( '#add_to_group_form_dialog' ).dialog( {
+                autoOpen: false,
+                height: 300,
+                width: 350,
+                modal: true,
+                buttons: {
+                    "{{=T( 'Submit' ) }}": function() {
+                        jQuery( this ).dialog( 'close' );
+                        ajax(
+                            '{{=URL( c="users", f="ajax_add_user_to_group", args=[ auth_user.id ] ) }}',
+                            [ 'add_to_group_id' ], ':eval' );
+
+                    },
+                    "{{=T( 'Cancel' ) }}": function() {
+                        jQuery( this ).dialog( 'close' );
+                    }
+                }
+            } );
+
+        });
+    </script>
+{{pass}}
+
+{{block right_sidebar}}
+{{end}}

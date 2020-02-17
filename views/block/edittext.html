@@ -1,0 +1,59 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h3>
+  {{if block:}}
+    {{=T( 'Edit block' )}}
+  {{else:}}
+    {{=T( 'New block' )}}
+  {{pass}}
+</h3>
+
+{{=form.custom.begin}}
+
+{{if block:}}
+  {{for f in db.block.fields:}}
+    {{fld = 'org__' + f}}
+    <input name="{{=fld}}" type="hidden" value="{{=block[f]}}">
+    {{pass}}
+  {{pass}}
+
+<table class="w100pct">
+  <tr>
+    <th class="w10pct"><label for="id">{{=T( 'Block #' )}}:</label></th>
+    <td class="w30pct">
+      {{=form.custom.widget.id}}
+    </td>
+    <th class="w20pct"><label for="content_type">{{=T( 'Content type' )}}:</label></th>
+    <td class="w40pct">
+      {{=form.custom.widget.content_type}}
+    </td>
+  </tr>
+  <tr>
+    <th colspan="4"><label for="body">{{=T( 'Body' )}}:</label></th>
+  </tr>
+  <tr>
+    <td colspan="4">
+      {{=form.custom.widget.body}}
+    </td>
+  </tr>
+  <tr>
+    <td colspan="4" class="center_align">
+      <table class="w100pct table_bt_border">
+        <tr>
+          <td>
+            <button
+              name="action" title="{{=T( 'Save block' )}}" type="submit"
+              value="submit_block">
+              {{=T( 'Save block' )}}
+            </button>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+{{=form.custom.end}}
+
+

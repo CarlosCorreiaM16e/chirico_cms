@@ -1,0 +1,23 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<script type="text/javascript" language="javascript">
+  $(document).ready( function() {
+    $( "#attach_attached" ).live(
+      'change', function() {
+        window.console && console.log( "this: " );
+        window.console && console.log( this );
+        var fakeFile = $( "#attach_attached" ).val();
+        var filename = fakeFile.split( '\\' ).pop().toLowerCase();
+        window.console && console.log( filename );
+        $( '#attach_filename' ).val( filename );
+        ajax( '{{=URL(c="images", f="ajaxupdmimetype" )}}', [ "filename" ], ":eval" );
+      });
+  } );
+</script>
+
+{{=main_panel}}
+
+{{block right_sidebar}}
+{{end}}
+

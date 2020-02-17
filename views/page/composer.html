@@ -1,0 +1,164 @@
+{{response.files.append( URL( 'static', 'css/jquery-te-1.4.0.css' ) ) }}
+{{response.files.append( URL( 'static', 'js/jquery-te-1.4.0.js' ) ) }}
+
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<div class="row">
+    <div class="col-md-8">
+        <h3>
+            {{if page:}}
+                {{=T( 'Edit page' )}}
+                {{=A( ' (', T( 'Preview' ), ')',
+                      _href = URL( c='arquivo', f='ver', args = [ page.id ] ) )
+                      }}
+            {{else:}}
+                {{=T( 'New page' )}}
+            {{pass}}
+        </h3>
+    </div>
+    <div class="col-md-4 text-right">
+        {{if page:}}
+            {{=A( T( 'Open in editor' ),
+                  _href = URL( c='page', f='edit', args=[ page.id ] ),
+                  _class='btn btn-success' ) }}
+            {{=A( T( 'Page list' ),
+                  _href=URL( c='page', f='index' ),
+                  _class='btn btn-info' ) }}
+
+        {{pass}}
+    </div>
+</div>
+
+{{=form.custom.begin}}
+
+{{if page:}}
+    {{for f in db.page.fields:}}
+        {{fld = 'org__' + f}}
+        <input name="{{=fld}}" type="hidden" value="{{=page[f]}}">
+    {{pass}}
+    {{for b in b_list:}}
+        {{fld = 'org__body_%d' % b.id }}
+        <input name="{{=fld }}" type="hidden" value="{{=b.body }}">
+    {{pass}}
+{{pass}}
+
+<div class="row">
+    <div class="col-md-6">
+        <label>{{=T( 'Page' )}}:</label>
+        {{if page:}}
+            {{=A( page.name, _href=URL( c='page', f='composer', args=[ page.id ] ), _class='form_field' ) }}
+        {{pass}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="title">{{=T( 'Title' )}}:</label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.title}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="name">{{=T( 'Name' )}}:</label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.name}}
+    </div>
+</div>
+{{from m16e import term, htmlcommon}}
+{{for b in b_list: }}
+    <div class="row block_body_row">
+        <div class="col-md-12">
+            <label>{{=T( 'Block' )}}:</label>
+            {{if b.id:}}
+                {{=A( b.name, _href=URL( c='block', f='composer', args=[ b.id ] ), _class='form_field' ) }}
+            {{pass}}
+        </div>
+        <div class="col-md-2">
+            <label>{{=T( 'Body' )}}:</label>
+            {{if b.id:}}
+                <a href="{{=URL( c='gallery', f='list_images',
+                                 args=[ 'body' ],
+                                 vars={ 'next_c': 'page',
+                                        'next_f': 'composer',
+                                        'next_args': [ page.id, b.id ] } ) }}"
+                     role="button" class="btn btn-success btn-xs">{{=T( 'Add image' ) }}</a>
+            {{pass}}
+
+        </div>
+        <div class="col-md-10">
+            {{if b.body_markup != 'H': }}
+                {{=htmlcommon.get_textarea( 'body_%d' % b.id,
+                                            value=b.body,
+                                            input_id='body_%d' % b.id,
+                                            rows=8,
+                                            css_class='mono_font' ) }}
+            {{else: }}
+                {{=htmlcommon.get_textarea( 'body_%d' % b.id,
+                                            value=b.body,
+                                            input_id='body_%d' % b.id,
+                                            rows=8 ) }}
+                <script>
+                    jQuery(function(){
+                        jQuery( '#{{="body_%d" % b.id }}' ).css('min-height','400px').jqte();
+                    } );
+                </script>
+            {{pass}}
+        </div>
+    </div>
+{{pass}}
+<div class="row block_body_row">
+    <div class="col-md-12">
+        <label>{{=T( 'New block' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        <label>{{=T( 'Body' )}}:</label>
+    </div>
+    <div class="col-md-10">
+        {{=htmlcommon.get_textarea( 'body_0',
+                                    input_id='body_0' ) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        {{include 'markmin_syntax.html' }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center" style="margin: 2px 0;">
+        <button
+          name="action" title="{{=T( 'Save page' )}}" type="submit"
+          value="act_submit" class="btn btn-submit">
+          {{=T( 'Save page' )}}
+        </button>
+        <button
+          name="action" title="{{=T( 'New page' )}}" type="submit"
+          value="new_page" class="btn btn-primary">
+          {{=T( 'New page' )}}
+        </button>
+        <button
+          name="action" title="{{=T( 'Add new block' )}}" type="submit"
+          value="new_block" class="btn btn-primary">
+          {{=T( 'New block' )}}
+        </button>
+        <button name="action" title="{{=T( 'Add existing block' )}}" type="submit"
+                value="add_block" class="btn btn-info">
+          {{=T( 'Add block' )}}
+        </button>
+    </div>
+</div>
+
+{{=form.custom.end}}
+
+{{block right_sidebar}}
+{{end}}
+
+<style>
+    .jqte_editor {
+        height: 240px;
+        max-height: 900px;
+        }
+</style>
+

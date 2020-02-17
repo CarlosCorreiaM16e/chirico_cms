@@ -1,0 +1,37 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h1>{{=T('Help')}}</h1>
+
+{{if help:}}
+  {{=MARKMIN(help.contents)}}
+  {{pass}}
+
+<hr>
+
+{{if isUserInGroup( 'admin' ):}}
+  {{=form}}
+  {{=DIV( T( 'Supports WIKI syntax' ),
+          ' (',
+          A( 'MARKMIN',
+             _href='http://web2py.com/examples/static/markmin.html',
+             _target = 'blank' ),
+          ') | ',
+          A( T( 'Create page' ),
+             _href = URL( 'help', args = [ 0 ] ) ),
+          )}}
+
+  {{pass}}
+
+
+{{block right_sidebar}}
+{{=A(T("Administrative Interface"), _href=URL('admin','default','index'), _class='button',
+     _style='margin-top: 1em;')}}
+<h4>{{=T("Don't know what to do?")}}</h4>
+<ul>
+  <li>{{=A(T("Online examples"), _href=URL('examples','default','index'))}}</li>
+  <li><a href="http://web2py.com">web2py.com</a></li>
+  <li><a href="http://web2py.com/book">{{=T('Documentation')}}</a></li>
+</ul>
+{{end}}
+

@@ -1,0 +1,183 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<div class="menu_path">
+    {{=A( T( 'Mail queues' ), _href = URL( c='mail_queue', f = 'index' ) )}}
+</div>
+
+<h3>
+    {{if mail_queue:}}
+        {{=T( 'Edit mail queue' )}}
+    {{else:}}
+        {{=T( 'New mail queue' )}}
+    {{pass}}
+</h3>
+
+{{=form.custom.begin}}
+
+{{if mail_queue:}}
+    {{for f in db.mail_queue.fields:}}
+        {{fld = 'org__' + f}}
+        <input name="{{=fld}}" type="hidden" value="{{=mail_queue[f]}}">
+    {{pass}}
+{{pass}}
+
+<div class="row">
+    <div class="col-md-2">
+        <label for="id">
+            {{=T( 'Queue Id.' )}}:
+        </label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.id }}
+    </div>
+    <div class="col-md-2">
+        <label for="subject">
+        {{=T( 'Subject' )}}:
+    </div>
+    <div class="col-md-6">
+        {{=form.custom.widget.subject }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="text_body">
+            {{=T( 'Body (text)' )}}:
+        </label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.text_body }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="html_body">
+            {{=T( 'Body (HTML)' )}}:
+        </label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.html_body }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="when_to_send">
+            {{=T( 'When to send' )}}:
+        </label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.when_to_send }}
+    </div>
+    <div class="col-md-2">
+        <label for="sent">
+            {{=T( 'Sent' )}}:
+        </label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.sent }}
+    </div>
+    <div class="col-md-2">
+        <label for="status">
+            {{=T( 'Status' )}}:
+        </label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.status }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="mail_cc">
+            {{=T( 'CC' )}}:
+        </label>
+    </div>
+    <div class="col-md-4">
+        {{=form.custom.widget.mail_cc }}
+    </div>
+    <div class="col-md-2">
+        <label for="mail_bcc">
+            {{=T( 'BCC' )}}:
+        </label>
+    </div>
+    <div class="col-md-4">
+        {{=form.custom.widget.mail_bcc }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="auth_user_id">
+            {{=T( 'Sent by' )}}:
+        </label>
+    </div>
+    <div class="col-md-4">
+        {{=form.custom.widget.auth_user_id }}
+    </div>
+    <div class="col-md-2">
+        <label for="percent_done">
+            {{=T( 'Percent done' )}}:
+        </label>
+    </div>
+    <div class="col-md-1">
+        {{=form.custom.widget.percent_done }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="progress_message">
+            {{=T( 'Progress' )}}:
+        </label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.progress_message }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <button
+            name="action" title="{{=T( 'Save' )}}" type="submit"
+            value="act_submit">
+            {{=T( 'Save' )}}
+        </button>
+    </div>
+</div>
+
+{{if mail_queue: }}
+    <h3>Recipients</h3>
+    {{from gluon.tools import prettydate}}
+    <table>
+        <tr>
+            <th>{{=T( 'E-mail' ) }}</th>
+            <th>{{=T( 'Sent' ) }}</th>
+            <th>{{=T( 'Status' ) }}</th>
+            <th>{{=T( 'Commands' ) }}</th>
+        </tr>
+        {{for mr in mr_list: }}
+            <tr>
+                <td>
+                    {{=mr.email }}
+                </td>
+                <td>
+                    {{=prettydate( mr.sent.replace( tzinfo=None ), T ) if mr.sent else '' }}
+                </td>
+                <td>
+                    {{if mr.status == 'error': }}
+                        {{=T( 'Error' ) }}
+                    {{elif mr.status == 'sent': }}
+                        {{=T( 'Sent' ) }}
+                    {{else: }}
+                        {{=mr.status or T( 'Pending' ) }}
+                    {{pass}}
+                </td>
+                <td>
+                    <a href="{{=URL( c='mail_queue', f='resend', args=[ mr.id ] ) }}">{{=T( 'Resend' ) }}</a>
+                </td>
+            </tr>
+        {{pass}}
+    </table>
+{{pass}}
+
+{{=form.custom.end}}
+
+{{block right_sidebar}}
+{{end}}
+

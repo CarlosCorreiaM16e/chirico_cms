@@ -1,0 +1,68 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<div id="add_user_form_dialog" title="{{=T( 'Add user' ) }}">
+    {{if group: }}
+        <h3>{{=T( 'To group' ) }}: {{=group.description }}</h3>
+        <form action name="add_user_form" id="add_user_form" enctype="multipart/form-data">
+            <table class="w100pct">
+                <tr>
+                    <th>
+                        <label for="name">{{=T( 'Name' ) }}</label>
+                    </th>
+                    <td>
+                        <input type="text" name="name" class="text ui-widget-content ui-corner-all string" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="email">{{=T( 'E-mail' ) }}</label>
+                    </th>
+                    <td>
+                        <input type="text" name="email" class="text ui-widget-content ui-corner-all string" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    {{else: }}
+        <h3>{{=T( 'Must select group' ) }}</h3>
+    {{pass}}
+</div>
+
+
+{{=content }}
+
+{{block right_sidebar}}
+{{end}}
+
+<script type="text/javascript">
+    jQuery(function() {
+        jQuery( '#act_add_user' ).click( function() {
+            jQuery( '#add_user_form_dialog' ).dialog( 'open' );
+            return false;
+        } );
+
+        jQuery( '#add_user_form_dialog' ).dialog( {
+            autoOpen: false,
+            height: 300,
+            width: 350,
+            modal: true,
+            buttons: {
+                {{if group: }}
+                "{{=T( 'Submit' ) }}": function() {
+                    jQuery( this ).dialog( 'close' );
+/*                    jQuery( '#add_user_form' ).submit(); */
+                    ajax(
+                        '{{=URL( c="user_admin", f="ajax_add_user", args=[ group.id ] ) }}',
+                        [ 'name', 'email' ], ':eval' );
+
+                },
+                {{pass}}
+                "{{=T( 'Cancel' ) }}": function() {
+                    jQuery( this ).dialog( 'close' );
+                }
+            }
+        } );
+
+    });
+</script>

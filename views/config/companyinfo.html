@@ -1,0 +1,394 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h3>{{=panel_title}}</h3>
+
+<div class="warning_msg">
+    {{=T( 'Mandatory fields marked with' ) }} <b class="not_empty">*</b>
+</div>
+{{if unfilled_list: }}
+    <div class="warning_msg">
+        {{=T( 'Please fill the fields outlined in' ) }}<b class="not_empty"> {{=T( 'red' ) }}</b>
+    </div>
+{{pass}}
+
+<ul class="nav nav-tabs" id="nav_tab_tabs">
+    <li>
+        <a href="#name_and_address" data-toggle="tab">{{=T( 'Name and address' ) }}</a>
+    </li>
+    <li>
+        <a href="#mail_info" data-toggle="tab">{{=T( 'Mails' ) }}</a>
+    </li>
+    <li>
+        <a href="#docs_layout" data-toggle="tab">{{=T( 'Printing' ) }}</a>
+    </li>
+</ul>
+
+{{=form.custom.begin}}
+
+{{if company_info:}}
+    {{for f in db.company_info.fields:}}
+        {{fld = 'org__' + f}}
+        <input name="{{=fld}}" type="hidden" value="{{=company_info[f]}}">
+    {{pass}}
+{{pass}}
+
+<div class="tab-content">
+    <div class="tab-pane active" id="name_and_address">
+        <div class="row">
+            <div class="col-md-2">
+                <label for="company_name">
+                    {{=T( 'Company name' ) }}:
+                    <span class="not_empty">*</span>
+                </label>
+            </div>
+            <div class="col-md-10">
+                {{=form.custom.widget.company_name}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="saft_company_id">
+                    {{=T( 'Company ID' ) }}:
+                    <span class="not_empty">*</span>
+                </label>
+            </div>
+            <div class="col-md-4">
+                {{=form.custom.widget.saft_company_id}}
+                <span class="small">
+                    Obtém-se pela concatenação da Conservatória do Registo Comercial
+                    com o número do registo comercial separados pelo caractere espaço.
+                    Nos casos em que não exista registo comercial, deve ser indicado o NIF.
+                </span>
+            </div>
+            <div class="col-md-2">
+                <label for="company_tax_id">
+                    {{=T( 'Tax. reg. no.' ) }}:
+                    <span class="not_empty">*</span>
+                </label>
+            </div>
+            <div class="col-md-4">
+                {{=form.custom.widget.company_tax_id}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="saft_tax_country_region">
+                    {{=T( 'SAF-T Region' ) }}:
+                    <span class="not_empty">*</span>
+                </label>
+            </div>
+            <div class="col-md-4">
+                {{=company_info.saft_tax_country_region }}
+            </div>
+            <div class="col-md-2">
+                <label for="company_country_iso3166">
+                    {{=T( 'Country code (ISO3166)' ) }}:
+                    <span class="not_empty">*</span>
+                    <span class="xsmall">
+                        ({{=T( '2 letter code (ex.: PT)' ) }}:
+                    </span>
+                </label>
+            </div>
+            <div class="col-md-4">
+                {{=form.custom.widget.company_country_iso3166}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="company_address">
+                    {{=T( 'Address' ) }}:
+                    <span class="not_empty">*</span>
+                </label>
+            </div>
+            <div class="col-md-10">
+                {{=form.custom.widget.company_address}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="company_postal_code">
+                    {{=T( 'Zip' ) }}:
+                    <span class="not_empty">*</span>
+                </label>
+            </div>
+            <div class="col-md-4">
+                {{=form.custom.widget.company_postal_code}}
+            </div>
+            <div class="col-md-2">
+                <label for="company_city">
+                    {{=T( 'City' ) }}:
+                    <span class="not_empty">*</span>
+                </label>
+            </div>
+            <div class="col-md-4">
+                {{=form.custom.widget.company_city}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="company_country">
+                    {{=T( 'Country' ) }}:
+                    <span class="not_empty">*</span>
+                </label>
+            </div>
+            <div class="col-md-4">
+                {{=form.custom.widget.company_country}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="company_phone">{{=T( 'Phone' ) }}:</label>
+            </div>
+            <div class="col-md-4">
+                {{=form.custom.widget.company_phone}}
+            </div>
+            <div class="col-md-2">
+                <label for="company_fax">{{=T( 'Fax' ) }}:</label>
+            </div>
+            <div class="col-md-4">
+                {{=form.custom.widget.company_fax}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="company_email">{{=T( 'Email' ) }}:</label>
+            </div>
+            <div class="col-md-4">
+                {{=form.custom.widget.company_email}}
+            </div>
+            <div class="col-md-2">
+                <label for="company_website">{{=T( 'URL' ) }}:</label>
+            </div>
+            <div class="col-md-4">
+                {{=form.custom.widget.company_website}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="company_fiscal_info_for_docs">
+                    {{=T( 'Info for docs' ) }}:
+                    <span class="not_empty">*</span>
+                </label>
+                <br>
+                <span class="small">
+                    (deverá conter todos os elementos de identificação obrigatórios por lei e será
+                    usado no cabeçalho dos documentos)
+                </span>
+            </div>
+            <div class="col-md-10">
+                {{=form.custom.widget.company_fiscal_info_for_docs}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="company_payment_info_for_docs">{{=T( 'Payment info for docs' ) }}:</label>
+            </div>
+            <div class="col-md-10">
+                {{=form.custom.widget.company_payment_info_for_docs}}
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane" id="mail_info">
+        {{if response.meta.is_admin: }}
+            <div class="row">
+                <div class="col-md-2">
+                    <label for="mpbiz_mail_smtp_server">{{=T( 'SMTP server' ) }}:</label>
+                </div>
+                <div class="col-md-10">
+                    {{=form.custom.widget.mpbiz_mail_smtp_server}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label for="mpbiz_mail_smtp_server_port">{{=T( 'SMTP server port' ) }}:</label>
+                </div>
+                <div class="col-md-10">
+                    {{=form.custom.widget.mpbiz_mail_smtp_server_port}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label for="mpbiz_mail_account">{{=T( 'Sender mail account' ) }}:</label>
+                </div>
+                <div class="col-md-10">
+                    {{=form.custom.widget.mpbiz_mail_account}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label for="mpbiz_mail_user">{{=T( 'Mail user' ) }}:</label>
+                </div>
+                <div class="col-md-10">
+                    {{=form.custom.widget.mpbiz_mail_user}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label for="mpbiz_mail_password">{{=T( 'Mail password' ) }}:</label>
+                </div>
+                <div class="col-md-10">
+                    {{=form.custom.widget.mpbiz_mail_password}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label for="mpbiz_mail_tls">{{=T( 'Use TLS' ) }}:</label>
+                </div>
+                <div class="col-md-10">
+                    {{=form.custom.widget.mpbiz_mail_tls}}
+                </div>
+            </div>
+        {{pass}}
+        <div class="row">
+            <div class="col-md-2">
+                <label for="mpbiz_mail_default_cc">{{=T( 'CC' ) }}:</label>
+            </div>
+            <div class="col-md-10">
+                {{=form.custom.widget.mpbiz_mail_default_cc}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="mpbiz_mail_default_bcc">{{=T( 'BCC' ) }}:</label>
+            </div>
+            <div class="col-md-10">
+                {{=form.custom.widget.mpbiz_mail_default_bcc}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="mpbiz_mail_default_sign">{{=T( 'Signature' ) }}:</label>
+            </div>
+            <div class="col-md-10">
+                {{=form.custom.widget.mpbiz_mail_default_sign}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="mpbiz_mail_send_doc_text">{{=T( 'Text for sending documents' ) }}:</label>
+            </div>
+            <div class="col-md-6">
+                {{=form.custom.widget.mpbiz_mail_send_doc_text}}
+            </div>
+            <div class="col-md-4">
+                {{=T( 'Variables for document mails' ) }}:
+                <table>
+                    <tr>
+                        <td>
+                            [[doc_id]]
+                        </td>
+                        <td>
+                            {{=T( 'placeholder for document name + number' ) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            [[sig]]
+                        </td>
+                        <td>
+                            {{=T( 'placeholder for mail signature' ) }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="mail_payment_pending_text">{{=T( 'Text for sending pending payments list' ) }}:</label>
+            </div>
+            <div class="col-md-6">
+                {{=form.custom.widget.mail_payment_pending_text}}
+                <p>
+                    <b>
+                        {{=T( 'Days to send pending payments list' ) }}:
+                    </b>
+                    <br>
+                    {{=form.custom.widget.mpp_day_2}} {{=T( 'Monday' ) }}
+                    <span style="margin-left: 1em;">{{=form.custom.widget.mpp_day_3}} {{=T( 'Tuesday' ) }}</span>
+                    <span style="margin-left: 1em;">{{=form.custom.widget.mpp_day_4}} {{=T( 'Wednesday' ) }}</span>
+                    <span style="margin-left: 1em;">{{=form.custom.widget.mpp_day_5}} {{=T( 'Thursday' ) }}</span>
+                    <span style="margin-left: 1em;">{{=form.custom.widget.mpp_day_6}} {{=T( 'Friday' ) }}</span>
+                </p>
+            </div>
+            <div class="col-md-4">
+                <p>
+                    {{=T( 'Variables for pending payments mails' ) }}:
+                    <table>
+                        <tr>
+                            <td>
+                                [[doc_list]]
+                            </td>
+                            <td>
+                                {{=T( 'placeholder for pending payments list' ) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                [[sig]]
+                            </td>
+                            <td>
+                                {{=T( 'placeholder for mail signature' ) }}
+                            </td>
+                        </tr>
+                    </table>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane" id="docs_layout">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>{{=T( 'Printing' ) }}</h3>
+                <h4>{{=T( 'Company logo' ) }}</h4>
+                <p>
+                    {{=T( 'Upload an imgage (type PNG), preferably with 920x120 pixels (it will be scaled) and transparent background to be used in documents' ) }}.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="background: #F0F0F0">
+                {{if f_logo_doc: }}
+                    <img src="{{=URL( c='default', f='download', args=f_logo_doc.attached ) }}" alt="Doc. logo">
+                {{else: }}
+                    {{=T( 'No logo defined' ) }}
+                {{pass}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="logo_attach_file">{{=T( 'Company logo' ) }}:</label>
+            </div>
+            <div class="col-md-10">
+                <input id="logo_attach_file" name="logo_attach_file" type="file">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center">
+    <button
+        name="action" title="{{=T( 'Submit' )}}" type="submit"
+        value="act_submit">
+        {{=T( 'Submit' ) }}
+    </button>
+    <button
+        name="action" title="{{=T( 'Test mail' )}}" type="submit"
+        value="act_test_mail">
+        {{=T( 'Test mail' ) }}
+    </button>
+
+</div>
+{{=form.custom.end}}
+
+
+{{block right_sidebar}}
+{{end}}
+
+<script>
+    jQuery( function() {
+        jQuery( '#nav_tab_tabs a:first' ).tab( 'show' );
+    } )
+</script>
+
+{{=unfilled_list_js }}

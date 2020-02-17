@@ -1,0 +1,69 @@
+{{left_sidebar_enabled=right_sidebar_enabled=False}}
+{{extend 'layout.html'}}
+
+<h1>{{=message}}</h1>
+<h3>{{=req_link }}</h3>
+<hr />
+
+{{=form.custom.begin}}
+
+{{if thread:}}
+    {{for f in db.thread.fields:}}
+        {{fld = 'org__' + f}}
+        <input name="{{=fld}}" type="hidden" value="{{=thread[f]}}">
+    {{pass}}
+{{pass}}
+
+<div class="row">
+    <div class="col-md-2">
+        <label>{{=T( 'User' )}}:</label>
+    </div>
+    <div class="col-md-4">
+        {{if form.custom.widget.created_by: }}
+            {{=form.custom.widget.created_by}}
+        {{else: }}
+            {{=thread.created_by.first_name }}
+            ({{=thread.created_by.email }})
+        {{pass}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label>{{=T( 'Type' )}}:</label>
+    </div>
+    <div class="col-md-4">
+        {{=form.custom.widget.thread_type_id}}
+    </div>
+    <div class="col-md-2">
+        <label>{{=T( 'Status' )}}:</label>
+    </div>
+    <div class="col-md-4">
+        {{=form.custom.widget.thread_status_id}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label>{{=T( 'Title' )}}:</label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.thread_title }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label>{{=T( 'Text' )}}:</label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.thread_msg }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        {{=form.custom.submit}}
+    </div>
+</div>
+
+
+{{=form.custom.end}}
+
+

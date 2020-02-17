@@ -1,0 +1,224 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h3>
+    {{=T( 'Edit configuration' )}}
+</h3>
+
+{{=form.custom.begin}}
+
+{{for f in db.app_config.fields:}}
+    {{fld = 'org__' + f}}
+    <input name="{{=fld}}" type="hidden" value="{{=app_config[f]}}">
+{{pass}}
+
+<div class="col-md-8">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="invitation_subject">{{=T( 'Invitation subject' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.invitation_subject}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="invitation_text">{{=T( 'Invitation text' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.invitation_text}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="reinvitation_subject">{{=T( 'Resend invitation subject' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.reinvitation_subject}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="reinvitation_text">{{=T( 'Resend invitation text' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.reinvitation_text}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="eos_title">{{=T( 'End of survey title' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.eos_title}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="eos_text">{{=T( 'End of survey text' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.eos_text}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="ooq_title">{{=T( 'Out of quota title' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.ooq_title}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="ooq_text">{{=T( 'Out of quota text' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.ooq_text}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="ovq_title">{{=T( 'Over quota title' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.ovq_title}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="ovq_text">{{=T( 'Over quota text' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.ovq_text}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="reinvitation_text">{{=T( 'Resend invitation text' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.reinvitation_text}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="max_ans_title">{{=T( 'Max. answers title' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.max_ans_title}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="max_ans_text">{{=T( 'Max. answers text' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.max_ans_text}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="credits_invitation_amount">{{=T( 'Invitation credits amount' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.credits_invitation_amount}}
+            <br>
+            {{=form.custom.comment.credits_invitation_amount}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="credits_pay_threshold">{{=T( 'Credits payement threshold' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.credits_pay_threshold}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="credits_pay_step">{{=T( 'Credits payement minimun step' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.credits_pay_step}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="request_credits_mail">{{=T( 'Request credits email' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.request_credits_mail}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="granted_credits_text">{{=T( 'Granted credits mail text' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.granted_credits_text}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="ui_title">{{=T( 'User invitation mail subject' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.ui_title}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="ui_text">{{=T( 'User invitation mail body' )}}:</label>
+        </div>
+        <div class="col-md-9">
+            {{=form.custom.widget.ui_text}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <button name="action" title="{{=T( 'Save' )}}"
+                    type="submit" value="act_submit"
+                    class="btn btn-default">
+                {{=T( 'Save' )}}
+            </button>
+        </div>
+    </div>
+
+</div>
+<div class="col-md-4">
+    <h4>{{=T( 'Help' ) }}</h4>
+    <table>
+        <tr>
+            <th>{{=T( 'Variable' ) }}</th>
+            <th>{{=T( 'Description' ) }}</th>
+        </tr>
+        <tr>
+            <td><code>[[$]]</code></td>
+            <td>{{=T( 'Currency' ) }}</td>
+        </tr>
+        <tr>
+            <td><code>[[L]]</code></td>
+            <td>{{=T( 'Link placeholder' ) }}</td>
+        </tr>
+        <tr>
+            <td><code>[[M]]</code></td>
+            <td>{{=T( 'Max. participants' ) }}</td>
+        </tr>
+        <tr>
+            <td><code>[[T]]</code></td>
+            <td>{{=T( 'Estimated time' ) }}</td>
+        </tr>
+        <tr>
+            <td><code>[[V]]</code></td>
+            <td>{{=T( 'Credit amount' ) }}</td>
+        </tr>
+        <tr>
+            <td><code>[[U]]</code></td>
+            <td>{{=T( 'User name and e-mail' ) }}</td>
+        </tr>
+    </table>
+</div>
+
+{{=form.custom.end}}
+

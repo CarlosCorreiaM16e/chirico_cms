@@ -1,0 +1,56 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout_wide.html'}}
+
+<h1>
+    {{=T( 'Page statistics' ) }}
+</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>
+            {{=T( 'Most visited pages' ) }}
+        </h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        {{if chart_type == 'show_daily': }}
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="{{=URL( c='page_stats', f='charts', args='show_totals' ) }}"
+                       class="btn btn-info">
+                        {{=T( 'Totals' ) }}
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{if 'nav_prev' in globals(): }}
+                        {{=nav_prev }}
+                    {{pass}}
+                </div>
+                <div class="col-md-6 text-right">
+                    {{if 'nav_next' in globals(): }}
+                        {{=nav_next }}
+                    {{pass}}
+                </div>
+            </div>
+        {{elif chart_type == 'show_totals': }}
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    {{=T( 'Click in the page bars to see statistics by page' ) }}
+                </div>
+            </div>
+        {{pass}}
+        <div class="row">
+            <div class="col-md-12">
+                <canvas id="chart_canvas"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{block right_sidebar}}
+{{end}}
+

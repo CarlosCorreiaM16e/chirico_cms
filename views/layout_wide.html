@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="{{=T.accepted_language or 'en'}}"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <!-- www.phpied.com/conditional-comments-block-downloads/ -->
+        <!-- Always force latest IE rendering engine
+                 (even in intranet) & Chrome Frame
+                 Remove this if you use the .htaccess -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge{{=not request.is_local and ',chrome=1' or ''}}">
+        <!--    Mobile Viewport Fix
+                    j.mp/mobileviewport & davidbcalhoun.com/2010/viewport-metatag
+                    device-width: Occupy full width of the screen in its current orientation
+                    initial-scale = 1.0 retains dimensions instead of zooming out if page height > device height
+                    user-scalable = yes allows the user to zoom in -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{=response.title or request.application}}</title>
+        <!-- http://dev.w3.org/html5/markup/meta.name.html -->
+        <meta name="application-name" content="{{=request.application}}">
+        <!-- Speaking of Google, don't forget to set your site up:
+                 http://google.com/webmasters -->
+<!--        <meta name="google-site-verification" content="">-->
+        <!-- include stylesheets -->
+<!--        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>-->
+        <link rel="stylesheet" href="{{=URL('static','css/bootstrap.min.css')}}"/>
+        <link rel="stylesheet" href="{{=URL('static','css/web2py-bootstrap3.css')}}"/>
+        <link rel="shortcut icon" href="{{=URL('static','images/favicon.ico')}}" type="image/x-icon">
+        <link rel="apple-touch-icon" href="{{=URL('static','images/favicon.png')}}">
+        <!-- All JavaScript at the bottom, except for Modernizr which enables
+                 HTML5 elements & feature detects -->
+        <!-- Favicons -->
+        {{include 'web2py_ajax.html'}} <!-- this includes jquery.js, calendar.js/.css and web2py.js -->
+            
+        <!-- include custom stylesheets -->
+        <link rel="stylesheet" href="{{=URL('static','css/jquery-ui.css' ) }}" type="text/css" media="all" />
+        <link rel="stylesheet" href="{{=URL('static','css/jquery.ui.labeledslider.css' ) }}" />
+        {{if response.meta.use_bootstrap_select: }}
+            <link rel="stylesheet" href="{{=URL('static','css/bootstrap-select.css')}}"/>
+        {{pass}}
+        <link rel="stylesheet" href="{{=URL('static','css/jquery.jqplot.css')}}"/>
+        <link rel="stylesheet" href="{{=URL('static','css/m16e.css')}}"/>
+        <link rel="stylesheet" href="{{=URL('static','css/cms.css')}}"/>
+        <link rel="stylesheet" href="{{=URL('static','css/chirico.css')}}"/>
+
+        <!-- include custom stylesheets : END -->
+
+        {{block head}}{{end}}
+    </head>
+    <body>
+        <!--[if lt IE 9]>
+            <p class="browserupgrade">
+                Está a usar um navegador (<i>browser</i>) desactualizado.
+                Deverá <a href="http://browsehappy.com/">actualizar o seu navegador</a> de modo
+                a usufruir de todas as funcionalidades da interface.
+            </p>
+        <![endif]-->
+
+        <div class="w2p_flash alert alert-dismissable">{{=response.flash or ''}}</div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    {{if auth.is_impersonating(): }}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="{{=URL( c='default', f='user', args=[ 'impersonate', 0 ] ) }}" style="color: magenta">Quit</a>
+                            </div>
+                        </div>
+                    {{pass}}
+                    <div class="page_title row" style="background-color: #1F1F60">
+                        <div class="col-md-10">
+                            <div style="max-width: 80px; overflow: hidden;">
+                                <a href="{{=URL( c='default', f='index' )}}">
+                                    {{=IMG( _src=URL( c='static', f='images/logo-chirico-80x80.png' ),
+                                            _style='float: left; margin: 6px 0px; width: 100%; object-fit: contain;' ) }}</a>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-right">
+                            {{if response.meta.app_theme.login_button_position == 'header': }}
+                                <ul class="nav navbar-nav navbar-right">
+                                    {{='auth' in globals() and auth.navbar('Welcome',mode='dropdown') or ''}}
+                                    {{if auth.is_impersonating(): }}
+                                        <a href="{{=URL( c='default', f='user', args=[ 'impersonate', 0 ] ) }}" style="color: magenta">{{=T( 'Quit' ) }}</a>
+                                    {{pass}}
+                                </ul>
+                            {{pass}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Navbar ======================================= -->
+        <nav class="navbar navbar-default " role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    {{=response.logo or ''}}
+                </div>
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    {{if response.meta.app_theme.login_button_position == 'menu': }}
+                        <ul class="nav navbar-nav navbar-right">
+                            {{='auth' in globals() and auth.navbar('Welcome',mode='dropdown') or ''}}
+                            {{if auth.is_impersonating(): }}
+                                <a href="{{=URL( c='default', f='user', args=[ 'impersonate', 0 ] ) }}" style="color: magenta">{{=T( 'Quit' ) }}</a>
+                            {{pass}}
+                        </ul>
+                    {{pass}}
+                    {{if response.menu:}}
+                        {{=MENU(response.menu, _class='nav navbar-nav',li_class='dropdown',ul_class='dropdown-menu')}}
+                    {{pass}}
+                </div>
+
+            </div>
+        </nav>
+
+        <!-- Masthead ===================================== -->
+        {{block header}}
+        {{end}}
+        <!-- Main ========================================= -->
+        <!-- Begin page content -->
+        <div class="container-fluid main-container">
+            {{include 'message_board.html' }}
+            {{include}}
+<!--            {{=response.toolbar() if response.show_toolbar else ''}}-->
+        </div>
+
+        {{block footer}} <!-- this is default footer -->
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 text-center menu">
+                        <a href="{{=URL( c='about', f='index' ) }}">{{=T( 'About us' ) }}</a> |
+                        <a href="{{=URL( c='contactos', f='index' ) }}">{{=T( 'Contacts' ) }}</a> |
+                        <a href="{{=URL( c='about', f='terms_of_use' ) }}">{{=T( 'Terms of use' ) }}</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        &nbsp;{{=T('Copyright')}} &#169; {{=request.now.year}}
+                        (ZPOLURAS)
+                        <br>
+                        <span class="small">
+                            &nbsp;Chirico CMS (v. {{=response.meta.version_id }} &ndash; {{=response.meta.version_date }})
+                        </span>
+                    </div>
+                    <div class="col-md-8 text-right">
+                        <span style="margin-right: 1em;">
+                            <span style="vertical-align: top;">
+                                {{=T( 'Made by' ) }}:
+                            </span>
+                            <a href="http://memoriapersistente.pt"><img src="{{=URL('static','images/m16e-logo-nobg.png')}}" width="90"></a>
+                        </span>
+                        <span>
+                            <span style="vertical-align: top;">
+                                {{=T( 'Engines' ) }}:
+                            </span>
+                            <a href="http://www.postgresql.org/"><img src="{{=URL('static','images/logo_postgresql.png')}}"/></a>
+                            <a href="http://www.web2py.com/"><img src="{{=URL('static','images/logo_w2p-200.png')}}"/></a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        {{end}}
+        <!-- The javascript =============================== -->
+        <script src="{{=URL('static','js/jquery-ui.js')}}"></script>
+        <script type="text/javascript">
+            <!-- Change JQueryUI plugin names to fix name collision with Bootstrap.-->
+            $.widget.bridge('jquitooltip', $.ui.tooltip);
+            $.widget.bridge('jquibutton', $.ui.button);
+        </script>
+        <script src="{{=URL('static','js/modernizr-2.8.3.min.js')}}"></script>
+        <script src="{{=URL('static','js/bootstrap.bundle.min.js')}}"></script>
+        <script src="{{=URL('static','js/web2py-bootstrap3.js')}}"></script>
+        {{if response.meta.use_bootstrap_select: }}
+            <script src="{{=URL('static','js/bootstrap-select.js')}}"></script>
+        {{pass}}
+        <script src="{{=URL( 'static','js/i18n/defaults-pt_PT.js' ) }}"></script>
+        <script src="{{=URL('static', 'js/Chart-2.9.3.min.js' ) }}"></script>
+        <script src="{{=URL('static', 'js/m16e.js' ) }}"></script>
+
+        <!-- Share ============================y============ -->
+        <script src="{{=URL('static','js/share.js',vars=dict(static=URL('static','images')))}}"></script>
+
+
+        {{block page_js}}{{end page_js}}
+        {{if auth.is_impersonating(): }}
+            <script>
+                jQuery(function(){
+                    jQuery( '#navbar' ).css( 'background-color', '#FFEEBB' );
+                } );
+            </script>
+        {{pass}}
+
+        {{if response.meta.use_bootstrap_select: }}
+            <script>
+                jQuery(function(){
+                    jQuery( 'select' ).not( '.ui-dialog select' ).addClass( 'selectpicker' );
+                    jQuery( 'select' ).not( '.ui-dialog select' ).attr( 'title', '' );
+                    jQuery( 'select' ).not( '.ui-dialog select' ).selectpicker();
+                    jQuery( 'select' ).not( '.ui-dialog select' ).selectpicker('refresh');
+                } );
+            </script>
+        {{pass}}
+        <script>
+            jQuery(function(){
+                jQuery( '.w2p_flash' ).delay( {{=response.meta.flash_msg_delay }} )
+                                      .fadeOut( {{=response.meta.flash_msg_delay }} );
+            } );
+        </script>
+
+        {{if 'page_js' in globals(): }}
+            {{=SCRIPT( page_js ) }}
+        {{pass}}
+
+
+    </body>
+</html>

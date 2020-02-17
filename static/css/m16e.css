@@ -1,0 +1,659 @@
+/*
+        Document     : m16e
+        Created on : 2/Set/2012, 12:24:33
+        Author         : carlos
+        Description:
+                Purpose of the stylesheet follows.
+*/
+
+/* override bootstrap3 + web2py defaults */
+body {
+    padding-top: 0px;
+    color: #32296C;
+    font: 12px/19px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+
+.form-control {
+    height:28px;
+}
+
+hr {
+    border: solid #ddd; border-width: 1px 0 0; clear: both;
+    width: 80%;
+    margin-left: 20px;
+    margin-top: 2px;
+    margin-bottom: 4px;
+    line-height: 6px;
+}
+
+.btn {
+    text-transform: none;
+}
+
+.btn-sm,
+.btn-group-sm > .btn {
+    padding: 8px 12px;
+    font-size: 12px;
+}
+
+.btn-xs, .btn-group-xs > .btn {
+    padding: 3px 4px;
+    font-size: 10px;
+}
+
+.navbar .nav > li > a {
+    font-weight: 700;
+    text-transform: none;
+}
+
+.navbar .nav > li,
+.navbar .nav > li > a,
+.navbar .nav > li > a > span,
+.navbar .nav > li > a > div,
+.navbar .nav > li > a > div > span {
+    vertical-align: bottom;
+    line-height: 14px;
+}
+
+.dropdown-menu > li > a {
+    text-transform: none;
+    color: #605F58;
+}
+
+/*
+h1 {
+    font-size: 32px;
+    line-height: 50px;
+}
+
+h2 {
+    font-size: 26px;
+    line-height: 40px;
+}
+*/
+
+h1 a, h2 a {
+    color: inherit;
+}
+
+h1 a:hover, h2 a:hover {
+    text-decoration: none;
+}
+
+h4, h5, h6, .h4, .h5, .h6 {
+    font-weight: bold;
+}
+
+a:hover, a:focus {
+    color: #005580;
+    text-decoration: underline;
+}
+
+a:hover, a:active {
+    outline: 0px none;
+}
+
+a {
+    color: #0088CC;
+    text-decoration: none;
+}
+
+.dark_bg {
+    background-color: #5979A8;
+    /*padding: 4px 4px 4px 0px; */
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px;
+    border:1px solid #3A4F6E;
+}
+
+.pad4440 {
+    padding: 4px 4px 4px 0px;
+}
+
+.pad4044 {
+    padding: 4px 0px 4px 4px;
+}
+
+a.dark_bg:hover {
+    background-color: #5979A8;
+}
+
+.dark_bg_up {
+    background-color: #f47c3c;
+}
+
+a.dark_bg_up:hover {
+    background-color: #EF5C0E;
+}
+
+.dark_bg_down {
+    background-color: #29ABE0;
+}
+
+a.dark_bg_down:hover {
+    background-color: #1B8DBB;
+}
+
+.glyphicon-white {
+    color: #ffffff;
+/*    height: 16px;
+    width: 16px; */
+}
+
+.dev_only {
+    color: #C500A0;
+/*    background-color: #FFC0F4; */
+}
+
+/* navbar sizes */
+.navbar-collapse {
+    padding-right: 0.5em;
+    padding-left: 0.5em;
+}
+
+.navbar > .container-fluid {
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 0.5em;
+    padding-left: 0.5em;
+}
+
+.navbar-default {
+    padding-right: 0.5em;
+    padding-left: 0.5em;
+    min-height: 32px;
+    background-color: #1F1F60;
+    background-repeat: repeat-x;
+    border-radius: 4px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25), 0px -1px 0px rgba(0, 0, 0, 0.1) inset;
+}
+
+.navbar{
+    margin: 2px 6px;
+    border:1px solid transparent;
+}
+
+.navbar-right {
+    float: right !important;
+    margin-right: 0px;
+}
+
+.navbar .nav > li > a {
+    float: none;
+    padding: 8px 15px;
+    color: #FFF;
+    text-decoration: none;
+}
+.navbar .nav > li > a {
+    line-height: 14px;
+    text-decoration: none;
+}
+
+/* navbar sizes -- END */
+
+/* tabs */
+.nav,
+.panel .panel-heading,
+.panel .panel-title{
+    font-weight: bold;
+    text-transform: none;
+}
+
+.panel-heading{
+    padding:0px 15px;
+    border: none;
+}
+
+.nav-tabs>li>a {
+    background-color:#F0F0F0;
+}
+.nav-tabs>li.disabled>a:hover {
+    background-color:#F0F8FF
+}
+
+.nav-tabs > li > a {
+    color:#5e7ca8;
+    border-color: #ccccbb;
+}
+
+.nav-tabs > li.active>a,
+.nav-tabs > li.active>a:hover,
+.nav-tabs > li.active>a:focus {
+    color: #143465;
+    border-top-color: #dddddd;
+    border-left-color: #dddddd;
+    border-right-color: #dddddd;
+}
+
+.panel-default > .panel-heading {
+    background-color: #f8f8f8;
+    border-color: #ccccbb;
+}
+
+/* tabs -- END */
+
+/* footer */
+.footer {
+    background: #FFF none repeat scroll 0% 0%;
+    color: #605F58;
+}
+
+.footer > .container-fluid {
+    margin: 0.25em 1em;
+    padding: 10px;
+    background-color: #EEE;
+    border-radius: 4px;
+}
+
+/* footer -- END */
+
+/* override bootstrap3 + web2py defaults -- END */
+
+.w5pct{ width: 5%; }
+.w8pct{ width: 8%; }
+.w10pct{ width: 10%; }
+.w12pct{ width: 12%; }
+.w14pct{ width: 14%; }
+.w15pct{ width: 15%; }
+.w20pct{ width: 20%; }
+.w25pct{ width: 25%; }
+.w30pct{ width: 30%; }
+.w33pct{ width: 33%; }
+.w35pct{ width: 35%; }
+.w40pct{ width: 40%; }
+.w50pct{ width: 50%; }
+.w60pct{ width: 60%; }
+.w66pct{ width: 66%; }
+.w70pct{ width: 70%; }
+.w75pct{ width: 75%; }
+.w80pct{ width: 80%; }
+.w90pct{ width: 90%; }
+.w100pct{ width: 100% }
+
+
+.align_top,
+table td.align_top,
+table th.align_top {
+    vertical-align: top;
+}
+
+.align_bottom,
+table td.align_bottom,
+table th.align_bottom {
+    vertical-align: bottom;
+}
+
+/* impersonating */
+.m16e_wrapper_menu {
+    float: left;
+}
+
+.m16e_wrapper_impersonating {
+    margin-right: 0px;
+    padding-right: 1em;
+    text-align: right
+}
+/* impersonating -- END */
+
+.logo_header {
+    margin: 0px;
+    margin-right:auto;margin-left:auto;
+    *zoom:1;
+    min-height: 64px;
+    background-color: transparent;
+}
+
+.page_wrapper{
+    min-height: 100%;
+}
+
+.page_footer{
+    position: relative;
+    margin-top: -60px;
+    clear: both;
+    background-color: #FFFFFF;
+    height: 60px;
+}
+
+
+.main_body {
+    padding-bottom: 60px;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+
+.app_panel h2 {
+    background-color: #FFF;
+    border: 1px solid #DDF;
+    border-radius: 4px;
+}
+
+.no_margins {
+    margin: 0px;
+}
+
+.no_paddings {
+    padding: 0px;
+}
+
+.borderless,
+.borderless td,
+.borderless th {
+    border: 0;
+}
+
+.colname {
+    font-weight: bold;
+}
+
+tr.table_header th {
+    background-color: #FCF;
+}
+
+th, td, label {
+    margin: 0px;
+    padding: 0.25em 0.5em;
+    border: medium none;
+    white-space: normal;
+}
+
+th, td, label, input {
+    vertical-align: top;
+}
+
+table.no_margin,
+table.no_margin th,
+table.no_margin td {
+    margin: 0px;
+    padding: 0px;
+}
+
+
+.inner_table_form {
+    padding: 0px 4px;
+    vertical-align: middle;
+    font-size: 10px;
+}
+
+th.inner_table_form {
+    font-size: 10px;
+}
+
+td.inner_table_form {
+    font-size: 10px;
+}
+
+.form_errors {
+    color: #701100;
+    background: #FF8FCF;
+}
+
+.form_warns {
+    color: #808000;
+    background: #FF8FCF;
+}
+
+form .row {
+    padding: 2px 0px;
+}
+
+#ajaxresults{
+        background: #ffffff;
+        padding: 5px 10px;
+        max-height: 400px;
+        overflow: auto;
+        position: absolute;
+        z-index: 99;
+        border: 1px solid #A9A9A9;
+        border-width: 0 1px 1px 1px;
+        -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+        -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+        -box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+}
+
+#ajaxresults a{
+        color:#666666;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.not_empty {
+    color: #ff0000;
+}
+/* m16e defaults -- END */
+
+*[onclick].ajax_link {
+    font-weight: bold;
+    color: #2F8DFF;
+}
+
+p img {
+    margin: 4px;
+}
+
+#admin_edit {
+    font-size: 8px;
+    position: absolute;
+    padding: 0em 0.5em;
+    top: 0;
+    right: 0;
+    background-color: #def;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-box-shadow: 0 0 3px #248;
+    -webkit-box-shadow: 0 0 3px #248;
+    box-shadow: 0 0 3px #248;
+}
+
+tr.table_totals th{
+    background-color: #ffeeee
+}
+
+
+tr.highlight_row {
+    background-color: #FCFFA0;
+}
+
+
+tr.highlight {
+    background-color: #D0FCFF;
+}
+
+
+.parent_panel {
+    padding: 0px;
+    margin: 0px;
+}
+
+.main_panel {
+    padding: 0px;
+    margin: 0px;
+    /*
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-box-shadow: 0 0 3px #248;
+    -webkit-box-shadow: 0 0 3px #248;
+    box-shadow: 0 0 3px #248;
+    */
+}
+
+.main_panel h2 {
+    padding: 0px;
+    padding-left: 4px;
+    /*
+    margin: 3px;
+    border-radius: 5px;
+    */
+
+}
+
+.main_panel p,
+.main_panel h3,
+.main_panel h4,
+.main_panel h5,
+.main_panel h6 {
+    margin: 6px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+#preview {
+    display: block
+}
+
+
+/*********** web2py specific ***********
+div.w2p_flash.alert {
+    background: #32296C;
+    border: solid 2px #ffff00;
+}
+
+div.w2p_flash{
+    color: #ffff00;
+}
+
+div.w2p_flash a:hover{
+    color: #ffffff;
+}
+****/
+
+.autocompletion{
+    background: white;
+    border: solid 1px #55A6C8;
+    cursor: pointer;
+}
+
+.autocompletion DIV {
+    padding: 2px 4px;
+}
+
+.inline_code {
+    font-family: monospace;
+    background-color: #F7F7F9;
+    border: 1px solid #E1E1E8;
+    color: #0017B2;
+}
+
+.tabbed_panel {
+    margin-top: -1px;
+    position: relative;
+}
+
+.tab_button {
+    font-weight: bolder;
+    border: 1px solid #ccccbb;    
+}
+
+.tab_button_selected {
+    background-color: #FFFFFF;
+    border-bottom: 4px solid #CCCCBB;
+}
+
+.input_wrap {
+    display: block;
+    overflow: hidden;
+    padding: 0 5px;
+}
+
+.input_wrap_inline {
+    display: inline-block;
+    overflow: hidden;
+    padding: 0 5px;
+}
+
+.input_wrap input {
+    width: 100%;
+}
+
+
+input[type=text],
+textarea {
+    width: 100%;
+    display:table-cell;
+}
+
+input[type=text],
+input[type=checkbox],
+textarea {
+    border: 1px solid #cccccc;
+    /*
+    border-radius: 3px;
+    */
+}
+
+.bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+    width: 100%;
+}
+
+input[type=text],
+textarea,
+.form-control {
+    padding: 1px 6px;
+    font-size: 11px;
+}
+
+.mono_font {
+    font-family: monospace;
+    font-size: 11px;
+}
+
+
+.bootstrap-select.btn-group .dropdown-toggle .caret {
+    right: 2px;
+}
+
+.bootstrap-select.btn-group:not(.input-group-btn),
+.bootstrap-select.btn-group[class*="col-"] {
+    margin-left: 2px;
+    font-size: 12px;
+}
+
+div.btn-group.bootstrap-select > button.btn.dropdown-toggle {
+    padding: 1px 6px;
+}
+
+
+
+.nav_page_sel_limits > span {
+    padding-right: 2em;
+}
+
+/*
+div.row > div {
+    padding: 4px 8px;
+}
+*/
+
+#admin_config_div > div.row {
+    margin-bottom: 60px;
+}
+
+.integer,
+.double,
+.decimal {
+    text-align: right;
+}
+
+td.tr_join_up {
+    margin-top: 0;
+    padding-top: 0;
+    border-bottom: 1px solid #cccccc;
+}
+
+td.tr_join_down {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+

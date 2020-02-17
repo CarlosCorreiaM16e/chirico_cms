@@ -1,0 +1,195 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout_wide.html'}}
+
+{{=form.custom.begin}}
+
+<div class="row">
+    <div class="col-md-2">
+        <h4 style="border-bottom: solid 1px #cccccc">{{=T( 'Active threads' ) }}</h4>
+        {{for t in active_thread_list: }}
+            <a href="{{=URL( c='forum', f='view', args=[ t.id ] ) }}"
+               title="{{=t.thread_title }}">
+                {{=t.thread_title[ : 60 ] }}
+            </a>
+            <br>
+        {{pass}}
+    </div>
+    <div class="col-md-8">
+        <div class="row forum_post">
+            <div class="col-md-12">
+                <div class="row forum_title">
+                    <div class="col-md-11">
+                        <h2>
+                            {{=thread.thread_title }}
+                        </h2>
+                    </div>
+                    <div class="col-md-1 text-right">
+                        {{if perms.is_admin: }}
+                            <a href="{{=URL( c='forum', f='edit', args=[ thread.id ] ) }}">
+                                #{{=thread.id }}
+                            </a>
+                        {{pass}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>
+                            {{=T( 'Author' ) }}:
+                        </label>
+                        {{=thread.created_by.first_name }}
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <label>
+                            {{=T( 'Date' ) }}:
+                        </label>
+                        <span title="{{=thread.created_on.strftime( '%Y-%m-%d %H:%M' ) }}">
+                            {{from gluon.tools import prettydate}}
+                            {{=prettydate( thread.created_on.replace( tzinfo=None ), T ) }}
+                        </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 forum_post_msg">
+                        {{=MARKMIN( thread.thread_msg ) }}
+                    </div>
+                </div>
+                {{=thread_cmd_row }}
+                <!-- edit comment 0 -->
+                <div class="row" id="edt_msg_text_0_row" style="display: none;">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <h4 class="col-md-8">{{=T( 'Edit comment' ) }}:</h4>
+                            <div class="col-md-4 text-right">
+                                <label>{{=T( 'Send mail' ) }}:</label>
+                                <input type="checkbox" name="ta_edt_send_mail_0" checked="checked">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label>
+                                    {{=T( 'Title' ) }}
+                                </label>
+                            </div>
+                            <div class="col-md-10">
+                                <input id="ta_edt_msg_title_0" name="edt_msg_title_0" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <textarea id="ta_edt_msg_text_0"
+                                          name="edt_msg_text_0"
+                                          rows="4"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-center">
+                        <button
+                          name="action" title="{{=T( 'Edit comment' )}}" type="submit"
+                          value="act_alter_comment_0" class="btn btn-submit">
+                          {{=T( 'Submit' )}}
+                        </button>
+                        <a
+                          href="#"
+                          title="{{=T( 'Cancel alterations' )}}"
+                          class="btn btn-warning"
+                          onclick="jQuery( '#edt_msg_text_0_row' ).hide()">
+                          {{=T( 'Cancel' )}}
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h3>
+            {{=T( 'Comments' ) }}
+        </h3>
+        <div class="row">
+            <div class="col-md-12">
+                {{=thread_list }}
+            </div>
+        </div>
+        <!-- add comment -->
+        <div class="row" id="cmt_msg_text_0_row">
+            <div class="col-md-12">
+                <h4 class="col-md-6">{{=T( 'Add comment' ) }}:</h4>
+                <textarea id="ta_cmt_msg_text_0"
+                          name="cmt_msg_text_0"
+                          rows="4"></textarea>
+            </div>
+            <div class="col-md-12 text-center">
+                <button
+                  name="action" title="{{=T( 'Add comment' )}}" type="submit"
+                  value="act_add_comment_0" class="btn btn-submit">
+                  {{=T( 'Add comment' )}}
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{include 'markmin_syntax.html' }}
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-2">
+        <h4 style="border-bottom: solid 1px #cccccc">{{=T( 'Subscribers' ) }}</h4>
+        <div class="row">
+            <div class="col-md-12">
+                {{for au in subscriber_list: }}
+                    {{=au.first_name }}
+                    {{if perms.is_dev: }}
+                        <a href="{{=URL( c='forum', f='unsubscribe_user', args=[ thread.id, au.auth_user_id ] ) }}"
+                            title="{{=T( 'Unsubscribe this user' ) }}"
+                            onclick="return confirm( '{{=T( 'Confirm unsubscribe this user?' ) }}' )">
+                            <i class="glyphicon glyphicon-minus"></i>
+                        </a>
+                    {{pass}}
+                    <br>
+                {{pass}}
+                <br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                {{if has_subscribed: }}
+                    <a href="{{=URL( c='forum', f='unsubscribe', args=[ thread.id ] ) }}"
+                       class="btn btn-warning btn-xs" style="margin:2px;">
+                        <i class="glyphicon glyphicon-minus"></i>
+                        {{=T( 'Unsubscribe' ) }}
+                    </a>
+               {{else:}}
+                    <a href="{{=URL( c='forum', f='subscribe', args=[ thread.id ] ) }}"
+                       class="btn btn-success btn-xs" style="margin:2px;">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        {{=T( 'Subscribe' ) }}
+                    </a>
+                {{pass}}
+                <label>{{=T( 'Add user' ) }}</label>
+                {{=user_sel }}
+                <button
+                  name="action" title="{{=T( 'Subscribe selected user' )}}" type="submit"
+                  value="act_subscribe_user" class="btn btn-submit">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    {{=T( 'Subscribe user' )}}
+                </button>
+                <label>{{=T( 'Add users\' group' ) }}</label>
+                {{=group_sel }}
+                <button
+                  name="action" title="{{=T( 'Subscribe selected group' )}}" type="submit"
+                  value="act_subscribe_group" class="btn btn-submit">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    {{=T( 'Subscribe group' )}}
+                </button>
+<!--                <a href="{{=URL( c='forum', f='subscribe_user', args=[ thread.id ] ) }}"-->
+<!--                   class="btn btn-success btn-xs" style="margin:2px;">{{=T( 'Subscribe user' ) }}</a>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+{{=form.custom.end}}
+
+{{block right_sidebar}}
+{{end}}
+

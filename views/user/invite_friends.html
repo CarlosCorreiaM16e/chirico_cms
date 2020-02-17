@@ -1,0 +1,125 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h2>{{=T( 'Invite users' ) }}</h2>
+
+{{=form.custom.begin}}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    {{=T( 'This message will be sent to the recipients' ) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 column_name">
+                    {{=T( 'Subject' ) }}:
+                </div>
+                <div class="col-md-10">
+                    {{=ui_title}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 column_name">
+                    {{=T( 'Body' ) }}:
+                </div>
+                <div class="col-md-10">
+                    {{=ui_text}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" style="padding-left: 2em;">
+            <h4>{{=T( 'E-mail list' ) }}</h4>
+            <p>
+                Escreva o endereço de <i>e-mail</i> dos seus amigos (um de cada vez) e
+                clique em <b>Adicionar</b> para adicionar à lista.
+            </p>
+            <p>
+                Assim que tiver composto a lista com os endereços pretendidos, clique em <b>Submeter</b> para
+                enviar os <i>mails</i>.
+            </p>
+            <div id="send_to_list_div">
+                {{=send_to_list_contents }}
+            </div>
+            <div class="row hidden" id="error_panel">
+                <div class="col-md-12" id="mail_error_msg">
+                </div>
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-success"
+                            value="act_resend_mail"
+                            id="bt_resend_mail"
+                            type="submit"
+                            name="action">
+                                <i class="glyphicon glyphicon-plus" style="padding-right: 0.5em; color: #ffff00;"></i>
+                        {{=T( 'Resend invitation' ) }}
+                    </button>
+                    <button class="btn btn-info"
+                            value="act_cancel"
+                            id="bt_cancel"
+                            type="submit"
+                            name="action">
+                        {{=T( 'Cancel' ) }}
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    {{=T( 'Mail' ) }}:
+                </div>
+                <div class="col-md-6">
+                    {{=form.custom.widget.send_to }}
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-info"
+                            value="act_add_mail"
+                            id="bt_add_mail"
+                            type="submit"
+                            name="action">
+                                <i class="glyphicon glyphicon-plus glyphicon-white" style="padding-right: 0.5em;"></i>
+                        {{=T( 'Add' ) }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <button class="btn btn-submit"
+                    value="act_submit"
+                    id="bt_submit"
+                    type="submit"
+                    name="action">
+                        <i class="glyphicon glyphicon-plus glyphicon-white" style="padding-right: 0.5em;"></i>
+                {{=T( 'Send invitations' ) }}
+            </button>
+        </div>
+
+    </div>
+{{=form.custom.end}}
+
+<script type="text/javascript">
+//<!--
+    jQuery('document').ready(function() {
+        jQuery( '#bt_add_mail' ).click( function() {
+            ajax( '{{=URL( c="user", f="ajax_add_mail" ) }}',
+                  [ 'send_to' ],
+                  ':eval' );
+            return false;
+        } );
+        jQuery( '#bt_resend_mail' ).click( function() {
+            ajax( '{{=URL( c="user", f="ajax_resend_invitation" ) }}',
+                  [ 'send_to' ],
+                  ':eval' );
+            return false;
+        } );
+        jQuery( '#bt_cancel' ).click( function() {
+            jQuery( '#error_panel' ).addClass( 'hidden' );
+            return false;
+        } );
+    });
+//-->
+</script>
+
+{{block right_sidebar}}
+{{end}}
+

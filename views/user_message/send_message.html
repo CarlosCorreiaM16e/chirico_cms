@@ -1,0 +1,24 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h3>{{=T( 'Send mesage to' )}}:</h3>
+
+<table>
+  <tr>
+    <th>{{=T( 'Username' )}}</th>
+    <th>{{=T( 'E-mail' )}}</th>
+  </tr>
+  {{for u in user_list:}}
+    <tr>
+      <td>{{=u.first_name}}</td>
+      <td>{{=u.email}}</td>
+    </tr>
+    {{pass}}
+</table>
+
+<h5>{{=T( 'Mail text' )}}:</h5>
+
+{{=form}}
+
+{{block right_sidebar}}
+{{end}}

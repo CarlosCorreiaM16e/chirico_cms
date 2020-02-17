@@ -1,0 +1,113 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout_wide.html'}}
+
+{{=menu_path }}
+
+{{=form.custom.begin}}
+
+<div class="row">
+    <div class="col-md-8">
+        <h3>
+            {{=T( 'Edit thread' )}}
+        </h3>
+    </div>
+</div>
+
+{{=form.custom.begin}}
+
+{{if thread:}}
+  {{for f in db.thread.fields:}}
+    {{fld = 'org__' + f}}
+    <input name="{{=fld}}" type="hidden" value="{{=thread[f]}}">
+    {{pass}}
+  {{pass}}
+
+<div class="row">
+    <div class="col-md-2">
+        <label for="id">{{=T( 'Thread #' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.id}}
+    </div>
+    <div class="col-md-2">
+        <label for="created_on">{{=T( 'Created' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.created_on}}
+    </div>
+    <div class="col-md-2">
+        <label for="created_by">{{=T( 'Author' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.created_by}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="thread_title">{{=T( 'Title' )}}:</label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.thread_title}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="thread_msg">{{=T( 'Message' )}}:</label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.thread_msg}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="thread_status_id">{{=T( 'Status' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.thread_status_id}}
+    </div>
+    <div class="col-md-2">
+        <label for="thread_type_id">{{=T( 'Type' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.thread_type_id}}
+    </div>
+    <div class="col-md-2">
+        <label for="markup">{{=T( 'Markup' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.markup}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="closed_time">{{=T( 'Closed' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.closed_time}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center" style="margin: 2px 0;">
+        <button
+          name="action" title="{{=T( 'Save thred' )}}" type="submit"
+          value="act_submit" class="btn btn-submit">
+          {{=T( 'Save' )}}
+        </button>
+        <span style="border: 1px solid #ff0000; padding: 6px 6px 10px; margin: 2px;">
+            <input id="delete_record" name="delete_this_record" type="checkbox"/>
+            <button
+              name="action" title="Delete thread" type="submit"
+              value="act_delete_record" class="btn btn-danger btn-xs">
+              {{=T( 'Delete thread' )}}
+            </button>
+        </span>
+        {{pass}}
+    </div>
+</div>
+
+
+{{=form.custom.end}}
+
+{{block right_sidebar}}
+{{end}}
+

@@ -1,0 +1,110 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+{{=menu_path }}
+
+<h3>
+    {{if user_message:}}
+        {{=T( 'Edit user_message' )}}
+    {{else:}}
+        {{=T( 'New user_message' )}}
+    {{pass}}
+</h3>
+
+{{=form.custom.begin}}
+
+{{if user_message:}}
+    {{for f in db.user_message.fields:}}
+        {{fld = 'org__' + f}}
+        <input name="{{=fld}}" type="hidden" value="{{=user_message[f]}}">
+    {{pass}}
+{{pass}}
+
+<div class="row">
+    <div class="col-md-2">
+        <label for="id">
+            {{=T( 'Id' )}}:
+        </label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.id }}
+    </div>
+    <div class="col-md-2">
+        <label for="notify_user_id">
+            {{=T( 'Notify user id' )}}:
+        </label>
+    </div>
+    <div class="col-md-6">
+        {{=form.custom.widget.notify_user_id }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="msg_title">
+            {{=T( 'Title' )}}:
+        </label>
+    </div>
+    <div class="col-md-8">
+        {{=form.custom.widget.msg_title }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="msg_text">
+            {{=T( 'Text' )}}:
+        </label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.msg_text }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="times_viewed">
+            {{=T( 'Times viewed' )}}:
+        </label>
+    </div>
+    <div class="col-md-1">
+        {{=form.custom.widget.times_viewed }}
+    </div>
+    <div class="col-md-1">
+        <label for="period_start">
+            {{=T( 'Start' )}}:
+        </label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.period_start }}
+    </div>
+    <div class="col-md-1">
+        <label for="period_stop">
+            {{=T( 'Stop' )}}:
+        </label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.period_stop }}
+    </div>
+    <div class="col-md-1">
+        <label for="ack_when">
+            {{=T( 'Ack.' )}}:
+        </label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.ack_when }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <button
+            name="action" title="{{=T( 'Save' )}}" type="submit"
+            value="act_submit"
+            class="btn btn-submit">
+            {{=T( 'Save' )}}
+        </button>
+    </div>
+</div>
+
+{{=form.custom.end}}
+
+{{block right_sidebar}}
+{{end}}
+

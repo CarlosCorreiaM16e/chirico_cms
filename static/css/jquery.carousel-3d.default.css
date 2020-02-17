@@ -1,0 +1,121 @@
+/* line 3, ../../styles/common/jquery.carousel-3d.scss */
+[data-carousel-3d] [data-prev-button] {
+  cursor: pointer;
+  height: 25px;
+  left: 0px;
+  margin-top: -13px;
+  position: absolute;
+  top: 50%;
+  -webkit-transition: background 0.3s ease 0s;
+  -ms-transition: background 0.3s ease 0s;
+  -o-transition: background 0.3s ease 0s;
+  transition: background 0.3s ease 0s;
+  width: 26px;
+}
+[data-carousel-3d] [data-prev-button]:before {
+    height: 25px;
+    width: 16px;
+    left: 0;
+    top: 0;
+    position: absolute;
+    color: #2d3e50;
+    content: "";
+    font-family: "Material-Design-Iconic-Font";
+    font-size: 50px !important;
+    transition: all 0.3s ease 0s
+}
+[data-carousel-3d] [data-prev-button]:hover:before, [data-carousel-3d] [data-next-button]:hover:before {
+    color: #7a9757
+}
+/* line 10, ../../styles/common/jquery.carousel-3d.scss */
+[data-carousel-3d] [data-next-button] {
+  cursor: pointer;
+  height: 25px;
+  margin-top: -13px;
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  -webkit-transition: background 0.3s ease 0s;
+  -ms-transition: background 0.3s ease 0s;
+  -o-transition: background 0.3s ease 0s;
+  transition: background 0.3s ease 0s;
+  width: 22px;
+}
+[data-carousel-3d] [data-next-button]:before {
+    height: 25px;
+    width: 16px;
+    content: "";
+    right: 0;
+    top: 0;
+    position: absolute;    
+    color: #2d3e50;
+    content: "";
+    font-family: "Material-Design-Iconic-Font";
+    font-size: 50px !important;
+}
+.screenshots-blue [data-carousel-3d] [data-prev-button]:hover:before, .screenshots-blue [data-carousel-3d] [data-next-button]:hover:before {
+    color: #05C2F9
+}
+.screenshots-yellow [data-carousel-3d] [data-prev-button]:hover:before, .screenshots-yellow [data-carousel-3d] [data-next-button]:hover:before {
+    color: #FDC007
+}
+/* line 22, ../../styles/common/jquery.carousel-3d.scss */
+[data-carousel-3d] {
+  position: relative;
+}
+/* line 26, ../../styles/common/jquery.carousel-3d.scss */
+[data-carousel-3d] > [data-children-wrapper] {
+  perspective: 3000px;
+  -ms-perspective: 3000px;
+  -moz-perspective: 3000px;
+  -webkit-perspective: 3000px;
+}
+/* line 32, ../../styles/common/jquery.carousel-3d.scss */
+[data-carousel-3d] > [data-children-wrapper] > [data-child] {
+  transition: 1s;
+  -ms-transition: 1s;
+  -moz-transition: 1s;
+  -webkit-transition: 1s;
+}
+/* line 43, ../../styles/common/jquery.carousel-3d.scss */
+[data-carousel-3d] {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
+/* line 50, ../../styles/common/jquery.carousel-3d.scss */
+[data-carousel-3d] > [data-children-wrapper] > [data-child] {
+  position: absolute;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
+/* line 59, ../../styles/common/jquery.carousel-3d.scss */
+[data-carousel-3d] > [data-children-wrapper] > [data-child] > [data-child-frame] > [data-content-wrapper] {
+  box-sizing: border-box;
+  transform-origin: 0px 0px;
+  -ms-transform-origin: 0px 0px;
+  -moz-transform-origin: 0px 0px;
+  -webkit-transform-origin: 0px 0px;
+}
+/* line 75, ../../styles/common/jquery.carousel-3d.scss */
+[data-carousel-3d]:before {
+  padding-top: 40%;
+  display: block;
+  content: '';
+}
+/* line 82, ../../styles/common/jquery.carousel-3d.scss */
+[data-carousel-3d] [data-children-wrapper] {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 26%;
+  left: 26%;
+}
+/* line 9, ../../styles/theme/jquery.carousel-3d.default.scss */
+[data-carousel-3d] {}
+/* line 19, ../../styles/theme/jquery.carousel-3d.default.scss */
+[data-carousel-3d] {}
+/* line 53, ../../styles/theme/jquery.carousel-3d.default.scss */
+[data-child-frame] {}
+/*# sourceMappingURL=jquery.carousel-3d.default.css.map */

@@ -1,0 +1,285 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout_wide.html'}}
+
+
+<div class="row">
+    <div class="col-md-8">
+        <h3>
+            {{if page:}}
+                {{=T( 'Edit page' )}}
+                {{=A( ' (', T( 'Preview' ), ')',
+                      _href = URL( c=page['url_c'], f=page['url_f'], args=[ page.id ] ) ) }}
+          {{else:}}
+                {{=T( 'New page' )}}
+          {{pass}}
+        </h3>
+    </div>
+    <div class="col-md-4 text-right">
+        {{if page:}}
+            {{=A( T( 'Open in composer' ),
+                  _href=URL( c='page', f='composer', args=[ page.id ] ),
+                  _class='btn btn-info' ) }}
+            {{=A( T( 'Page list' ),
+                  _href=URL( c='page', f='index' ),
+                  _class='btn btn-info' ) }}
+        {{pass}}
+    </div>
+</div>
+
+{{=form.custom.begin}}
+
+{{if page:}}
+  {{for f in db.page.fields:}}
+    {{fld = 'org__' + f}}
+    <input name="{{=fld}}" type="hidden" value="{{=page[f]}}">
+    {{pass}}
+  {{pass}}
+
+<div class="row">
+    <div class="col-md-2">
+        <label for="id">{{=T( 'Page #' )}}:</label>
+    </div>
+    <div class="col-md-4">
+        {{=form.custom.widget.id}}
+    </div>
+    <div class="col-md-2">
+        <label for="tagname">{{=T( 'Tagname' )}}:</label>
+    </div>
+    <div class="col-md-4">
+        {{=form.custom.widget.tagname}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+      <label for="parent_page_id">{{=T( 'Parent page' )}}:</label>
+      {{if page and page.parent_page_id:}}
+        <span>
+          {{=A( '(' + str( page.parent_page_id ) + ')',
+                _href = URL( c = 'page', f = 'edit', args = [ page.parent_page_id ] ) )}}
+        </span>
+        {{pass}}
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.parent_page_id}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="name">{{=T( 'Name' )}}:</label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.name}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="title">{{=T( 'Title' )}}:</label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.title}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="url_c">{{=T( 'Controller' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.url_c}}
+    </div>
+    <div class="col-md-2">
+        <label for="url_f">{{=T( 'Function' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.url_f}}
+    </div>
+    <div class="col-md-2">
+        <label for="url_args">{{=T( 'Arguments' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.url_args}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="colspan">{{=T( 'Width (columns)' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.colspan}}
+    </div>
+    <div class="col-md-2">
+        <label for="rowspan">{{=T( 'Height (rows)' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.rowspan}}
+    </div>
+    <div class="col-md-2">
+        <label for="aside_position">{{=T( 'ASIDE' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.aside_position}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="aside_title">{{=T( 'ASIDE title' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.aside_title}}
+    </div>
+    <div class="col-md-2">
+        <label for="aside_title_en">{{=T( 'ASIDE title (en)' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.aside_title_en }}
+    </div>
+    <div class="col-md-2">
+        <label for="main_panel_cols">{{=T( 'Main panel cols.' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.main_panel_cols}}
+    </div>
+    <div class="col-md-2">
+        <label for="aside_panel_cols">{{=T( 'ASIDE panel cols.' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.aside_panel_cols}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="menu_order">{{=T( 'Menu order' )}}:</label>
+    </div>
+    <div class="col-md-4">
+        {{=form.custom.widget.menu_order}}
+    </div>
+    <div class="col-md-3">
+      {{=form.custom.widget.is_news}}
+      <label for="is_news">{{=T( 'News' )}}</label>
+    </div>
+    <div class="col-md-3">
+      {{=form.custom.widget.hide}}
+      <label for="hide">{{=T( 'Hide page' )}}</label>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="page_timestamp">{{=T( 'Page timestamp' )}}:</label>
+    </div>
+    <div class="col-md-4">
+        {{=form.custom.widget.page_timestamp}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center" style="margin: 2px 0;">
+        <button
+          name="action" title="{{=T( 'Save page' )}}" type="submit"
+          value="act_submit" class="btn btn-submit">
+          {{=T( 'Save page' )}}
+        </button>
+        <button
+          name="action" title="{{=T( 'New page' )}}" type="submit"
+          value="new_page" class="btn btn-primary">
+          {{=T( 'New page' )}}
+        </button>
+        <button
+          name="action" title="{{=T( 'Add new block' )}}" type="submit"
+          value="new_block" class="btn btn-primary">
+          {{=T( 'New block' )}}
+        </button>
+        <button name="action" title="{{=T( 'Add existing block' )}}" type="submit"
+                value="add_block" class="btn btn-info">
+          {{=T( 'Add block' )}}
+        </button>
+        {{if page: }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center" style="margin: 2px 0; padding: 2px;">
+        <span style="border: 1px solid #29abe0; padding: 6px 6px 10px; margin: 2px;">
+            <button
+              name="action" title="{{=T( 'Clone page' )}}" type="submit"
+              value="clone_page" class="btn btn-info btn-xs">
+              {{=T( 'Clone page' )}}
+            </button>
+            <span>
+              {{=T( 'With blocks' )}}
+            </span>
+            <input name="chk_inc_blocks" type="checkbox" checked="checked"/>
+        </span>
+        <span style="border: 1px solid #ff0000; padding: 6px 6px 10px; margin: 2px;">
+            <span>
+              {{=T( 'Page' )}}
+            </span>
+            <input id="delete_record" name="delete_this_record" type="checkbox"/>
+            <span>
+              {{=T( 'Blocks' )}}
+            </span>
+            <input name="chk_del_blocks" type="checkbox"/>
+            {{if is_dev: }}
+              <span>
+                {{=T( 'Purge' )}}
+              </span>
+              <input name="chk_purge" type="checkbox"/>
+              {{pass}}
+            <button
+              name="action" title="Delete page" type="submit"
+              value="act_delete_record" class="btn btn-danger btn-xs">
+              {{=T( 'Delete page' )}}
+            </button>
+        </span>
+        {{pass}}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>{{=T( 'Blocks' )}}</h4>
+        {{if block_list:}}
+            <table class="table_bt_border w100pct">
+                <tr>
+                    <th class="table_bt_border">
+                        {{=T( 'Name' )}}
+                    </th>
+                    <th class="table_bt_border">
+                        {{=T( 'Order' )}}
+                    </th>
+                    <th class="table_bt_border">
+                        {{=T( 'Position' )}}
+                    </th>
+                    <th class="table_bt_border">
+                        {{=T( 'Columns' )}}
+                    </th>
+                    <th class="table_bt_border">
+                        {{=T( 'Rows' )}}
+                    </th>
+                </tr>
+                {{for b in block_list:}}
+                    <tr>
+                        <td class="table_bt_border">
+                            {{=A( b.name,
+                                  _href=URL( c='block', f='edit', args=[b.id] ) )}}
+                        </td>
+                        <td class="table_bt_border">
+                            {{=b.blk_order}}
+                        </td>
+                        <td class="table_bt_border">
+                            {{=b.container }}
+                        </td>
+                        <td class="table_bt_border">
+                            {{=b.colspan }}
+                        </td>
+                        <td class="table_bt_border">
+                            {{=b.rowspan }}
+                        </td>
+                    </tr>
+                {{pass}}
+            </table>
+        {{pass}}
+  </div>
+</div>
+
+{{=form.custom.end}}
+
+{{block right_sidebar}}
+{{end}}
+

@@ -1,0 +1,58 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h2>{{=T( 'Invite users' ) }}</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            {{=T( 'This message will be sent to the recipients' ) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 column_name">
+            {{=T( 'Subject' ) }}:
+        </div>
+        <div class="col-md-10">
+            {{=ui_title}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 column_name">
+            {{=T( 'Body' ) }}:
+        </div>
+        <div class="col-md-10">
+            {{=ui_text}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    {{=T( 'Add mail address' ) }}
+                </div>
+                <div class="col-md-12">
+                    <form id="new_mail_address"
+                          method="post"
+                          enctype="multipart/form-data">
+                        <input id="mail_address"
+                               name="mail_address"
+                               type="text">
+                        <button class="btn btn-submit"
+                                value="act_submit"
+                                type="submit"
+                                name="action">
+                            <i class="glyphicon glyphicon-plus glyphicon-white"
+                               style="padding-right: 0.5em;"></i>
+                            Adicionar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{block right_sidebar}}
+{{end}}
+

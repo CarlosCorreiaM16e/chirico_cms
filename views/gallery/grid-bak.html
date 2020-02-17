@@ -1,0 +1,159 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+{{=form.custom.begin}}
+
+<div class="col-md-12">
+    <h1>{{=T( 'Image gallery' ) }}</h1>
+    <div class="row">
+        <div class="col-md-6">
+            {{=T( 'Image count' ) }}: {{=rec_count }}
+        </div>
+    </div>
+    <div class="row" style="padding: 10px; margin: 10px;">
+        <div class="col-md-12" style="padding: 10px; background-color: #e1e3ff; border: 1px solid #ccb;">
+            <div class="row">
+                <div class="col-md-2">
+                    <label>
+                        {{=T( 'Image to be added' ) }}:
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <input id="qv_upload_file" name="qv_upload_file" type="file">
+                    <img src="#"
+                         id="attached_thumb"
+                         alt="{{=T( 'No file selected' ) }}"
+                         style="width:100%; max-width: 160px;" />
+
+                </div>
+                <div class="col-md-2">
+                    <label>
+                        {{=T( 'Filename' ) }}:
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <input id="qv_filename" name="qv_filename" type="text">
+                </div>
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-success"
+                            name="action"
+                            type="submit"
+                            value="act_upload_file">
+                        {{=T( 'Add image' ) }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{for row in range( rows ): }}
+        <div class="row">
+            {{for col in range( cols ): }}
+                {{idx = cols * row + col }}
+                {{if idx < len( records ): }}
+                    <div class="{{=col_class }} text-center">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <figure>
+                                    {{if next_c: }}
+                                        <img src="{{=records[ idx ].url }}"
+                                             class="site_image_thumb">
+                                    {{else: }}
+                                        <a href="{{=r.url }}">
+                                            <img src="{{=records[ idx ].url }}"
+                                                 class="site_image_thumb">
+                                        </a>
+                                    {{pass}}
+                                    <figcaption>
+                                        {{=records[ idx ].filename }}
+                                        {{='(%(w)sx%(h)s)' % dict( w=records[ idx ].img_width, h=records[ idx ].img_height) }}
+                                    </figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                        {{if next_c: }}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span style="padding: 0 0.5em">
+                                        {{=T( 'Choose size' }}:
+                                    </span>
+                                    <span style="padding: 0 0.5em">
+                                        {{url=URL( c=next_c,
+                                                   f=next_f,
+                                                   args=next_args,
+                                                   vars={ 'action': 'act_new_image',
+                                                          'attach_id': records[ idx ].id,
+                                                          'target': target,
+                                                          'size': 'L' } ) }}
+                                        <a href="{{=url }}"><b>L</b></a>
+                                    </span>
+                                    {{if 'medium' in records[ idx ].resize_options: }}
+                                        <span style="padding: 0 0.5em">
+                                            {{url=URL( c=next_c,
+                                                       f=next_f,
+                                                       args=next_args,
+                                                       vars={ 'action': 'act_new_image',
+                                                              'attach_id': records[ idx ].id,
+                                                              'target': target,
+                                                              'size': 'M' } ) }}
+                                            <a href="{{=url }}"><b>M</b></a>
+                                        </span>
+                                    {{pass}}
+                                    {{if 'small' in records[ idx ].resize_options: }}
+                                        <span style="padding: 0 0.5em">
+                                            {{url=URL( c=next_c,
+                                                       f=next_f,
+                                                       args=next_args,
+                                                       vars={ 'action': 'act_new_image',
+                                                              'attach_id': records[ idx ].id,
+                                                              'target': target,
+                                                              'size': 'S' } ) }}
+                                            <a href="{{=url }}"><b>S</b></a>
+                                        </span>
+                                    {{pass}}
+                                </div>
+                            </div>
+                        {{pass}}
+                        {{if records[ idx ].is_file_in_static: }}
+                            <div class="saved_to_disk">
+                                <span class="glyphicon glyphicon-floppy-saved"></span>
+                            </div>
+                        {{pass}}
+                    </div>
+                {{pass}}
+            {{pass}}
+        </div>
+    {{pass}}
+    <div class="row">
+        <div class="col-md-6">
+            {{=nav_prev }}
+        </div>
+        <div class="col-md-6 text-right">
+            {{=nav_next }}
+        </div>
+    </div>
+</div>
+
+{{=form.custom.end}}
+
+{{block right_sidebar}}
+{{end}}
+
+<script>
+jQuery( function () {
+    jQuery( "#qv_upload_file" ).change( function () {
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = imageIsLoaded;
+            reader.readAsDataURL(this.files[0]);
+            var filename = this.value.split(/(\\|\/)/g).pop().replace(/\W/g, "-");
+            var ext = filename.split( '.' ).pop()
+            var new_filename = filename.substring( 0, filename.length - ext.length ) + ext.toLowerCase()
+			jQuery( '#qv_filename' ).val( new_filename );
+        }
+    });
+});
+
+function imageIsLoaded(e) {
+    $('#attached_thumb').attr('src', e.target.result);
+};
+</script>

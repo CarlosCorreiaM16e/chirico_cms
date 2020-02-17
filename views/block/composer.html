@@ -1,0 +1,298 @@
+{{response.files.append( URL( 'static', 'css/jquery-te-1.4.0.css' ) ) }}
+{{response.files.append( URL( 'static', 'js/jquery-te-1.4.0.js' ) ) }}
+
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout_wide.html'}}
+
+<div class="row">
+    <div class="col-md-8">
+        <h3>
+            {{if block:}}
+                {{=T( 'Edit block' )}}
+            {{else:}}
+                {{=T( 'New block' )}}
+            {{pass}}
+            {{=form.custom.widget.id }}
+        </h3>
+    </div>
+    <div class="col-md-4 text-right">
+        {{if block:}}
+            {{=A( T( 'Open in editor' ),
+                  _href = URL( c='block', f='edit', args=[ block.id ] ),
+                  _class='btn btn-success' ) }}
+        {{pass}}
+    </div>
+</div>
+
+{{=form.custom.begin}}
+
+{{if block:}}
+    {{for f in db.block.fields:}}
+        {{fld = 'org__' + f}}
+        <input name="{{=fld}}" type="hidden" value="{{=block[f]}}">
+    {{pass}}
+{{pass}}
+
+<div class="row">
+    <div class="col-md-2">
+        <label>{{=T( 'Page' )}}:</label>
+        {{if block:}}
+            {{=A( SPAN( _class="glyphicon glyphicon-circle-arrow-right" ),
+                  _href=URL( c='page', f='composer', args=[ block.page_id ] ),
+                  _class='form_field',
+                  _title=T( 'Go to page composer' ) ) }}
+        {{pass}}
+    </div>
+    <div class="col-md-4">
+        {{=form.custom.widget.page_id }}
+    </div>
+    <div class="col-md-2 text-right">
+        <label for="body_markup">
+            {{=T( 'Markup' ) }}:
+        </label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.body_markup}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="blk_order">{{=T( 'Order in page' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.blk_order}}
+    </div>
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-2 text-right">
+        <label for="container">{{=T( 'Container' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.container}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="name">{{=T( 'Name' )}}:</label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.name}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="body">{{=T( 'Body (pt)' )}}:</label>
+                <span class="red">*</span>
+            </div>
+            <div class="col-md-8 text-right">
+                {{if block: }}
+                    <a href="{{=URL( c='gallery', f='grid',
+                                     args=[ 'body' ],
+                                     vars={ 'next_c': 'block',
+                                            'next_f': 'composer',
+                                            'next_args': [ block.id ] } ) }}"
+                         role="button" class="btn btn-success btn-xs" style="margin-right: 5px;">{{=T( 'Add image' ) }}</a>
+                    <button
+                        name="action"
+                        title="{{=T( 'Add link to page' )}}"
+                        type="submit"
+                        id="act_add_link"
+                        value="act_add_link"
+                        class="btn btn-xs btn-success">
+                        {{=T( 'Add link' )}}
+                    </button>
+                    <button
+                        name="action"
+                        title="{{=T( 'Embed code' )}}"
+                        type="submit"
+                        id="act_add_embed"
+                        value="act_add_embed"
+                        class="btn btn-xs btn-success">
+                        {{=T( 'Embed code' )}}
+                    </button>
+                {{pass}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{=form.custom.widget.body}}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="body_en">{{=T( 'Body (en)' )}}:</label>
+                <span class="red">*</span>
+            </div>
+            <div class="col-md-8 text-right">
+                {{if block: }}
+                    <a href="{{=URL( c='gallery', f='grid',
+                                     args=[ 'body_en' ],
+                                     vars={ 'next_c': 'block',
+                                            'next_f': 'composer',
+                                            'next_args': [ block.id ] } ) }}"
+                         role="button" class="btn btn-success btn-xs" style="margin-right: 5px;">{{=T( 'Add image' ) }}</a>
+                    <button
+                        name="action"
+                        title="{{=T( 'Add link to page' )}}"
+                        type="submit"
+                        id="act_add_link_en"
+                        value="act_add_link_en"
+                        class="btn btn-xs btn-success">
+                        {{=T( 'Add link' )}}
+                    </button>
+                    <button
+                        name="action"
+                        title="{{=T( 'Embed code' )}}"
+                        type="submit"
+                        id="act_add_embed_en"
+                        value="act_add_embed_en"
+                        class="btn btn-xs btn-success">
+                        {{=T( 'Embed code' )}}
+                    </button>
+                {{pass}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{=form.custom.widget.body_en}}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        {{include 'markmin_syntax.html' }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 text-center" style="margin: 2px 0;">
+        <button
+          name="action" title="{{=T( 'Save block' )}}" type="submit"
+          value="act_submit" class="btn btn-submit">
+          {{=T( 'Save block' )}}
+        </button>
+        <button
+          name="action" title="{{=T( 'Add new block' )}}" type="submit"
+          value="new_block" class="btn btn-success">
+          {{=T( 'New block' )}}
+        </button>
+        <button name="action" title="{{=T( 'Add existing block' )}}" type="submit"
+                value="add_block" class="btn btn-info">
+          {{=T( 'Add block' )}}
+        </button>
+    </div>
+</div>
+
+{{=form.custom.end}}
+
+{{block right_sidebar}}
+{{end}}
+
+{{if block:}}
+    <div id="add_link_form_dialog" title="{{=T( 'Add link' ) }}">
+        <h3>{{=T( 'Add link to block' ) }}</h3>
+        <form action name="add_link_form" id="add_link_form" enctype="multipart/form-data">
+            <label for="add_link_id">{{=T( 'Page' ) }}</label>
+            <select name="add_link_id" id="add_link_id" class="generic-widget">
+                <option value="0"></option>
+                {{for p in page_list: }}
+                    <option value="{{=p.id }}">{{=p.name }}</option>
+                {{pass}}
+            </select>
+        </form>
+    </div>
+
+    <div id="add_embed_form_dialog" title="{{=T( 'Add embed text' ) }}">
+        <h3>{{=T( 'Add embed to block (youtube, vimeo, etc.)' ) }}</h3>
+        <form action name="add_embed_form" id="add_embed_form" enctype="multipart/form-data">
+            <label for="add_embed_text">{{=T( 'Text to embed' ) }}:</label>
+            <textarea name="add_embed_text"
+                      id="add_embed_text"
+                      class="generic-widget"
+                      rows="8"></textarea>
+            <label for="add_embed_text_caption">{{=T( 'Caption' ) }}:</label>
+            <input name="add_embed_text_caption"
+                   id="add_embed_text_caption"
+                   class="generic-widget" />
+        </form>
+    </div>
+
+
+    <script type="text/javascript">
+        jQuery(function() {
+            jQuery( '#act_add_embed' ).click( function() {
+                jQuery( '#add_embed_form_dialog' )
+                    .data( 'url', '{{=URL( c="block", f="ajax_add_embed", args=[ block.id, 'body' ] ) }}' )
+                    .dialog( 'open' );
+                return false;
+            } );
+            jQuery( '#act_add_embed_en' ).click( function() {
+                jQuery( '#add_embed_form_dialog' )
+                    .data( 'url', '{{=URL( c="block", f="ajax_add_embed", args=[ block.id, 'body_en' ] ) }}' )
+                    .dialog( 'open' );
+                return false;
+            } );
+            jQuery( '#add_embed_form_dialog' ).dialog( {
+                autoOpen: false,
+                modal: true,
+                width: 640,
+                buttons: {
+                    "{{=T( 'Submit' ) }}": function() {
+                        jQuery( this ).dialog( 'close' );
+                        ajax( jQuery( this ).data( 'url' ), [ 'add_embed_text', 'add_embed_text_caption' ], ':eval' );
+                    },
+                    "{{=T( 'Cancel' ) }}": function() {
+                        jQuery( this ).dialog( 'close' );
+                    }
+                }
+            } );
+
+
+            jQuery( '#act_add_link' ).click( function() {
+                jQuery( '#add_link_form_dialog' ).dialog( 'open' );
+                return false;
+            } );
+
+            jQuery( '#add_link_form_dialog' ).dialog( {
+                autoOpen: false,
+    /*            height: 640,
+                width: 350, */
+                modal: true,
+                buttons: {
+                    "{{=T( 'Submit' ) }}": function() {
+                        jQuery( this ).dialog( 'close' );
+    /*                    jQuery( '#add_link_form' ).submit(); */
+                        ajax(
+                            '{{=URL( c="block", f="ajax_add_link", args=[ block.id ] ) }}',
+                            [ 'add_link_id' ], ':eval' );
+
+                    },
+                    "{{=T( 'Cancel' ) }}": function() {
+                        jQuery( this ).dialog( 'close' );
+                    }
+                }
+            } );
+
+        });
+    </script>
+{{pass}}
+{{if block and block.body_markup == 'H': }}
+    <script>
+        jQuery(function(){
+            jQuery( '#block_body' ).css('min-height','400px').jqte();
+            jQuery( '#block_body_en' ).css('min-height','400px').jqte();
+        } );
+    </script>
+{{pass}}
+<style>
+    .jqte_editor {
+        height: 480px;
+        max-height: 900px;
+    }
+</style>
+

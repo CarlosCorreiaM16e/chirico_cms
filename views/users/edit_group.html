@@ -1,0 +1,65 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h3>
+    {{=T( 'Edit group' )}}
+</h3>
+
+{{=form.custom.begin}}
+
+{{for f in db.auth_group.fields:}}
+    {{fld = 'org__' + f}}
+    <input name="{{=fld}}" type="hidden" value="{{=auth_group[f]}}">
+{{pass}}
+
+<table class="w100pct">
+    <tr>
+        <th class="w15pct"><label for="id">{{=T( 'Group #' )}}:</label></th>
+        <td class="w35pct">
+            {{=form.custom.widget.id}}
+        </td>
+        <th class="w15pct"><label for="role">{{=T( 'Role' )}}:</label></th>
+        <td class="w35pct">
+            {{=form.custom.widget.role}}
+        </td>
+    </tr>
+    <tr>
+        <th><label for="description">{{=T( 'Description' )}}:</label></th>
+        <td>
+            {{=form.custom.widget.description}}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4" class="center_align">
+            <table class="w100pct table_bt_border">
+                <tr>
+                    <td>
+                        <button
+                            name="action" title="{{=T( 'Save group' )}}" type="submit"
+                            value="act_submit">
+                            {{=T( 'Save group' )}}
+                        </button>
+                    </td>
+                    <td>
+                        <span>
+                            {{=T( 'delete' )}}
+                        </span>
+                        <input name="chk_del_group" type="checkbox"/>
+                        <button
+                            name="action" title="Delete group" type="submit"
+                            value="act_delete_group"
+                            class="del_bt"
+                            onclick="confirm( '{{=delete_group_msg }}' )">
+                            {{=T( 'Delete group' )}}
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+
+{{=form.custom.end}}
+
+

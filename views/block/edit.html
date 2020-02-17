@@ -1,0 +1,211 @@
+{{response.files.append( URL( 'static', 'css/jquery-te-1.4.0.css' ) ) }}
+{{response.files.append( URL( 'static', 'js/jquery-te-1.4.0.js' ) ) }}
+
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h3>
+    {{if block:}}
+        {{=T( 'Edit block' )}}
+    {{else:}}
+        {{=T( 'New block' )}}
+    {{pass}}
+</h3>
+
+{{=form.custom.begin}}
+
+{{if block:}}
+    {{for f in db.block.fields:}}
+        {{fld = 'org__' + f}}
+        <input name="{{=fld}}" type="hidden" value="{{=block[f]}}">
+    {{pass}}
+{{pass}}
+
+<div class="row">
+    <div class="col-md-2">
+        <label for="id">{{=T( 'Block #' )}}:</label>
+    </div>
+    <div class="col-md-1">
+        {{=form.custom.widget.id}}
+    </div>
+    <div class="col-md-2">
+        <label for="page_id">{{=T( 'Page' )}}:</label>
+        {{if block:}}
+            {{=A( SPAN( _class="glyphicon glyphicon-circle-arrow-right" ),
+                  _href=URL( c='page', f='edit', args=[ block.page_id ] ),
+                  _class='form_field',
+                  _title=T( 'Go to page composer' ) ) }}
+        {{pass}}
+    </div>
+    <div class="col-md-3">
+        {{=form.custom.widget.page_id}}
+    </div>
+    <div class="col-md-2">
+        <label for="container">{{=T( 'Container' )}}:</label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.container}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="blk_order">{{=T( 'Order in page' )}}:</label>
+    </div>
+    <div class="col-md-1">
+        {{=form.custom.widget.blk_order}}
+    </div>
+    <div class="col-md-2">
+        <label for="colspan">{{=T( 'Width (columns)' )}}:</label>
+    </div>
+    <div class="col-md-1">
+        {{=form.custom.widget.colspan}}
+    </div>
+    <div class="col-md-2">
+        <label for="rowspan">{{=T( 'Height (rows)' )}}:</label>
+    </div>
+    <div class="col-md-1">
+        {{=form.custom.widget.rowspan}}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2">
+        <label for="name">{{=T( 'Name' )}}:</label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.name}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="html_element_id">{{=T( 'Html element ID' ) }}</label>
+    </div>
+    <div class="col-md-4">
+        {{=form.custom.widget.html_element_id}}
+    </div>
+    <div class="col-md-2">
+        <label for="is_allow_comments">{{=T( 'Comments' )}}</label>
+        {{=form.custom.widget.is_allow_comments }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="description">{{=T( 'Description' )}}:</label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.description}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="body_markup">{{=T( 'Body markup' )}}:</label>
+    </div>
+    <div class="col-md-4">
+        {{=form.custom.widget.body_markup}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="body">{{=T( 'Body' )}}:</label>
+
+        <br>
+        {{if block:}}
+            <a href="{{=URL( c='gallery', f='choose_site_image',
+                             args=[ 'body' ],
+                             vars={ 'next_c': 'block',
+                                    'next_f': 'edit',
+                                    'next_args': [ block.id ] } ) }}"
+                 role="button" class="btn">{{=T( 'Add image' ) }}</a>
+        {{pass}}
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.body }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="body">{{=T( 'Body (en)' )}}:</label>
+
+        <br>
+        {{if block:}}
+            <a href="{{=URL( c='gallery', f='choose_site_image',
+                             args=[ 'body_en' ],
+                             vars={ 'next_c': 'block',
+                                    'next_f': 'edit',
+                                    'next_args': [ block.id ] } ) }}"
+                 role="button" class="btn">{{=T( 'Add image' ) }}</a>
+        {{pass}}
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.body_en }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <label for="css_class">{{=T( 'CSS class' )}}</label>
+    </div>
+    <div class="col-md-4">
+        {{=form.custom.widget.css_class}}
+    </div>
+    <div class="col-md-2">
+        <label for="css_style">{{=T( 'CSS style' )}}</label>
+    </div>
+    <div class="col-md-4">
+        {{=form.custom.widget.css_style}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <button
+            name="action" title="{{=T( 'Save block' )}}" type="submit"
+            value="submit_block">
+            {{=T( 'Save block' )}}
+        </button>
+        <button
+            name="action" title="{{=T( 'New block' )}}" type="submit"
+            value="new_block">
+            {{=T( 'New block' )}}
+        </button>
+        <button
+            name="action" title="{{=T( 'New page' )}}" type="submit"
+            value="new_page">
+            {{=T( 'New page' )}}
+        </button>
+        <span class="delete_item">
+            <label>{{=T( 'Delete' ) }}</label>
+            <input name="chk_del_block" type="checkbox"/>
+            <button
+                name="action" title="Delete block" type="submit"
+                value="delete_block">
+                {{=T( 'Delete' )}}
+            </button>
+        </span>
+        <button
+            name="action" title="{{=T( 'Create page from block' )}}" type="submit"
+            value="create_page_from_block">
+            {{=T( 'Create page from block' )}}
+        </button>
+        {{if block:}}
+            <td>
+                <button
+                    name="action" title="{{=T( 'Clone block' )}}" type="submit"
+                    value="clone_block">
+                    {{=T( 'Clone block' )}}
+                </button>
+            </td>
+        {{pass}}
+    </div>
+</div>
+
+
+{{=form.custom.end}}
+
+
+{{if block and block.body_markup == 'H': }}
+    <script>
+        jQuery(function(){
+            jQuery( '#block_body' ).jqte();
+        } );
+    </script>
+{{pass}}
+

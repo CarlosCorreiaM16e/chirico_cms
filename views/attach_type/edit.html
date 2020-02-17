@@ -1,0 +1,66 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h3>
+    {{if attach_type:}}
+        {{=T( 'Edit page block' )}}
+    {{else:}}
+        {{=T( 'New page block' )}}
+    {{pass}}
+</h3>
+
+{{=form.custom.begin}}
+
+{{if attach_type:}}
+    {{for f in db.attach_type.fields:}}
+        {{fld = 'org__' + f}}
+        <input name="{{=fld}}" type="hidden" value="{{=attach_type[f]}}">
+    {{pass}}
+{{pass}}
+
+<div class="row">
+    <div class="col-md-2">
+        <label for="id">{{=T( 'Attach type #' )}}:</label>
+    </div>
+    <div class="col-md-1">
+        {{=form.custom.widget.id}}
+    </div>
+    <div class="col-md-1">
+        <label for="name">{{=T( 'Name' )}}:</label>
+    </div>
+    <div class="col-md-3">
+        {{=form.custom.widget.name}}
+    </div>
+    <div class="col-md-1">
+      <label for="meta_name">{{=T( 'Metaname' )}}:</label>
+    </div>
+    <div class="col-md-3">
+        {{=form.custom.widget.meta_name }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 text-center" style="margin: 2px 0;">
+        <button
+          name="action" title="{{=T( 'Submit data' )}}" type="submit"
+          value="act_submit" class="btn btn-submit">
+          {{=T( 'Submit' )}}
+        </button>
+        <span style="border: 1px solid #ff0000; padding: 6px 6px 10px; margin: 2px;">
+            <input id="delete_record" name="delete_this_record" type="checkbox"/>
+            <button
+              name="action" title="Delete attach type" type="submit"
+              value="act_delete_record" class="btn btn-danger btn-xs">
+              {{=T( 'Delete' )}}
+            </button>
+        </span>
+        {{pass}}
+    </div>
+</div>
+
+
+{{=form.custom.end}}
+
+{{block right_sidebar}}
+{{end}}
+

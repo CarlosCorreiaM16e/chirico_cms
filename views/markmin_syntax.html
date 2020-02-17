@@ -1,0 +1,99 @@
+<div id="markmin_help">
+    <span class="red">*</span> Suporta sintaxe WIKI
+    <span class="glyphicon glyphicon-plus"
+          id="toggle_markmin_help_plus"
+          style="margin-left: 5px; color: #29abe0;"
+          title="{{=T( 'Help' ) }}">
+    </span>
+    <i class="glyphicon glyphicon-minus"
+       id="toggle_markmin_help_minus"
+       style="margin-left: 5px; color: #29abe0;"
+       title="{{=T( 'Hide' ) }}">
+    </i>
+    <a href="http://web2py.com/examples/static/markmin.html"
+       target="blank">
+        <sup>(Especificação)</sup>
+    </a>
+    <div id="toggle_markmin_help_div" class="forum_post">
+        <table style="width:100%; ">
+            <tr>
+                <th class="w50pct">{{=T( 'Code' ) }}</th>
+                <th class="w50pct">{{=T( 'Result' ) }}</th>
+            </tr>
+            <tr>
+                <td class="xsmall" style="font-family: monospace; white-space: pre-wrap;"># {{=T( 'Header 1' ) }}</td>
+                <td class="xsmall"><h1>{{=T( 'Header 1' ) }}</h1></td>
+            </tr>
+            <tr>
+                <td class="xsmall" style="font-family: monospace; white-space: pre-wrap;">## {{=T( 'Header 2' ) }}</td>
+                <td class="xsmall"><h2>{{=T( 'Header 2' ) }}</h2></td>
+            </tr>
+            <tr>
+                <td class="xsmall" style="font-family: monospace; white-space: pre-wrap;">### {{=T( 'Header 3' ) }}</td>
+                <td class="xsmall"><h3>{{=T( 'Header 3' ) }}</h3></td>
+            </tr>
+            <tr>
+                <td class="xsmall" style="font-family: monospace; white-space: pre-wrap;">{{=T( 'plain text' ) }}</td>
+                <td class="xsmall">{{=T( 'plain text' ) }}</td>
+            </tr>
+            <tr>
+                <td class="xsmall" style="font-family: monospace; white-space: pre-wrap;">**{{=T( 'bold' ) }}**</td>
+                <td class="xsmall"><strong>{{=T( 'bold' ) }}</strong></td>
+            </tr>
+            <tr>
+                <td class="xsmall" style="font-family: monospace; white-space: pre-wrap;">&#x27;&#x27;{{=T( 'italic' ) }}&#x27;&#x27;</td>
+                <td class="xsmall"><em>{{=T( 'italic' ) }}</em></td>
+            </tr>
+            <tr>
+                <td class="xsmall" style="font-family: monospace; white-space: pre-wrap;">``{{=T( 'monospaced' ) }}``</td>
+                <td class="xsmall"><code>{{=T( 'monospaced' ) }}</code></td>
+            </tr>
+            <tr>
+                <td class="xsmall" colspan="2">{{=H4( T( 'Chirico extensions (note "[+[...]+]" syntax)' ) ) }}</td>
+            </tr>
+            <tr>
+                <td class="xsmall" style="font-family: monospace; white-space: pre-wrap;">[+[link{ 'url': '/www' }: link text]+]</td>
+                <td class="xsmall"><code><a href="/www">link</a></code></td>
+            </tr>
+            <tr>
+                <td class="xsmall" style="font-family: monospace; white-space: pre-wrap;">[+[author]+]</td>
+                <td class="xsmall"><span class="author_sig">John Doe</span></td>
+            </tr>
+            <tr>
+                <td class="xsmall" style="font-family: monospace; white-space: pre-wrap;">[+[timestamp]+]</td>
+                <td class="xsmall"><span class="news_timestamp">2020-01-01 12:45</span></td>
+            </tr>
+<!--            <tr>-->
+<!--                <td class="xsmall" style="font-family: monospace; white-space: pre-wrap;">-->
+<!--[+[image 32:al-Khwarizm.jpeg+++{ 'link': True, 'width': '200px' }]+]-->
+<!--                </td>-->
+<!--                <td class="xsmall">-->
+<!--                    {{img = 'images/site/al-Khwarizm.jpeg' }}-->
+<!--                    {{url = URL( r=request, c='static', f=img ) }}-->
+<!--                    <a href="{{=url }}"><img src="{{=url }}" width="200"></a>-->
+<!--                </td>-->
+<!--            </tr>-->
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+jQuery(function() {
+    jQuery('#toggle_markmin_help_div').hide();
+
+    jQuery('#toggle_markmin_help_plus').click( function( e ){
+        e.preventDefault();
+        jQuery('#toggle_markmin_help_plus').hide();
+        jQuery('#toggle_markmin_help_minus').show();
+        jQuery('#toggle_markmin_help_div').show();
+    });
+    jQuery('#toggle_markmin_help_minus').hide();
+    jQuery('#toggle_markmin_help_minus').click( function( e ){
+        e.preventDefault();
+        jQuery('#toggle_markmin_help_minus').hide();
+        jQuery('#toggle_markmin_help_plus').show();
+        jQuery('#toggle_markmin_help_div').hide();
+    });
+});
+</script>
+

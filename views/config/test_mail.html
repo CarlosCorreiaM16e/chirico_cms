@@ -1,0 +1,61 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+<h3>{{=T( 'Mail test' ) }}</h3>
+
+<p>
+    Teste configuração de acesso à conta da sua Empresa enviando um email para um endereço à sua escolha.
+</p>
+
+{{if mail_error_no: }}
+    <div class="row">
+        <div class="col-md-12 error">
+            <h4>{{=T( 'Error #' ) }} {{=mail_error_no }}</h4>
+            {{for l in mail_error_msg: }}
+                {{=l }}<br>
+            {{pass}}
+        </div>
+    </div>
+{{pass}}
+
+{{=form.custom.begin}}
+
+<div class="row">
+    <div class="col-md-2">
+        <label for="mail_to">
+            {{=T( 'Mail to' ) }}:
+            <span class="not_empty">*</span>
+        </label>
+    </div>
+    <div class="col-md-10">
+        {{=form.custom.widget.mail_to}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label for="mail_text">
+            {{=T( 'Mail text' ) }}:
+            <span class="not_empty">*</span>
+        </label>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        {{=form.custom.widget.mail_text}}
+    </div>
+</div>
+
+<div class="text-center">
+    <button
+        name="action" title="{{=T( 'Test mail' )}}" type="submit"
+        value="act_send_mail">
+        {{=T( 'Send mail' ) }}
+    </button>
+
+</div>
+{{=form.custom.end}}
+
+
+{{block right_sidebar}}
+{{end}}
+
