@@ -1,9 +1,6 @@
-# v. 1.0
+# v. 0.9
 
 ## BUGS
 
 
-## Entities
-
-- Add link to ents/update if role = editor
 
