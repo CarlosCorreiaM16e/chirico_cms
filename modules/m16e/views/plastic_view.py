@@ -543,12 +543,6 @@ class BaseListPlasticView( BaseView ):
         return self.content_div_id
 
     #----------------------------------------------------------------------
-    def get_table_view_dict( self ):
-        self.tdef = {}
-        # term.printDebug( 'self.tdef: %s' % repr( self.tdef ) )
-        return self.tdef
-
-    #----------------------------------------------------------------------
     def get_view_dict( self, reload=False ):
         #------------------------------------------------------------------
         def exclude_columns( tdef, column_list=[] ):
@@ -570,6 +564,7 @@ class BaseListPlasticView( BaseView ):
         # term.printDebug( 'self.tdef.col_order: %s' % repr( self.tdef ),
         #                  print_trace=True)
         # term.printDebug( 'self.hide_columns: %s' % repr( self.hide_columns ) )
+        # term.printDebug( 'self.tdef: %s' % repr( self.tdef ) )
         if not self.tdef or reload:
             tdef = copy.deepcopy( self.get_table_view_dict() )
             exclude_columns( tdef, self.hide_columns )
@@ -577,12 +572,6 @@ class BaseListPlasticView( BaseView ):
         # term.printDebug( 'self.tdef: %s' % repr( self.tdef ) )
         # term.printDebug( 'self.tdef.col_order: %s' % repr( self.tdef ) )
         return self.tdef
-
-
-    #----------------------------------------------------------------------
-    def get_table_qdata_dict( self, extra_buttons={} ):
-        self.qdata = Storage()
-        return self.qdata
 
 
     #----------------------------------------------------------------------

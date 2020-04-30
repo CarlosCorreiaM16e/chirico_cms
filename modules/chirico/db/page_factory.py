@@ -12,8 +12,7 @@ from m16e import term, user_factory
 from m16e.kommon import DT
 
 
-NON_PAGE_LIST = [ 'about',
-                  'forum',
+NON_PAGE_LIST = [ 'forum',
                   'support',
                   'user' ]
 
@@ -40,10 +39,9 @@ def get_page( page_id=None, url=None, db=None ):
             q_sql &= (p_model.db_table.url_f == parts[ 1 ])
         if plen > 2:
             q_sql &= (p_model.db_table.url_args == ','.join( parts[ 2 : ] ))
-        if plen > 0 and parts[ 0 ] in ('arquivo', 'arquive'):
+        if plen > 0 and parts[ 0 ] == 'page' and parts[ 1 ] == 'view':
             page = p_model[ parts[ 2 ] ]
         else:
-            sql = str( q_sql )
             page = p_model.select( q_sql, print_query=True ).first()
         if not page:
             term.printLog( 'Page not found: %s' % str( url ) )
@@ -74,23 +72,6 @@ def clone( page_id, inc_blocks=True, db=None ):
             upd_block[ 'page_id' ] = new_page_id
             b_model.insert( upd_block )
 
-        # pb_model = db_tables.get_table_model( 'page_block', db=db )
-        # q_sql = (pb_model.db_table.page_id == page_id)
-        # pb_list = pb_model.select( q_sql, orderby='blk_order' )
-        # for pb in pb_list:
-        #     b = b_model[ pb.block_id ]
-        #     upd_block = { f: b[f]
-        #                   for f in b_model.db_table.fields
-        #                   if not f == 'id' }
-        #     new_block_id = b_model.insert( upd_block )
-        #     pb_model.insert( dict( page_id=new_page_id,
-        #                            block_id=new_block_id,
-        #                            container=pb.container,
-        #                            blk_order=pb.blk_order,
-        #                            colspan=pb.colspan,
-        #                            rowspan=pb.rowspan,
-        #                            css_class=pb.css_class,
-        #                            css_style=pb.css_style ) )
     return new_page_id
 
 
@@ -159,3 +140,19 @@ def update_page( page_id, upd, db=None ):
     p_model.update_by_id( page_id, upd )
     chirico_events.store_page_updated( page_id, db=db )
 
+
+def get_last_modification_time( page_id, db=None ):
+    if not db:
+        db = current.db
+    p_model = db_tables.get_table_model( 'page', db=db )
+    page = p_model[ page_id ]
+    last_modification_time = page.page_timestamp
+    b_model = db_tables.get_table_model( 'block', db=db )
+    q_sql = (db.block.page_id == page_id)
+    b_list = b_model.select( q_sql )
+    for b in b_list:
+        if last_modification_time < b.created_on:
+            last_modification_time = b.created_on
+        if last_modification_time < b.last_modified_on:
+            last_modification_time = b.last_modified_on
+    return last_modification_time

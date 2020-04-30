@@ -40,7 +40,7 @@ def get_auth_user_id( include_dummy=False, db=None ):
     try:
         auth = current.auth
     except:
-        return None
+        pass
     if auth and auth.user:
         return auth.user.id
     if include_dummy:
@@ -186,7 +186,8 @@ def get_user_list( group=None,
         sql = '''
             select *
             from auth_user
-            where registration_key = ''
+            where 
+                registration_key = ''
             order by
                 %s
         ''' % orderby

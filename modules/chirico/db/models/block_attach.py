@@ -1,25 +1,17 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-
-from gluon import current
-from gluon.dal import Field
-from gluon.validators import IS_NULL_OR, IS_IN_DB
+from gluon import current, Field, IS_NULL_OR, IS_IN_DB
 from m16e.db.database import DbBaseTable
 
 
-DT=datetime.datetime
-DATE=datetime.date
-
-#----------------------------------------------------------------------
 class BlockAttachModel( DbBaseTable ):
     table_name = 'block_attach'
 
-    #----------------------------------------------------------------------
+
     def __init__( self, db ):
         super( BlockAttachModel, self ).__init__( db )
 
-    #----------------------------------------------------------------------
+
     def get_fields( self ):
         from m16e.db import db_tables
         db_tables.get_table_model( 'attach', db=self.db )
@@ -29,7 +21,7 @@ class BlockAttachModel( DbBaseTable ):
         ]
         return self.fields
 
-    #----------------------------------------------------------------------
+
     def get_validators( self ):
         T = current.T
         from m16e.db import db_tables
@@ -39,5 +31,4 @@ class BlockAttachModel( DbBaseTable ):
                             'block_id': IS_NULL_OR( IS_IN_DB( self.db, 'block.id', '%(name)s' ) ),
         }
         return self.validators
-    #----------------------------------------------------------------------
 

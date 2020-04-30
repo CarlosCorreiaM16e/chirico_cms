@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from gluon import current
-from gluon.dal import Field
-from gluon.validators import IS_NULL_OR, IS_IN_DB, IS_IN_SET
+from gluon import current, Field
 from m16e import term
 from m16e.db.database import DbBaseTable
-from m16e.kommon import DATE, DT
 
 
-#----------------------------------------------------------------------
 class AppConfigModel( DbBaseTable ):
     table_name = 'app_config'
 

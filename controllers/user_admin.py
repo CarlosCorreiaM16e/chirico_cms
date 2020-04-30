@@ -7,8 +7,8 @@ import traceback
 
 from psycopg2._psycopg import IntegrityError
 
-from cms.views.user_admin.list import CmsUserListView
-from cms.views.user_admin.edit import CmsUserEditView
+from chirico.views.user_admin.edit import CmsUserEditView
+from chirico.views.user_admin.list import CmsUserListView
 from m16e.db import db_tables
 from gluon.storage import Storage
 from m16e import htmlcommon, user_factory
@@ -26,7 +26,6 @@ if 0:
     global cache; cache = gluon.cache.Cache()
     global crud; crud = gluon.tools.Crud()
     global db; db = gluon.sql.DAL()
-    global dbErp; dbErp = gluon.sql.DAL()
     global request; request = gluon.globals.Request()
     global response; response = gluon.globals.Response()
     global service; service = gluon.tools.Service()

@@ -10,6 +10,7 @@ from gluon import current, DIV, A, LI, xmlescape, TABLE, TR, TD
 from gluon.html import SPAN, SELECT, OPTION, SCRIPT, INPUT, BUTTON, TEXTAREA
 from gluon.storage import Storage
 from gluon.tools import prettydate
+from m16e.db import db_tables
 from m16e.decorators import deprecated
 from m16e.kommon import KDT_DEC, KDT_MONEY, KDT_PERCENT, KDT_BOOLEAN, KDT_DATE, \
     KDT_TIME, KDT_TIMESTAMP, KDT_CHAR, KDT_INT, KDT_SELECT_INT, KDT_SELECT_CHAR, TAB_ROLE, DT, KDT_TIMESTAMP_PRETTY
@@ -418,16 +419,17 @@ def parseTime( value, mask=None ):
 
 
 #------------------------------------------------------------------
-def parse_timestamp( value, mask=None ):
+def parse_timestamp( value, mask=None, allow_dates=True ):
     d = None
     if value:
-        masks = []
         if mask:
             masks = [ mask ]
         else:
             masks = [ '%Y-%m-%d %H:%M:%S.%f',
                       '%Y-%m-%d %H:%M:%S',
                       '%Y-%m-%d %H:%M' ]
+            if allow_dates:
+                masks.append( '%Y-%m-%d' )
         for mask in masks:
             try:
                 d = DT.strptime( value, mask )
@@ -1118,55 +1120,4 @@ class is_percentage( object ):
     def formatter( self, value ):
         return formatPercentage( value, self.decimals )
 
-#------------------------------------------------------------------
-# moved to m16e.i18n.pt_pt.nif_validator
-# class is_valid_nif( object ):
-#     def __init__( self,
-#                   allowBlank=False,
-#                   error_message=None ):
-#         self.allowBlank = allowBlank
-#         self.error_message = error_message
-#
-#     def __call__( self, value ):
-#         db = current.db
-#         T = current.T
-#         auth = current.auth
-#
-#         try:
-#             term.printLog( 'nif: %s' % ( repr( value ) ) )
-#             valid = False
-#             blank = not value
-#             if self.allowBlank and blank:
-#                 return ( value, None )
-#             if value:
-#                 valid = vmulti.controlNIF( value )
-#             term.printLog( 'valid: %s' % ( repr( valid ) ) )
-#             if valid:
-#                 q_sql = (db.auth_user.fiscal_id == value)
-#                 if auth.user:
-#                     q_sql &= (db.auth_user.id != auth.user.id)
-#                 count = db( q_sql ).count()
-#                 term.printDebug( 'sql: %s' % db._lastsql )
-#                 term.printDebug( 'count: %s' % repr( count ) )
-#                 if db( q_sql ).count() > 0:
-#                     term.printDebug( 'sql: %s' % db._lastsql )
-#                     self.error_message = T( 'Fiscal ID already in database' )
-#                     valid = False
-#                     term.printDebug( 'error: %s' % repr( self.error_message ) )
-#
-#             if not valid and not self.error_message:
-#                 self.error_message = T( 'must be a valid NIF format (ex.: 123456789)' )
-#
-#             term.printDebug( 'error: %s' % repr( self.error_message ) )
-#             return ( value, self.error_message )
-#         except Exception, err:
-#             t, v, tb = sys.exc_info()
-#             traceback.print_exception( t, v, tb )
-#             term.printLog( 'error: %s' % ( str( err ) ) )
-#             return ( value, self.error_message )
-#
-#     def formatter( self, value ):
-#         return value
-
-#------------------------------------------------------------------
 
