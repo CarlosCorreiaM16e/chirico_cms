@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
+
 from cgi import FieldStorage
 
-from app import db_sets
-from chirico.k import IMG_SIZE_PAGE, IMG_SIZE_BLOCK, IMG_SIZE_THUMB
 from chirico.app import app_factory
-from gluon import current, DIV, H1, IMG, URL, A, SQLFORM, IS_IN_SET
+from gluon import current, DIV, H1, IMG, URL, A, SQLFORM, IS_IN_SET, Field
 from gluon.storage import Storage
 from m16e import term
 from m16e.db import attach_factory, db_tables
@@ -14,7 +13,6 @@ from m16e.ktfact import KTF_ACTION
 from m16e.ui import elements
 from m16e.user_factory import is_in_group
 from m16e.views.base_view import BaseView
-from pydal import Field
 
 
 ACT_DUMP_ALL_FILES = 'act_dump_all_files'
@@ -35,10 +33,11 @@ class CmsGridGallery( BaseView ):
         self.col_class = 'col-md-%d' % (12 / self.grid_cols)
         self.url_c = 'gallery'
         self.url_f = 'edit'
-        ac = app_factory.get_app_config_data( db=db )
-        self.isizes = Storage( { db_sets.IMG_SIZE_ORIGINAL: ac[ IMG_SIZE_PAGE ],
-                                 db_sets.IMG_SIZE_MEDIUM: ac[ IMG_SIZE_BLOCK ],
-                                 db_sets.IMG_SIZE_SMALL: ac[ IMG_SIZE_THUMB ] } )
+        # ac = app_factory.get_app_config_data( db=db )
+        # self.isizes = Storage( { db_sets.IMG_SIZE_ORIGINAL: ac[ IMG_SIZE_PAGE ],
+        #                          db_sets.IMG_SIZE_MEDIUM: ac[ IMG_SIZE_BLOCK ],
+        #                          db_sets.IMG_SIZE_SMALL: ac[ IMG_SIZE_THUMB ] } )
+        self.isizes = attach_factory.get_img_sizes( db=db )
         self.form = None
         self.rec_count = None
         self.record_list = []
@@ -100,10 +99,19 @@ class CmsGridGallery( BaseView ):
                     ''' % dict( f=filename )
                 self.rec_count = db.executesql( sql )[ 0 ][ 0 ]
                 offset = db.executesql( sql )[ 0 ][ 0 ]
-
+                url_vars = { KQV_OFFSET: offset }
+                url_args=[]
+                if self.next_c:
+                    url_vars[ 'next_c' ] = self.next_c
+                    url_vars[ 'next_f' ] = self.next_f
+                if self.next_args:
+                    url_vars[ 'next_args' ] = self.next_args
+                if self.target:
+                    url_args = self.target
                 return self.set_result( redirect=URL( c=self.controller_name,
                                                       f=self.function_name,
-                                                      vars={ KQV_OFFSET: offset } ),
+                                                      args=url_args,
+                                                      vars=url_vars ),
                                         message=T( 'Image added' ) )
 
 
@@ -128,7 +136,7 @@ class CmsGridGallery( BaseView ):
         T = current.T
         if self.action == ACT_DUMP_ALL_FILES:
             ac = app_factory.get_app_config_data( db=db )
-            thumb_size = ac[ IMG_SIZE_THUMB ]
+            thumb_size = ac[ attach_factory.IMG_SIZE_THUMB ]
             attach_factory.dump_all_files_to_disk( at_meta_name='images',
                                                    ut_meta_name='site_objects',
                                                    thumb_size=thumb_size,
@@ -165,7 +173,7 @@ class CmsGridGallery( BaseView ):
                     lim=self.limit )
         term.printDebug( 'sql: %s' % sql )
         ac = app_factory.get_app_config_data( db=db )
-        small_size = ac[ IMG_SIZE_THUMB ]
+        small_size = ac[ attach_factory.IMG_SIZE_THUMB ]
         self.record_list = []
         rows = db.executesql( sql, as_dict=True )
         for row in rows:
@@ -176,7 +184,7 @@ class CmsGridGallery( BaseView ):
                 r.url = attach_factory.get_url( child.id, db=db )
             else:
                 r.url = attach_factory.get_url( r.id, db=db )
-            r.resize_options = attach_factory.get_resize_options( r, self.isizes )
+            r.resize_options = attach_factory.get_resize_options( r, self.isizes, db=db )
             self.record_list.append( r )
         if self.next_c:
             args = [ self.target ]
