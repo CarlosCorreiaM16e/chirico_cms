@@ -2,10 +2,12 @@
 # this file is released under public domain and you can use without limitations
 
 import m16e.term as term
-from chirico.db import page_factory
+from chirico.views import page_viewer
 from chirico.views.page.composer import PageComposerView
 from chirico.views.page.edit import PageEditView
 from chirico.views.page.index import PageIndexView
+from m16e import user_factory
+from m16e.db import db_tables
 
 if 0:
     from gluon.html import URL
@@ -73,6 +75,31 @@ def composer():
         redirect( result.redirect )
 
     return result.dict
+
+
+def view():
+    term.printLog( 'request.args: %s' % repr( request.args ) )
+    term.printLog( 'request.vars: %s' % repr( request.vars ) )
+    page_args = request.args( 0 )
+    try:
+        page_id = int( page_args )
+        p_model = db_tables.get_table_model( 'page', db=db )
+        page = p_model[ page_id ]
+        if page.url_c:
+            redirect( URL( c=page.url_c,
+                           f=page.url_f,
+                           args=page.url_args ) )
+        content = page_viewer.get_page( page_id=page_id,
+                                        db=db )
+    except ValueError:
+        content = page_viewer.get_page( url_c='page',
+                                        url_f='view',
+                                        url_args=page_args,
+                                        db=db )
+    return dict( content=content,
+                 user_message_board=user_factory.get_user_message_board() )
+
+
 
 
 
