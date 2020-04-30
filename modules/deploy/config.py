@@ -52,6 +52,9 @@ class Config( object ):
         self.app = None
         self.db_compression = self.config_data.get( 'db_compression' ) or 'j'
         self.app_theme = self.config_data.get( 'app_theme' ) or 'm16e'
+        self.app_description = self.config_data.get( 'app_description' ) or 'Chirico CMS'
+        self.app_keywords = self.config_data.get( 'app_keywords' ) or ''
+        self.dev_email = self.config_data.get( 'dev_email' ) or 'dev@m16e.com'
         self.theme_name = self.config_data.get( 'theme_name' ) or 'm16e'
         self.theme_title = self.config_data.get( 'theme_title' ) or 'Innovative Web'
         self.theme_subtitle = self.config_data.get( 'theme_subtitle' ) or 'Next Generation WepApps'

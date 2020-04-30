@@ -26,6 +26,7 @@ class Server( object ):
         self.mail_sender = config.config_data.get( 'mail_sender' )
         self.mail_login = config.config_data.get( 'mail_login' )
         self.mail_tls = config.config_data.get( 'mail_tls' )
+        self.dev_email = config.config_data.get( 'dev_email' )
 
 
     def get_user_host_string( self ):

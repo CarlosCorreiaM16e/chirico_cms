@@ -476,6 +476,9 @@ class App( object ):
                              '{{theme_subtitle}}': self.config.theme_subtitle,
                              '{{theme_logo_header}}': self.config.theme_logo_header,
                              '{{theme_login_button_position}}': self.config.theme_login_button_position,
+                             '{{app_description}}': self.config.app_description,
+                             '{{app_keywords}}': self.config.app_keywords,
+                             '{{dev_email}}': self.config.dev_email
                              }
             for k in replace_dict:
                 cmd = '''sed -i 's/%(k)s/%(v)s/g' %(f)s''' % \
@@ -924,6 +927,7 @@ class App( object ):
         ac = ac.replace( '{{mail_sender}}', server.mail_sender )
         ac = ac.replace( '{{mail_login}}', server.mail_login )
         ac = ac.replace( '{{mail_tls}}', server.mail_tls )
+        ac = ac.replace( '{{dev_email}}', server.dev_email )
         return ac
 
 
