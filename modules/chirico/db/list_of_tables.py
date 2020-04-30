@@ -3,10 +3,13 @@
 from chirico.db.models.app_config import AppConfigModel
 from chirico.db.models.app_theme import AppThemeModel
 from chirico.db.models.block import BlockModel
+from chirico.db.models.block_attach import BlockAttachModel
+from chirico.db.models.block_log import BlockLogModel
 from chirico.db.models.comment import CommentModel
 from chirico.db.models.page import PageModel
 from chirico.db.models.page_counter import PageCounterModel
 from chirico.db.models.page_log import PageLogModel
+from chirico.db.models.user_data import UserDataModel
 from forum_threads.db.models.thread import ThreadModel
 from forum_threads.db.models.thread_msg import ThreadMsgModel
 from forum_threads.db.models.thread_msg_attach import ThreadMsgAttachModel
@@ -31,7 +34,9 @@ TABLE_LIST = [ AppConfigModel,
                AppThemeModel,
                AttachModel,
                AttachTypeModel,
+               BlockAttachModel,
                BlockModel,
+               BlockLogModel,
                CommentModel,
                LongTaskModel,
                MailQueueModel,
@@ -50,5 +55,6 @@ TABLE_LIST = [ AppConfigModel,
                ThreadTypeModel,
                ThreadVisibilityModel,
                ThreadVoteModel,
+               UserDataModel,
                UserMessageModel,
                ]
