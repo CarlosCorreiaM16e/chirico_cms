@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # this file is released under public domain and you can use without limitations
+
 from chirico.app.app_factory import set_session_mode
-from chirico.db import lang_factory
+from chirico.db import lang_factory, page_factory
 from chirico.k import SES_MODE_ERP, SES_MODE_SHOP, SES_MODE_ANON
 from chirico.views import page_viewer
 from m16e.db import db_tables
 from m16e import term, htmlcommon, mpmail, user_factory
-from m16e.kommon import DATE
 from m16e.ui import elements
 from gluon.storage import Storage
 
@@ -17,6 +17,7 @@ if 0:
     from gluon.languages import translator
     from gluon.tools import Auth, Crud, Mail, Service, PluginManager, A, URL, DIV, P, H2
     from gluon.http import redirect
+    from gluon import current
 
     # API objects
     request = Request()
@@ -141,31 +142,38 @@ def error():
     if code is not None and request_url != request.url:  # Make sure error url is not current url to avoid infinite loop.
         response.status = int(code)  # Assign the error status code to the current response. (Must be integer to work.)
     content = DIV()
-    app = None
+    # app_name = None
     user_msg = T( '''Click on the button below to return to application''' )
     if code == '403':
         title = T( "Not authorized" )
+        msg = "Not authorized: %s" % request_url
     elif code == '404':
         title = T( "Page not found" )
+        msg = "Page not found: %s" % request_url
     elif code == '500':
-        app = ticket.split( '/', 1 )[0]
+        # app = ticket.split( '/', 1 )[0]
         # Get ticket URL:
         ticket_url = '%(scheme)s://%(host)s/admin/default/ticket/%(ticket)s' % {
             'scheme': 'https' if request.is_https else 'http',
             'host': request.env.http_host,
             'ticket': ticket }
-
-        # Email a notice, etc:
-        au = user_factory.get_dev_user( db=db )
-        mpmail.do_send_mail( to=au.email,
-                             subject="[%s][Error]" % app.upper(),
-                             message="Error Ticket:  %s" % ticket_url)
-
+        msg = "Error Ticket:  %s" % ticket_url
         title = T( "Internal error" )
         user_msg = (P( T( 'An unexpected error has occurred. The system administrator has been mailed on this issue.' ) ),
                     P( T( 'Click on the button below to return to application' ) ))
     else:
         title = T( "Unexpected error" )
+        msg = '''Unexpected error %(code)s
+url: %(url)s
+ticket: %(ticket)s
+        ''' % dict( code=code,
+                    url=request_url or '',
+                    ticket=ticket or '' )
+    # Email a notice, etc:
+    mpmail.do_send_mail( to=current.app_config.take( 'app.dev_email' ),
+                         subject="[MIA][Error][%s]" % current.app_name,
+                         message=msg )
+
     content.append( H2( title ) )
     content.append( DIV( DIV( user_msg,
                               _class='col-md-12' ),
@@ -176,8 +184,7 @@ def error():
                                                  ui_icon=elements.UiIcon( elements.ICON_NAV_NEXT ),
                                                  button_style=elements.BTN_SUBMIT,
                                                  button_size=elements.BT_SIZE_LARGE,
-                                                 url=URL( a=app,
-                                                          c='default',
+                                                 url=URL( c='default',
                                                           f='index' ) ).get_html_button(),
                               _class='col-md-12 text-center' ),
                          _class='row' ) )
@@ -200,5 +207,50 @@ def lang():
 
 @service.xml
 def sitemap():
-    return dict()
+    # Adding  Schemas for the site map
+    xmlns = 'xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n'
+    xmlns_img = 'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"\n'
+    xmlns_vid = 'xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"\n'
+    sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    sitemap_xml += '<urlset %s  %s  %s>\n' % (xmlns, xmlns_img, xmlns_vid)
 
+    # Add The Pages That You want in the XML Sitemap
+    include_pages = Storage( about=[ 'index', 'terms_of_use' ],
+                             default=[ 'index' ] )
+
+    domain = 'https://yourdomain.whatever'
+
+    for controller in include_pages:
+        page = include_pages[ controller ]
+        for fn in page:
+            if controller == 'default' and fn == 'index':
+                url = domain
+            else:
+                url = '%(d)s/%(c)s/%(f)s' % dict( d=domain, c=controller, f=fn )
+            p = page_factory.get_page( url='/%(c)s/%(f)s' % dict( c=controller, f=fn ), db=db )
+            page_id = p.id
+            last_modification_time = page_factory.get_last_modification_time( page_id, db=db )
+            sitemap_xml += '''
+<url>
+    <loc>%(url)s</loc>
+    <lastmod>%(day)s</lastmod>
+</url>''' % dict( url=url,
+                  day=last_modification_time.strftime( '%Y-%m-%d' ) )
+    p_model = db_tables.get_table_model( 'page', db=db )
+    q_sql = (db.page.url_c == 'arquive')
+    q_sql &= (db.page.url_f == 'year')
+    p_list = p_model.select( q_sql, orderby='url_args desc')
+    for p in p_list:
+        sitemap_xml += '''
+<url>
+    <loc>%(url)s/%(c)s/%(f)s/%(id)s</loc>
+    <lastmod>%(day)s</lastmod>
+</url>''' % dict( url=domain,
+                  c='arquive',
+                  f='year',
+                  id=p.url_args,
+                  day=page_factory.get_last_modification_time( p.id, db=db ).strftime( '%Y-%m-%d' ) )
+
+    sitemap_xml += '</urlset>'
+
+    return sitemap_xml
