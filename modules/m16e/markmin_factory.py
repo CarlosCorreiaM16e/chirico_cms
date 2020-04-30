@@ -91,7 +91,10 @@ def split_parts( xml_text, tag ): #, handle_styles=True ):
     mk_tag = '%s%s' % ( TAG_PREFIX, tag )
     struct = '{}'
     p1, mk_text, p2 = split_with_delimeters( xml_text, mk_tag, TAG_SUFFIX )
-    parts = Storage( part1=p1, part2=p2, tag=tag )
+    parts = Storage( part1=p1,
+                     part2=p2,
+                     tag=tag,
+                     original_text=mk_tag + mk_text + TAG_SUFFIX )
     if '{' in mk_text:
         struct, mk_text = mk_text.split( '}' )
         struct += '}'
@@ -184,6 +187,21 @@ def parse_wt_author( block, xml_text, db=None ):
     return txt
 
 
+def get_text_images_id( xml_text ):
+    ids = []
+    mk_image = '%s%s ' % (TAG_PREFIX, WT_IMAGE)
+    mk_parsed = '%s---%s ' % (TAG_PREFIX, WT_IMAGE)
+    xml_parsed = xml_text
+    while mk_image in xml_parsed:
+        parts = split_parts( xml_parsed, WT_IMAGE )
+        ids.append( int( parts.mk.style.id ) )
+        xml_parsed = parts.part1 \
+                     + parts.original_text.replace( mk_image, mk_parsed) \
+                     + parts.part2
+
+    return ids
+
+
 def parse_wt_images( xml_text, db=None ):
     '''
     [+[image { 'id': 32, 'filename': 'al-Khwarizm.jpeg',
@@ -212,7 +230,8 @@ def parse_wt_images( xml_text, db=None ):
             else:
                 url = URL( c='default', f='download', args=image.attached )
             #         term.printDebug( 'st_filename: %s' % ( repr( st_filename ) ) )
-            use_link = bool( parts.mk.style.get( 'link' ) )
+            # use_link = bool( parts.mk.style.get( 'link' ) )
+            use_link = parts.mk.style.get( 'link' )
             caption = parts.mk.style.get( 'caption' )
             align = parts.mk.style.get( 'align', 'center' )
             width = parts.mk.style.get( 'width' )
@@ -225,24 +244,29 @@ def parse_wt_images( xml_text, db=None ):
             xml = apply_styles( xml, parts.mk.style )
             xml[ '_style' ] = 'width: 100%%; object-fit: contain; max-width: %(w)s; margin: auto; display: block;' % dict( w=width )
             if use_link:
-                if image.org_attach_id:
-                    oi = a_model[ image.org_attach_id ]
-                    while oi.org_attach_id:
-                        oi = a_model[ oi.org_attach_id ]
-                    dest_link = attach_factory.get_url( oi.id, db=db )
+                if isinstance( use_link, bool ):
+                    if image.org_attach_id:
+                        oi = a_model[ image.org_attach_id ]
+                        while oi.org_attach_id:
+                            oi = a_model[ oi.org_attach_id ]
+                        dest_link = attach_factory.get_url( oi.id, db=db )
+                    else:
+                        dest_link = url
+                elif isinstance( use_link, basestring ):
+                    dest_link = use_link
                 else:
-                    dest_link = url
+                    raise TypeError( 'Wrong type (%s) for link: %s' % (type( use_link ), repr( use_link ) ) )
                 xml = A( xml, _href=dest_link, _target='blank' )
             if caption:
                 if align:
-                    css_class = ' class="text-%s"' % align
+                    css_class = ' class="text-%s image_container"' % align
                 else:
-                    css_class = ' class="text-center"'
-                css_style = 'style="max-width: %(width)s; overflow: hidden; margin: auto;"' % dict( width=width )
+                    css_class = ' class="text-center image_container"'
+                css_style = 'style="max-width: %(width)s;"' % dict( width=width )
                 xmlstr = '''
                     <figure %(cls)s %(stl)s>
                         %(x)s
-                        <figcaption>%(c)s</figcaption>
+                        <figcaption class="text-center">%(c)s</figcaption>
                     </figure>
                 ''' % dict( cls=css_class,
                             stl=css_style,

@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import Image
 import StringIO
 import magic
 import os
-import shutil
-import sys
 import tempfile
+from PIL import Image
+
 from gluon import current, URL
 from gluon.storage import Storage
 from m16e import term, user_factory
@@ -29,6 +28,18 @@ THUMBS_EXT = [
     'xbm',
     'xmp'
 ]
+
+IMG_SIZE_ORIGINAL = 'original'
+IMG_SIZE_MEDIUM = 'medium'
+IMG_SIZE_SMALL = 'small'
+
+IMG_SIZE_PAGE = 'max_img_page_width'
+IMG_SIZE_BLOCK = 'max_img_block_width'
+IMG_SIZE_THUMB = 'max_img_thumb_width'
+
+IMG_SIZE_FIELD_SET = { IMG_SIZE_ORIGINAL: IMG_SIZE_PAGE,
+                       IMG_SIZE_MEDIUM: IMG_SIZE_BLOCK,
+                       IMG_SIZE_SMALL: IMG_SIZE_THUMB }
 
 WIDTH_MARGIN = 1.3
 
@@ -494,8 +505,10 @@ def add_attach( attached,
                 filename=None,
                 created_by=None,
                 attach_type_id=None,
+                attach_type_meta_name=None,
                 unit_type_id=None,
                 mime_type_id=None,
+                unit_type_meta_name=None,
                 is_site_image=False,
                 short_description=None,
                 long_description=None,
@@ -511,9 +524,7 @@ def add_attach( attached,
 
     term.printDebug( 'filename: %s' % filename )
     a_model = db_tables.get_table_model( 'attach', db=db )
-    # at_model = db_tables.get_table_model( 'attach_type', db=db )
     mt_model = db_tables.get_table_model( 'mime_type', db=db )
-    # ut_model = db_tables.get_table_model( 'unit_type', db=db )
 
     if not created_by:
         created_by = auth.user.id
@@ -522,6 +533,12 @@ def add_attach( attached,
     filename = fileutils.filename_sanitize( filename )
     if not mime_type_id:
         mime_type_id = get_mime_type_id_from_name( filename )
+    if attach_type_meta_name:
+        at = get_attach_type( attach_type_meta_name, db=db )
+        attach_type_id = at.id
+    if unit_type_meta_name:
+        at = get_unit_type( unit_type_meta_name, db=db )
+        unit_type_id = at.id
     # ut = ut_model[ unit_type_id ]
     if not path:
         path = ''
@@ -699,6 +716,40 @@ def get_url( attach_id, db=None ):
         url = URL( c='default', f='download', args=[ attach.attached ] )
     return url
 
+
+def get_image_url( attach_id, size=None, db=None ):
+    """
+    Get image url by id (+ size)
+    @param attach_id: id of the attach
+    @param size: image width (maybe a number or one of 'original', 'medium' or 'small')
+    @return: image URL
+    """
+    if not db:
+        db = current.db
+    a_model = db_tables.get_table_model( 'attach', db=db )
+    attach = a_model[ attach_id ]
+    a = attach
+    while a.org_attach_id:
+        a = a_model[ a.org_attach_id ]
+    img_id = a.id
+    if size:
+        try:
+            width = int( size )
+        except ValueError:
+            from chirico.app import app_factory
+            ac = app_factory.get_app_config_data( db=db )
+            if size == IMG_SIZE_ORIGINAL:
+                width = ac[ size ]
+    if attach.img_width > width and a.org_attach_id:
+        q_sql = (db.attach.org_attach_id == img_id)
+        a_list = a_model.select( q_sql, orderby='img_width desc' )
+        for a in a_list:
+            if a.img_width >= width:
+                img_id = a.id
+            else:
+                break
+    url = get_url( img_id, db=db )
+    return url
 
 # def resize_image_file( pathname, width=None, height=None ):
 #     return media.resize_image( pathname, width=width, height=height )
@@ -886,17 +937,31 @@ def resize_image( attach_id, width=None, height=None, new_filename=None, db=None
     return w, h
 
 
-def get_resize_options( attach, img_sizes ):
+def get_img_sizes( db=None ):
+    if not db:
+        db = current.db
+    from chirico.app import app_factory
+    ac = app_factory.get_app_config_data( db=db )
+    isizes = Storage( { IMG_SIZE_ORIGINAL: ac[ IMG_SIZE_PAGE ],
+                        IMG_SIZE_MEDIUM: ac[ IMG_SIZE_BLOCK ],
+                        IMG_SIZE_SMALL: ac[ IMG_SIZE_THUMB ] } )
+    return isizes
+
+
+# def get_resize_options( attach, img_sizes, db=None ):
+def get_resize_options( attach, isizes, db=None ):
     '''
-        ac = app_factory.get_app_config_data( db=db )
-        img_sizes = Storage( large=ac[ IMG_SIZE_PAGE ],
-                             medium=ac[ IMG_SIZE_BLOCK ],
-                             small=ac[ IMG_SIZE_THUMB ])
+    ac = app_factory.get_app_config_data( db=db )
+    img_sizes = Storage( large=ac[ IMG_SIZE_PAGE ],
+                         medium=ac[ IMG_SIZE_BLOCK ],
+                         small=ac[ IMG_SIZE_THUMB ])
 
     '''
+    if not db:
+        db = current.db
     resize_options = []
-    for k in img_sizes:
-        if img_sizes[k] < attach.img_width:
+    for k in isizes:
+        if isizes[k] < attach.img_width:
             resize_options.append( k )
     return resize_options
 
