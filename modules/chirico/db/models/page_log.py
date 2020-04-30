@@ -19,6 +19,11 @@ class PageLogModel( DbBaseTable ):
                         Field( 'ts', 'datetime', default=DT.now, notnull=True ),
                         Field( 'client_ip', 'string' ),
                         Field( 'auth_user_id', 'referne auth_user' ),
+                        Field( 'is_tablet', 'boolean', default=False ),
+                        Field( 'is_mobile', 'boolean', default=False ),
+                        Field( 'os_name', 'string' ),
+                        Field( 'browser_name', 'string' ),
+                        Field( 'browser_version', 'string' ),
                         ]
         return self.fields
 

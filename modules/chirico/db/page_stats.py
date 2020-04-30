@@ -53,6 +53,12 @@ def update_page_log( db=None ):
 
     if not db:
         db = current.db
+    request = current.request
+    user_agent = request.user_agent()
+    if user_agent.bot:
+        term.printLog( 'Skipping bot: %s' % repr( request.env.http_user_agent ))
+        return
+
     pl_model = db_tables.get_table_model( 'page_log', db=db )
     path_info = env.get_path_info()
     if path_info.startswith( '/' + current.app_name ):
@@ -60,7 +66,7 @@ def update_page_log( db=None ):
     if not path_info:
         term.printLog( 'empty path_info', print_trace=True )
         path_info = '/'
-    if not path_info.startswith( '/default/index' ):
+    if path_info.startswith( '/default/index' ):
         path_info = '/'
 
     for s in _SKIP_LIST:
@@ -68,10 +74,18 @@ def update_page_log( db=None ):
             return
 
     auth_user_id = user_factory.get_auth_user_id( db=db )
-    pl_model.insert( dict( path_info=path_info,
-                           ts=DT.now(),
-                           client_ip=current.remote_ip,
-                           auth_user_id=auth_user_id ) )
+    data = Storage( path_info=path_info,
+                    ts=DT.now(),
+                    client_ip=current.remote_ip,
+                    auth_user_id=auth_user_id,
+                    is_tablet=user_agent.is_tablet,
+                    is_mobile=user_agent.is_mobile )
+    if user_agent.os:
+        data.os_name = user_agent.os.name
+    if user_agent.browser:
+        data.browser_name = user_agent.browser.name
+        data.browser_version = user_agent.browser.version
+    pl_model.insert( data )
 
 
 def get_page_views( limit=None, db=None ):

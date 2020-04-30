@@ -72,6 +72,8 @@ term.printLog( '''
     WEB2PY_PATH: %(WEB2PY_PATH)s
     protocol: %(protocol)s
     local: %(local)s
+    user_agent: %(user_agent)s
+    user_agent_dict: %(user_agent_dict)s
     ''' % { 'HTTP_HOST': env.get_http_hostname(),
             'PATH_INFO': env.get_path_info(),
             'args': repr( request.args ),
@@ -81,7 +83,9 @@ term.printLog( '''
             'folder': request.folder,
             'WEB2PY_PATH': request.env.web2py_path,
             'protocol': 'https' if request.is_https else 'http',
-            'local': request.is_local
+            'local': request.is_local,
+            'user_agent': request.env.http_user_agent,
+            'user_agent_dict': request.user_agent()
             } )
 
 current.is_testing = os.path.isfile( 'TESTING' )
