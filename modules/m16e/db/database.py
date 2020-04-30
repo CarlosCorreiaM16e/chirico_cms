@@ -468,7 +468,18 @@ class DbBaseTable( object ):
                               track_history=track_history )
         return result
 
-    #------------------------------------------------------------------
+
+    def insert_or_update( self, upd, print_query=None ):
+        u_id = upd.get( 'id' )
+        if not u_id:
+            u_id = self.insert( upd, print_query=print_query )
+        else:
+            del u_id[ 'id' ]
+            self.update_by_id( u_id, upd )
+        record = self.select_by_id( u_id )
+        return record
+
+
     def update_history( self, query, operation ):
         db = self.db
         session = current.session
