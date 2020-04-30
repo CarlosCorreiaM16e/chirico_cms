@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 # this file is released under public domain and you can use without limitations
+
 from cgi import FieldStorage
 
-from chirico.k import IMG_SIZE_PAGE, IMG_SIZE_BLOCK, IMG_SIZE_THUMB
 from chirico.views.gallery.cms_edit_image import CmsGalleryEditImageView
 from chirico.views.gallery.image_grid import CmsGridGallery
 from chirico.views.gallery.list_images import get_image_list, get_image_list_comps
 from chirico.app import app_factory
 from m16e.db import db_tables
 from gluon.html import URL
-from gluon.storage import Storage
 from m16e.db import attach_factory
 from m16e.kommon import KQV_LIMIT, KQV_OFFSET, KQV_ORDER, KQV_UPLOAD_FILE, KQV_PAGE_SIZE, KQV_BLOCK_SIZE, \
     KQV_THUMB_SIZE, KQV_NEXT_C, KQV_NEXT_F, KQV_NEXT_ARGS
@@ -17,7 +16,6 @@ import m16e.term as term
 from m16e.views.gallery.choose_image import GalleryChooseImageView
 from m16e.views.gallery.choose_site_image import GalleryChooseSiteImageView
 from m16e.views.gallery.list import GalleryListView
-from pydal import Field
 
 if 0:
     # from globals import Request, Response, Session
@@ -41,7 +39,7 @@ if 0:
     service = Service()
     plugins = PluginManager()
     from gluon.sqlhtml import SQLFORM
-    from gluon import IS_IN_SET
+    from gluon import IS_IN_SET, Field
     from gluon.http import redirect
 
 #     import gluon.languages.translator as T
@@ -100,9 +98,9 @@ def list_images():
     data.url_c = 'gallery'
     data.url_f = 'edit'
     ac = app_factory.get_app_config_data( db=db )
-    op_page_size = ( ('P', T( 'Page' ) + (' %dpx') % ac[ IMG_SIZE_PAGE ] ),
-                     ('B', T( 'Block' ) + (' %dpx') % ac[ IMG_SIZE_BLOCK ]),
-                     ('T', T( 'Thumbnail' ) + (' %dpx') % ac[ IMG_SIZE_THUMB ]),
+    op_page_size = ( ('P', T( 'Page' ) + (' %dpx') % ac[ attach_factory.IMG_SIZE_PAGE ] ),
+                     ('B', T( 'Block' ) + (' %dpx') % ac[ attach_factory.IMG_SIZE_BLOCK ]),
+                     ('T', T( 'Thumbnail' ) + (' %dpx') % ac[ attach_factory.IMG_SIZE_THUMB ]),
                      )
     op_unit_type = ( ('S', T( 'Site images' )),
                      ('W', T( 'Web shop' ) ) )
@@ -118,11 +116,11 @@ def list_images():
         if new_image is not None and isinstance( new_image, FieldStorage ):
             qv_page_size = request.vars.qv_page_size
             if qv_page_size == 'P':
-                width = ac[ IMG_SIZE_PAGE ]
+                width = ac[ attach_factory.IMG_SIZE_PAGE ]
             elif qv_page_size == 'B':
-                width = ac[ IMG_SIZE_BLOCK ]
+                width = ac[ attach_factory.IMG_SIZE_BLOCK ]
             elif qv_page_size == 'T':
-                width = ac[ IMG_SIZE_THUMB ]
+                width = ac[ attach_factory.IMG_SIZE_THUMB ]
             else:
                 width = None
             at_model = db_tables.get_table_model( 'attach_type', db=db )

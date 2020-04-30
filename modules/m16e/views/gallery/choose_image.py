@@ -3,7 +3,6 @@
 import os
 from cgi import FieldStorage
 
-from chirico.k import IMG_SIZE_PAGE, IMG_SIZE_BLOCK, IMG_SIZE_THUMB
 from chirico.app import app_factory
 from m16e.db import db_tables
 from gluon import current
@@ -254,17 +253,17 @@ class GalleryChooseImageView( BaseListPlasticView ):
                 path = attach_factory.get_path( attach, db=db )
                 filename = os.path.join( path,
                                          attach.filename )
-                attach_factory.image_dump( attach_id, filename=filename, width=ac[ IMG_SIZE_PAGE ], db=db )
+                attach_factory.image_dump( attach_id, filename=filename, width=ac[ attach_factory.IMG_SIZE_PAGE ], db=db )
             if block_size:
                 path = attach_factory.get_path( attach, db=db )
                 filename = os.path.join( path,
                                          attach.filename )
-                attach_factory.image_dump( attach_id, filename=filename, width=ac[ IMG_SIZE_BLOCK ], db=db )
+                attach_factory.image_dump( attach_id, filename=filename, width=ac[ attach_factory.IMG_SIZE_BLOCK ], db=db )
             if thumb_size:
                 path = attach_factory.get_path( attach, db=db )
                 filename = os.path.join( path,
                                          attach.filename )
-                attach_factory.image_dump( attach_id, filename=filename, width=ac[ IMG_SIZE_THUMB ], db=db )
+                attach_factory.image_dump( attach_id, filename=filename, width=ac[ attach_factory.IMG_SIZE_THUMB ], db=db )
             if self.next_c:
                 data = dict( action=ACT_NEW_IMAGE,
                              attach_id=attach_id )

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from belmiro.app.k import CFG_IMG_SIZE_SMALL
+from chirico.app import app_factory
 from gluon import current, DIV, H1, IMG, URL, A
 from gluon.storage import Storage
 from m16e import term
@@ -65,11 +65,11 @@ def get_image_list( offset=0,
             if idx >= idx_limit:
                 break
             record = Storage( records[ idx ] )
-            width = current.app_config.take( CFG_IMG_SIZE_SMALL )
+            ac = app_factory.get_app_config_data( db=db )
             row_panel.append( DIV( A( IMG( _src=URL( c='default',
                                                       f='download',
                                                       args=[ record.attached ] ),
-                                           _width=int( width ) ),
+                                           _width=int( ac.max_img_thumb_width ) ),
                                       DIV( record.filename ),
                                       DIV( '(%(w)sx%(h)s)' % dict( w=record.img_width, h=record.img_height) ),
                                       _href=URL( c= url_c, f=url_f, args=[ record.id ],

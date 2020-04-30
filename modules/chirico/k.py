@@ -22,12 +22,20 @@ KQV_BLOCK_ID = KQV_PREFIX + 'block_id'
 KQV_BLK_ORDER = KQV_PREFIX + 'blk_order'
 KQV_CONTAINER = KQV_PREFIX + 'container'
 
-ARCHIVE_CONTROLLER = 'arquivo'
-ARCHIVE_FUNCTION = 'ver'
+ARCHIVE_CONTROLLER = 'arquive'
+ARCHIVE_FUNCTION = 'year'
 
-IMG_SIZE_PAGE = 'max_img_page_width'
-IMG_SIZE_BLOCK = 'max_img_block_width'
-IMG_SIZE_THUMB = 'max_img_thumb_width'
+# IMG_SIZE_ORIGINAL = 'original'
+# IMG_SIZE_MEDIUM = 'medium'
+# IMG_SIZE_SMALL = 'small'
+#
+# IMG_SIZE_PAGE = 'max_img_page_width'
+# IMG_SIZE_BLOCK = 'max_img_block_width'
+# IMG_SIZE_THUMB = 'max_img_thumb_width'
+#
+# IMG_SIZE_FIELD_SET = { IMG_SIZE_ORIGINAL: IMG_SIZE_PAGE,
+#                        IMG_SIZE_MEDIUM: IMG_SIZE_BLOCK,
+#                        IMG_SIZE_SMALL: IMG_SIZE_THUMB }
 
 SES_MODE_ANON = 'ses_mode_anon'
 SES_MODE_SHOP = 'ses_mode_shop'

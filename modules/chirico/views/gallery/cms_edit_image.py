@@ -5,7 +5,7 @@ import sys
 import traceback
 from psycopg2 import IntegrityError
 
-from belmiro.app.k import CFG_IMG_SIZE_SMALL, CFG_IMG_SIZE_LARGE, CFG_IMG_SIZE_MEDIUM
+from chirico.app import app_factory
 from chirico.db import block_factory
 from gluon import IS_IN_SET, SPAN, B
 from gluon.storage import Storage
@@ -458,7 +458,7 @@ class CmsGalleryEditImageView( BaseFormView ):
         children = []
         span_resize = ''
         if self.record:
-            ac = current.app_config
+            # ac = current.app_config
             onclick = '''
                 jQuery( '#attach_img_width' ).val( '%(w)s' );
                 jQuery( '#attach_img_height' ).val( '%(h)s' );
@@ -473,10 +473,11 @@ class CmsGalleryEditImageView( BaseFormView ):
                 jQuery( '#attach_filename' ).val( farr.join( '.' ) );
                 '''
             span_resize = SPAN( '[ ' )
-            data = Storage( l=ac.take( CFG_IMG_SIZE_LARGE ),
-                            m=ac.take( CFG_IMG_SIZE_MEDIUM ),
-                            s=ac.take( CFG_IMG_SIZE_SMALL ) )
-            data.w = ac.take( CFG_IMG_SIZE_SMALL )
+            ac = app_factory.get_app_config_data( db=db )
+            data = Storage( l=ac.max_img_page_width,
+                            m=ac.max_img_block_width,
+                            s=ac.max_img_thumb_width )
+            data.w = ac.max_img_thumb_width
             data.h = get_new_heigth( self.record.img_width, self.record.img_height, data.w )
             if data.h < self.record.img_height:
                 span_resize.append( A( B( 'S', _style='font-size: 120%;' ),
@@ -484,7 +485,7 @@ class CmsGalleryEditImageView( BaseFormView ):
                                        _onclick=onclick % data,
                                        _title='small size' ) )
                 span_resize.append( ' ' )
-            data.w = ac.take( CFG_IMG_SIZE_MEDIUM )
+            data.w = ac.max_img_block_width
             data.h = get_new_heigth( self.record.img_width, self.record.img_height, data.w )
             if data.h < self.record.img_height:
                 span_resize.append( A( B( 'M', _style='font-size: 120%;' ),
@@ -492,7 +493,7 @@ class CmsGalleryEditImageView( BaseFormView ):
                                        _onclick=onclick % data,
                                        _title='medium size' ) )
                 span_resize.append( ' ' )
-            data.w = ac.take( CFG_IMG_SIZE_LARGE )
+            data.w = ac.max_img_page_width
             data.h = get_new_heigth( self.record.img_width, self.record.img_height, data.w )
             if data.h < self.record.img_height:
                 span_resize.append( A( B( 'L', _style='font-size: 120%;' ),
