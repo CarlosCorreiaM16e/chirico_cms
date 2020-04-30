@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from gluon import current, Field
-from gluon.validators import IS_NULL_OR, IS_IN_DB
+from gluon import current, Field, IS_IN_DB
 from m16e.db.database import DbBaseTable
 
 
@@ -22,6 +21,7 @@ class AppConfigModel( DbBaseTable ):
         db_tables.get_table_model( 'country', db=self.db )
         self.fields = [ Field( 'qt_decimals', 'integer', default=2, notnull=True ),
                         Field( 'currency_decimals', 'integer', default=2, notnull=True ),
+                        Field( 'default_country_id', 'integer', default=2, notnull=True ),
                         Field( 'server_timezone', 'string', default='UTC', notnull=True ),
                         Field( 'client_timezone', 'string', default='UTC', notnull=True ),
                         Field( 'app_theme_id', 'reference app_theme', ondelete='NO ACTION', default=1, notnull=True ),
