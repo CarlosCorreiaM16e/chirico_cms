@@ -189,6 +189,10 @@ DECIMAL_0 = Decimal( 0 )
 DECIMAL_1 = Decimal( 1 )
 DECIMAL_100 = Decimal( 100 )
 
+#------------------------------------------------------------------
+NAV_DIR_NEXT = 'next'
+NAV_DIR_PREV = 'prev'
+NAV_DIR_SET = (NAV_DIR_PREV, NAV_DIR_NEXT)
 
 #------------------------------------------------------------------
 def storagize( d ):
@@ -268,49 +272,6 @@ def is_sequence( value ):
     return is_seq
 
 
-# #------------------------------------------------------------------
-# @deprecated( replacement='m16e.user_factory.is_in_group( group )' )
-# def is_in_group( group ):
-#     import m16e.user_factory
-#     return m16e.user_factory.is_in_group( group )
-#     '''
-#     Group hierarchy:
-#     + dev
-#     +-- support
-#         +-- admin
-#             +-- manager
-#                 +-- (others)
-#     '''
-# #     term.printDebug( 'group: %s' % group )
-#     auth = current.auth
-#     if auth.user and auth.user.id > 0:
-#         if auth.has_membership( group ):
-#             return True
-#         if auth.has_membership( 'dev' ):
-#             return True
-#         master_grps = [ 'dev' ]
-#         if group not in master_grps and auth.has_membership( 'support' ):
-#             return True
-#         master_grps.append( 'support' )
-#         if group not in master_grps and auth.has_membership( 'admin' ):
-#             return True
-#         master_grps.append( 'admin' )
-#         if group not in master_grps and auth.has_membership( 'manager' ):
-#             return True
-#
-#     return False
-#
-# #------------------------------------------------------------------
-# def is_in_groups( group_list ):
-#     auth = current.auth
-#     if is_in_group( 'dev' ):
-#         return True
-#     for group in group_list:
-#         if is_in_group( group ):
-#             return True
-#     return False
-
-#----------------------------------------------------------------------
 def format_exception( e ):
     exception_list = traceback.format_stack()
     exception_list = exception_list[:-2]
@@ -347,11 +308,6 @@ def get_init_config_data( mod_name ):
         'mod': mod_name }
     if not os.path.isfile( init ):
         init = '%(src)s/applications/%(app)s/resources/config/init/%(mod)s.py' % {
-            'src': request.global_settings.applications_parent,
-            'app': request.application,
-            'mod': mod_name }
-    if not os.path.isfile( init ):
-        init = '%(src)s/applications/%(app)s/config/belmiro/init/%(mod)s.py' % {
             'src': request.global_settings.applications_parent,
             'app': request.application,
             'mod': mod_name }
