@@ -2,6 +2,7 @@
 from chirico.views import page_viewer
 from m16e import term, user_factory
 from m16e.db import db_tables
+from m16e.kommon import DATE
 from m16e.ui import elements
 
 if 0:
@@ -33,10 +34,11 @@ def year():
     term.printLog( 'request.args: %s' % repr( request.args ) )
     term.printLog( 'request.vars: %s' % repr( request.vars ) )
     year = int( request.args( 0 ) or 0 )
-    if not year or (year < 2010 or year > 2019):
+    today = DATE.today()
+    if not year or (year < 2010 or year > today.year):
         raise HTTP( 404 )
-    content = page_viewer.get_page( url_c='arquivo',
-                                    url_f='ano',
+    content = page_viewer.get_page( url_c='arquive',
+                                    url_f='year',
                                     url_args=year,
                                     db=db )
     nav_prev = DIV( _class='col-md-6' )
@@ -47,7 +49,7 @@ def year():
                             _href=URL( c='arquive',
                                        f='year',
                                        args=year - 1 ) ) )
-    if year < 2019:
+    if year < today.year:
         nav_next.append( A( str( year + 1 ),
                             elements.get_bootstrap_icon( elements.ICON_NAV_NEXT, dark_background=False ),
                             _href=URL( c='arquive',
