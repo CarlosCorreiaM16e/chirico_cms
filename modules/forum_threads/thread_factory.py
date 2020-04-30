@@ -955,16 +955,32 @@ def get_thread_list( active=None, db=None ):
     if not db:
         db = current.db
     t_model = db_tables.get_table_model( 'thread', db=db )
-    q_sql = (db.thread.id > 0)
     if active != 'all':
         if active:
-            q_sql &= (db.thread.closed_time == None)
+            q_sql = (db.thread.closed_time == None)
         else:
-            q_sql &= (db.thread.closed_time != None)
+            q_sql = (db.thread.closed_time != None)
+    else:
+        q_sql = (db.thread.id > 0)
     if not is_in_group( K_ROLE_ADMIN ):
         q_sql &= (db.thread.thread_type_id == TTYPE_OPEN_DISCUSSION)
     t_list = t_model.select( q_sql, orderby='created_on' )
     return t_list
+
+
+def get_last_modified_ts( thread_id, db=None ):
+    if not db:
+        db = current.db
+    t_model = db_tables.get_table_model( 'thread', db=db )
+    t = t_model[ thread_id ]
+    last_modified_ts = t.created_on
+    tm_model = db_tables.get_table_model( 'thread_msg', db=db )
+    q_sql = (db.thread_msg.thread_id == thread_id)
+    tm_list = tm_model.select( q_sql )
+    for tm in tm_list:
+        if last_modified_ts < tm.msg_ts:
+            last_modified_ts = tm.msg_ts
+    return last_modified_ts
 
 
 def get_subscriber_list( thread_id, db=None ):
