@@ -3,15 +3,19 @@ Created on 11/09/2014
 
 @author: carlos
 '''
+import difflib
 import os
 
 from app import db_sets
 from chirico.db import chirico_events
+from chirico.k import ARCHIVE_FUNCTION, ARCHIVE_CONTROLLER
+from gluon import URL
 from m16e.db import db_tables
 from gluon.globals import current
 from gluon.storage import Storage
-from m16e import term, user_factory
-from m16e.kommon import DT
+from m16e import term, user_factory, markmin_factory
+from m16e.kommon import DT, NAV_DIR_PREV, NAV_DIR_NEXT
+from m16e.ui import elements
 
 
 def get_page_blocks( page_id=None, block_id=None, db=None ):
@@ -113,8 +117,8 @@ def create_page_from_block( block_id, post_vars, db=None ):
         b_model = db_tables.get_table_model( 'block', db=db )
         p_model = db_tables.get_table_model( 'page', db=db )
         page_id = p_model.insert( dict( tagname=tag_name,
-                                        url_c='arquivo',
-                                        url_f='ver',
+                                        url_c='page',
+                                        url_f='view',
                                         title=title,
                                         name=title,
                                         colspan=1,
@@ -197,13 +201,64 @@ def create_block( upd, db=None ):
 def update_block( block_id, upd, db=None ):
     if not db:
         db = current.db
+    upd = Storage( upd )
     b_model = db_tables.get_table_model( 'block', db=db )
+    b = b_model[ block_id ]
     ts = DT.now()
+    log_data = Storage()
+    if 'body' in upd:
+        log_data.old_body = b.body
+        udiff = difflib.unified_diff( b.body.splitlines(),
+                                      upd.body.splitlines(),
+                                      'old',
+                                      'new' )
+        log_data.diff_body = '\n'.join( [ l for l in udiff ] )
+    else:
+        log_data.old_body = ''
+        log_data.diff_body = ''
+
+    if 'body_en' in upd:
+        log_data.old_body_en = b.body_en
+        udiff = difflib.unified_diff( b.body_en.splitlines(),
+                                      upd.body_en.splitlines(),
+                                      'old',
+                                      'new' )
+        log_data.diff_body_en = '\n'.join( [ l for l in udiff ] )
+    else:
+        log_data.old_body_en = ''
+        log_data.diff_body_en = ''
+
+    if log_data:
+        log_data.block_id = block_id
+        log_data.auth_user_id = user_factory.get_auth_user_id( db=db )
+        log_data.ts = ts
+        bl_model = db_tables.get_table_model( 'block_log', db=db )
+        bl_model.insert( log_data )
     upd = Storage( upd )
     upd.last_modified_by = user_factory.get_auth_user_id( db=db )
     upd.last_modified_on = ts
     b_model.update_by_id( block_id, upd )
     chirico_events.store_block_updated( block_id, db=db )
+    b = b_model[ block_id ]
+    # append  or delete image to/from block_attach
+    b_img_ids = markmin_factory.get_text_images_id( b.body )
+    for i in markmin_factory.get_text_images_id( b.body_en ):
+        if i not in b_img_ids:
+            b_img_ids.append( i )
+    ba_model = db_tables.get_table_model( 'block_attach', db=db )
+    q_sql = (db.block_attach.block_id == block_id)
+    ba_list = ba_model.select( q_sql )
+    for ba in ba_list:
+        if ba.attach_id not in b_img_ids:
+            ba_model.delete_by_id( ba.id )
+    if b_img_ids:
+        for i in b_img_ids:
+            q_sql = (db.block_attach.block_id == block_id)
+            q_sql &= (db.block_attach.attach_id == i)
+            ba = ba_model.select( q_sql ).first()
+            if not ba:
+                ba_model.insert( dict( attach_id=i,
+                                       block_id=block_id ) )
 
 
 def create_slot_before( block, db=None ):
@@ -221,3 +276,50 @@ def create_slot_before( block, db=None ):
                 blk_order=block.blk_order,
                 container=block.container )
     db.executesql( sql )
+
+
+def get_nav_block_in_page( block, nav_dir, db=None ):
+    if nav_dir not in (NAV_DIR_PREV, NAV_DIR_NEXT):
+        raise AttributeError( 'Wrong nav_dir: %s' % str( nav_dir ) )
+
+    if not db:
+        db = current.db
+    b_model = db_tables.get_table_model( 'block', db=db )
+    q_sql = (db.block.page_id == block.page_id)
+    if nav_dir == NAV_DIR_PREV:
+        q_sql &= (db.block.blk_order < block.blk_order)
+        orderby = 'blk_order desc'
+    else:
+        q_sql &= (db.block.blk_order > block.blk_order)
+        orderby = 'blk_order'
+    b = b_model.select( q_sql, orderby=orderby ).first()
+    return b
+
+
+def get_link_to_block_in_page( block, nav_dir, function_name='composer', db=None ):
+    if nav_dir not in (NAV_DIR_PREV, NAV_DIR_NEXT):
+        raise AttributeError( 'Wrong nav_dir: %s' % str( nav_dir ) )
+
+    if not db:
+        db = current.db
+    T = current.T
+    b = get_nav_block_in_page( block, nav_dir, db=db )
+    nav_block = ''
+    if b:
+        if nav_dir == NAV_DIR_PREV:
+            tip = T( 'Go to previous block' )
+            icon = elements.ICON_NAV_PREV
+            text_before_icon = False
+        else:
+            tip = T( 'Go to next block' )
+            icon = elements.ICON_NAV_NEXT
+            text_before_icon = True
+        nav_block = elements.get_link_icon( icon,
+                                            url=URL( c='block',
+                                                     f=function_name,
+                                                     args=b.id ),
+                                            bt_text=b.name,
+                                            text_before_icon=text_before_icon,
+                                            dark_background=False,
+                                            tip=tip )
+    return nav_block

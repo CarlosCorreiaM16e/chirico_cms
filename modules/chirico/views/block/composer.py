@@ -4,19 +4,16 @@ import sys
 import traceback
 
 from app import db_sets
-from chirico.app import app_factory
 from chirico.db import block_factory
-from chirico.k import KQV_PAGE_ID, ACT_DELETE_BLOCK, IMG_SIZE_PAGE, IMG_SIZE_BLOCK, IMG_SIZE_THUMB, KQV_BLK_ORDER, \
-    KQV_CONTAINER
+from chirico.k import KQV_PAGE_ID, ACT_DELETE_BLOCK, KQV_BLK_ORDER, KQV_CONTAINER
 from gluon import current, H4, SQLFORM, IS_NOT_EMPTY, IMG, SCRIPT, A
-from gluon.html import DIV, H5, URL
+from gluon.html import DIV, H5, URL, BR, SPAN
 from gluon.storage import Storage
 
 from m16e.db import db_tables, attach_factory
 from m16e import term, markmin_factory
 from m16e.files import fileutils
-from m16e.kommon import KDT_INT, KDT_CHAR, KDT_TIMESTAMP, DT, ACT_NEW_IMAGE
-from m16e.user_factory import is_in_group
+from m16e.kommon import KDT_INT, KDT_CHAR, KDT_TIMESTAMP, DT, ACT_NEW_IMAGE, NAV_DIR_PREV, NAV_DIR_NEXT
 from m16e.views.edit_base_view import BaseFormView
 
 # ACT_NEW_MAIN_BLOCK = 'new_main_block'
@@ -72,12 +69,14 @@ class BlockComposerView( BaseFormView ):
         a_model = db_tables.get_table_model( 'attach', db=db )
         attach = a_model[ attach_id ]
         append_attach_id = None
-        if size != db_sets.IMG_SIZE_ORIGINAL:
-            ac = app_factory.get_app_config_data( db=db )
-            isizes = Storage( { db_sets.IMG_SIZE_ORIGINAL: ac[ IMG_SIZE_PAGE ],
-                                db_sets.IMG_SIZE_MEDIUM: ac[ IMG_SIZE_BLOCK ],
-                                db_sets.IMG_SIZE_SMALL: ac[ IMG_SIZE_THUMB ] } )
-            resize_options = attach_factory.get_resize_options( attach, isizes )
+        if size != attach_factory.IMG_SIZE_ORIGINAL:
+            # ac = app_factory.get_app_config_data( db=db )
+            # isizes = Storage( { attach_factory.IMG_SIZE_ORIGINAL: ac[ IMG_SIZE_PAGE ],
+            #                     attach_factory.IMG_SIZE_MEDIUM: ac[ IMG_SIZE_BLOCK ],
+            #                     attach_factory.IMG_SIZE_SMALL: ac[ IMG_SIZE_THUMB ] } )
+            # resize_options = attach_factory.get_resize_options( attach, isizes )
+            isizes = attach_factory.get_img_sizes( db=db )
+            resize_options = attach_factory.get_resize_options( attach, isizes, db=db )
             if size in resize_options:
                 w = isizes[ size ]
                 att = attach_factory.get_child_by_width( attach_id, w, db=db )
@@ -98,16 +97,26 @@ class BlockComposerView( BaseFormView ):
             a_model.update_by_id( append_attach_id, upd )
             attach_factory.file_dump_to_static( append_attach_id, db=db )
         # b = b_model[ block_id ]
-        if self.record.body_markup == db_sets.MARKUP_MARKMIN:
-            img = markmin_factory.mk_wt_image( append_attach_id,
-                                               align='center',
-                                               width=attach.img_width,
-                                               caption=attach.short_description,
-                                               db=db )
-        else:
-            img = IMG( _src=attach_factory.get_url( append_attach_id, db=db ) ).xml()
-        self.table_model.update_by_id( self.record_id,
-                                       { target: self.record[ target ] + '\n' + img + '\n' } )
+        # if self.record.body_markup == db_sets.MARKUP_MARKMIN:
+        img = markmin_factory.mk_wt_image( append_attach_id,
+                                           align='center',
+                                           width=attach.img_width,
+                                           caption=attach.short_description,
+                                           db=db )
+        # else:
+        #     img = html_factory.mk_html_image( append_attach_id,
+        #                                       align='center',
+        #                                       width=attach.img_width,
+        #                                       caption=attach.short_description,
+        #                                       db=db ).xml()
+            # img = IMG( _src=attach_factory.get_url( append_attach_id, db=db ) ).xml()
+        block_factory.update_block( self.record_id,
+                                    { target: self.record[ target ] + '\n' + img + '\n' },
+                                    db=db )
+        # # append image to block_attach
+        # ba_model = db_tables.get_table_model( 'block_attach', db=db )
+        # ba_model.insert( dict( attach_id=append_attach_id,
+        #                        block_id=self.record_id ) )
         return self.set_result( redirect=URL( c=self.controller_name,
                                               f=self.function_name,
                                               args=[ self.record_id ] ),
@@ -132,7 +141,8 @@ class BlockComposerView( BaseFormView ):
 
     def get_form_fields( self ):
         self.form_fields = [ 'page_id', 'name', 'body', 'body_en',
-                             'body_markup', 'container', 'blk_order' ]
+                             'body_markup', 'container', 'blk_order',
+                             'css_class', 'css_style' ]
         return self.form_fields
 
 
@@ -208,12 +218,68 @@ class BlockComposerView( BaseFormView ):
         super( BlockComposerView, self ).post_process_form( form )
         T = current.T
         db = self.db
-        is_dev = is_in_group( 'dev' )
         #    term.printLog( 'form: ' + repr( form.xml() ) )
         p_model = db_tables.get_table_model( 'page', db=db )
         pages = p_model.select( orderby='name' )
+        prev_block = next_block = ''
+        block_log = []
+        ba_list = [ ]
+        if self.record:
+            prev_block = block_factory.get_link_to_block_in_page( self.record,
+                                                                  NAV_DIR_PREV,
+                                                                  function_name=self.function_name,
+                                                                  db=db )
+            next_block = block_factory.get_link_to_block_in_page( self.record,
+                                                                  NAV_DIR_NEXT,
+                                                                  function_name=self.function_name,
+                                                                  db=db )
+
+
+            def get_line_style( l ):
+                css_style = 'font-family: monospace;'
+                if l.startswith( '-' ):
+                    css_style += ' color: red;'
+                elif l.startswith( '+' ):
+                    css_style += ' color: green;'
+                elif l.startswith( '@@ ' ):
+                    css_style += ' color: blue'
+                return css_style
+
+
+            bl_model = db_tables.get_table_model( 'block_log', db=db )
+            q_sql = (db.block_log.block_id == self.record_id)
+            bl_list = bl_model.select( q_sql, orderby='id desc', limit=5 )
+            block_log = []
+            for b in bl_list:
+                diff_body = DIV()
+                for l in b.diff_body.splitlines():
+                    if l == '':
+                        continue
+                    diff_body.append( SPAN( l, _style=get_line_style( l ) ) )
+                    diff_body.append( BR() )
+                diff_body_en = DIV()
+                for l in b.diff_body_en.splitlines():
+                    diff_body_en.append( SPAN( l, _style=get_line_style( l ) ) )
+                    diff_body_en.append( BR() )
+
+                block_log.append( Storage( user=b.auth_user_id.email,
+                                           block_id=b.block_id,
+                                           ts=b.ts.strftime( '%Y-%m-%d %H:%M' ),
+                                           diff_body=diff_body,
+                                           diff_body_en=diff_body_en ) )
+            if self.record_id:
+                ba_model = db_tables.get_table_model( 'block_attach', db=db )
+                q_sql = (db.block_attach.block_id == self.record_id)
+                ba_list = ba_model.select( q_sql )
+                for ba in ba_list:
+                    ba.url = attach_factory.get_url( ba.attach_id, db=db )
+
+
         self.set_result( dict( page_list=pages,
-                               is_dev=is_dev ) )
+                               prev_block=prev_block,
+                               next_block=next_block,
+                               block_log=block_log,
+                               ba_list=ba_list ) )
 
 
     # def get_page_js( self ):
@@ -337,7 +403,7 @@ class BlockComposerView( BaseFormView ):
                     s = '''
                         <figure>
                             %(e)s
-                            <figcaption>%(c)s</figcaption>
+                            <figcaption class="text-center">%(c)s</figcaption>
                         </figure>
                     ''' % dict( e=add_embed_text, c=add_embed_text_caption )
                 else:

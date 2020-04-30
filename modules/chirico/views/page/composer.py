@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # this file is released under public domain and you can use without limitations
-from app import db_sets
-from chirico.app import app_factory
+
 from chirico.db import block_factory
-from chirico.k import ARCHIVE_CONTROLLER, ARCHIVE_FUNCTION, IMG_SIZE_BLOCK, IMG_SIZE_PAGE, IMG_SIZE_THUMB
+from chirico.k import ARCHIVE_CONTROLLER, ARCHIVE_FUNCTION
 from gluon import current, H4, SQLFORM, IS_NOT_EMPTY, IMG, SCRIPT, IS_NOT_IN_DB
 from gluon.html import DIV, H5, URL
 from gluon.storage import Storage
@@ -12,8 +11,6 @@ from m16e.db import db_tables, attach_factory
 from m16e import term, htmlcommon, markmin_factory
 from m16e.files import fileutils
 from m16e.kommon import KDT_INT, KDT_CHAR, KDT_TIMESTAMP, DT, ACT_NEW_IMAGE
-from m16e.ktfact import KTF_ACTION
-from m16e.user_factory import is_in_group
 from m16e.views.edit_base_view import BaseFormView
 
 ACT_NEW_MAIN_BLOCK = 'new_main_block'
@@ -51,12 +48,13 @@ class PageComposerView( BaseFormView ):
         a_model = db_tables.get_table_model( 'attach', db=db )
         attach = a_model[ attach_id ]
         aid = None
-        if size != db_sets.IMG_SIZE_ORIGINAL:
-            ac = app_factory.get_app_config_data( db=db )
-            isizes = Storage( { db_sets.IMG_SIZE_ORIGINAL: ac[ IMG_SIZE_PAGE ],
-                                db_sets.IMG_SIZE_MEDIUM: ac[ IMG_SIZE_BLOCK ],
-                                db_sets.IMG_SIZE_SMALL: ac[ IMG_SIZE_THUMB ] } )
-            resize_options = attach_factory.get_resize_options( attach, isizes )
+        if size != attach_factory.IMG_SIZE_ORIGINAL:
+            # ac = app_factory.get_app_config_data( db=db )
+            # isizes = Storage( { db_sets.IMG_SIZE_ORIGINAL: ac[ IMG_SIZE_PAGE ],
+            #                     db_sets.IMG_SIZE_MEDIUM: ac[ IMG_SIZE_BLOCK ],
+            #                     db_sets.IMG_SIZE_SMALL: ac[ IMG_SIZE_THUMB ] } )
+            isizes = attach_factory.get_img_sizes( db=db )
+            resize_options = attach_factory.get_resize_options( attach, isizes, db=db )
             if size in resize_options:
                 w = isizes[ size ]
                 aid = attach_factory.get_child_by_width( attach_id, w, db=db )
@@ -78,16 +76,23 @@ class PageComposerView( BaseFormView ):
         b_model = db_tables.get_table_model( 'block', db=db )
         # attach = a_model[ attach_id ]
         b = b_model[ block_id ]
-        if b.body_markup == db_sets.MARKUP_MARKMIN:
-            img = markmin_factory.mk_wt_image( aid,
-                                               align='center',
-                                               width=attach.img_width,
-                                               caption=attach.short_description,
-                                               db=db )
-        else:
-            img = IMG( _src=attach_factory.get_url( aid, db=db ) ).xml()
+        # if b.body_markup == db_sets.MARKUP_MARKMIN:
+        img = markmin_factory.mk_wt_image( aid,
+                                           align='center',
+                                           width=attach.img_width,
+                                           caption=attach.short_description,
+                                           db=db )
+        # else:
+        #     img = IMG( _src=attach_factory.get_url( aid, db=db ) ).xml()
         b_model.update_by_id( block_id,
                               { target: b[ target ] + '\n' + img + '\n' } )
+        ba_model = db_tables.get_table_model( 'block_attach', db=db )
+        q_sql = (db.block_attach.block_id == self.record_id)
+        q_sql &= (db.block_attach.attach_id == aid)
+        ba = ba_model.count( q_sql )
+        if not ba:
+            ba_model.insert( dict( block_id=self.record_id,
+                                   attach_id=aid ) )
         return self.set_result( redirect=URL( c=self.controller_name,
                                               f=self.function_name,
                                               args=[ self.record_id ] ),
@@ -265,6 +270,9 @@ class PageComposerView( BaseFormView ):
                 msg = self.msg_record_created
             elif upd_p or upd_b:
                 msg = self.msg_record_updated
+                upd = current.request.post_vars
+                # if upd_b and ('body_' in upd or 'body_body_en' in upd):
+
             else:
                 msg = self.msg_nothing_to_update
             self.set_result( message=msg,
@@ -292,9 +300,16 @@ class PageComposerView( BaseFormView ):
     #
     def post_process_form( self, form ):
         super( PageComposerView, self ).post_process_form( form )
-        is_dev = is_in_group( 'dev' )
         #    term.printLog( 'form: ' + repr( form.xml() ) )
-        self.set_result( dict( b_list=self.b_list,
-                               is_dev=is_dev ) )
+        db =self.db
+        ba_list = []
+        if self.record_id:
+            ba_model = db_tables.get_table_model( 'block_attach', db=db )
+            q_sql = (db.block_attach.block_id == self.record_id)
+            ba_list = ba_model.select( q_sql )
+            for ba in ba_list:
+                ba.url = attach_factory.get_url( ba.attach_id, db=db )
+
+        self.set_result( dict( b_list=self.b_list ) )
 
 
