@@ -4,7 +4,7 @@
 from gluon import current
 from m16e.kommon import DATE
 from m16e.user_factory import is_in_group
-from m16e.kommon import K_ROLE_DEVELOPER, K_ROLE_EDITOR
+from m16e.kommon import K_ROLE_DEVELOPER, K_ROLE_EDITOR, K_ROLE_SUPPORT
 
 if 0:
     import gluon.languages.translator as T
@@ -25,19 +25,23 @@ if 0:
 
 
 test_env = db._uri.endswith( '_test' )
-title = current.app_config.take( 'theme.title' )
+app_theme = None
+if request.wsgi:
+    from chirico.app import app_factory
+    app_theme = app_factory.get_app_theme( db=db )
+title = app_theme.title if app_theme else ''
 
 response.navbar_class = 'navbar-inner'
 if test_env:
     title += ' (%s)' % T( 'testing environment' )
     response.navbar_class += ' test_env'
 response.title = title
-response.subtitle = current.app_config.take( 'theme.subtitle' )
+response.subtitle = app_theme.subtitle if app_theme else ''
 
 ## read more at http://dev.w3.org/html5/markup/meta.name.html
-response.meta.author = 'Carlos Correia <carlos@m16e.com>'
-response.meta.description = 'Your Free CMS System'
-response.meta.keywords = 'web2py, python, frameworks'
+response.meta.author = current.app_config.take( 'app.author' )
+response.meta.description = current.app_config.take( 'app.description' )
+response.meta.keywords = current.app_config.take( 'app.keywords' )
 response.meta.generator = 'Web2py Web Framework'
 response.meta.copyright = 'Copyright 2011-%d' % DATE.today().year
 
@@ -70,9 +74,11 @@ if is_in_group( K_ROLE_EDITOR ):
             (T( 'Compose new page' ), False, URL( c='page', f='composer', args = [ 0 ] ), [] ),
             (T( 'Image gallery' ), False, URL( c='gallery', f='grid' ), []),
             (T( 'Forum' ), False, URL( 'forum', 'index' ), [ ]),
-            (T( 'Users' ), False, URL( c='user_admin', f='index' ), [ ]),
+            (SPAN( T( 'Users' ), _class='menu_admin' ),
+             False, URL( c='user_admin', f='index' ), [ ]),
+            (T( 'Events' ), False, URL( c='event', f='index' ), [ ]),
             (T( 'Page stats' ), False, URL( c='page_stats', f='charts' ), [ ]),
-            (T( 'Page stats (detailed)' ), False, URL( c='page_stats', f='totals' ), [ ]),
+            (T( 'Page stats (detailed)' ), False, URL( c='page_stats', f='index' ), [ ]),
             (T( 'User messages' ), True, URL( c='user_message', f='index' ), [ ]),
         ] ),
     ]
