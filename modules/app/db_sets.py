@@ -14,6 +14,14 @@ MQ_STATUS_SET = { MQ_STATUS_DEFAULT: current.T( 'queued' ),
                   MQ_STATUS_SENT: current.T( 'sent' ),
                   }
 
+# attach types
+ATTACH_TYPE_IMAGES = 'images'
+ATTACH_TYPE_PORTFOLIO = 'portfolio'
+
+# unit types
+UNIT_TYPE_SITE_OBJECTS = 'site_objects'
+UNIT_TYPE_PORTFOLIOS = 'portfolios'
+
 # markup
 MARKUP_SET_DISPLAY_TYPE = [ ('T', current.T( 'Table' )),
                             ('R', current.T( 'Row' )) ]
