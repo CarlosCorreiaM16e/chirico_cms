@@ -184,10 +184,11 @@ def get_page_container( page, container_type, db=None ):
     div = DIV( _class='row block_container' )
     if page.aside_title and container_type == db_sets.BLOCK_CONTAINER_ASIDE:
         div = DIV( _class='row block_container aside_container' )
-        div.append( H1( lang_factory.get_page_aside_title( page=page, db=db ),
-                        _class='col-md-12 aside_title' ) )
+        div.append( DIV( lang_factory.get_page_aside_title( page=page, db=db ),
+                         _class='col-md-12 aside_title' ) )
     q_sql = (b_model.db_table.page_id == page.id)
     q_sql &= (b_model.db_table.container == container_type)
+    q_sql &= (b_model.db_table.blk_order >= 0)
     b_list = b_model.select( q_sql, orderby='blk_order' )
     if not b_list:
         return None
@@ -218,9 +219,9 @@ def get_page_container( page, container_type, db=None ):
             b_div[ '_style' ] = block.css_style
         if is_in_group( K_ROLE_EDITOR ):
             b_div.append( get_edit_link( block, db=db ) )
-            b_div.append( get_add_link( block, 'before', db=db ) )
-            b_div.append( get_add_link( block, 'after', db=db ) )
-            b_div.append( get_del_link( block, db=db ) )
+            # b_div.append( get_add_link( block, 'before', db=db ) )
+            # b_div.append( get_add_link( block, 'after', db=db ) )
+            # b_div.append( get_del_link( block, db=db ) )
         div.append( b_div )
     return div
 
@@ -283,20 +284,77 @@ def get_edit_link( block, db=None ):
     if not db:
         db = current.db
     T = current.T
-    # ed_id = 'b_%d' % (block.block_id)
     css_class = 'dropdown align_right div_edit_block'
     ed_link = DIV( _class=css_class )
     ed_inner = DIV( _class = 'align_left' )
-    url = URL( c='block', f='composer', args=[ block.id ] )
-    icon = elements.get_bootstrap_icon( elements.ICON_EDIT, tip=T( 'Edit block' ) )
+
+    icon = elements.get_bootstrap_icon( elements.ICON_MENU, tip=T( 'Edit block' ) )
+    ed_id = 'b_%d' % (block.id)
     ed_inner.append( A( icon,
-                        _title=T( 'Compose block' ),
-                        _href=url,
-                        _class='inplace_menu',
-                        _role='button' ) )
+                       _href = '#',
+                       _id = ed_id,
+                       _title=T( 'Edit block' ),
+                       _class = 'dropdown-toggle',
+                       _role = 'button',
+                       **{ '_data-toggle': 'dropdown' } ) )
+    ul = UL( _id = 'menu', _class = 'dropdown-menu', _role = 'menu',
+             **{ '_aria-labelledby': ed_id } )
+    # compose
+    url = URL( c='block', f='composer', args=[ block.id ] )
+    ul.append( LI( A( T( 'Compose block' ),
+                      _href=url,
+                      _class=' inplace_menu' ) ) )
+    # append
+    url = URL( c='block',
+               f='composer',
+               vars={ KQV_PAGE_ID: block.page_id,
+                      KQV_BLK_ORDER: block.blk_order + 1,
+                      KQV_CONTAINER: block.container } )
+    ul.append( LI( A( T( 'Append block' ),
+                      _href=url,
+                      _class=' inplace_menu' ) ) )
+    # insert before
+    url = URL( c='block',
+               f='composer',
+               vars={ KQV_PAGE_ID: block.page_id,
+                      KQV_BLK_ORDER: block.blk_order,
+                      KQV_CONTAINER: block.container } )
+    ul.append( LI( A( T( 'Insert block before' ),
+                      _href=url,
+                      _class=' inplace_menu' ) ) )
+    # delete
+    url = URL( c='block', f='composer', args=[ block.id ], vars={ KTF_ACTION: ACT_DELETE_BLOCK } )
+    ul.append( LI( A( T( 'Delete block' ),
+                      _href=url,
+                      _class=' inplace_menu',
+                      _onclick="return confirm( '%(msg)s' );" % dict( msg=T( 'Confirm delete block?' ) ) ),
+                   _tabindex=-1 ) )
+
+    if is_in_group( K_ROLE_DEVELOPER ):
+        url = URL( c='block', f='edit', args=[ block.id ] )
+        ul.append( LI( A( T( 'Edit block' ),
+                          _href=url, _class=' inplace_menu' ),
+                      _tabindex=-1 ) )
+        url = URL( c='page', f='composer', args=[ block.id ] )
+        ul.append( LI( A( T( 'Compose page' ),
+                          _href=url, _class=' inplace_menu' ),
+                       _tabindex=-1 ) )
+    ed_inner.append( ul )
+
+
+    # url = URL( c='block', f='composer', args=[ block.id ] )
+    # icon = elements.get_bootstrap_icon( elements.ICON_EDIT, tip=T( 'Edit block' ) )
+    # ed_inner.append( A( icon,
+    #                     _title=T( 'Compose block' ),
+    #                     _href=url,
+    #                     _class='inplace_menu',
+    #                     _role='button' ) )
+
+
     # # url = URL( c='block', f='edit', args=[ block_id ] )
     # # ed_inner.append( A( T( 'Edit' ), _href = url ) )
     # icon = elements.get_bootstrap_icon( elements.ICON_EDIT, tip=T( 'Edit block' ) )
+
     # ed_inner.append( A( icon,
     #                    _href = '#',
     #                    _id = ed_id,
