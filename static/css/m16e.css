@@ -623,7 +623,12 @@ div.btn-group.bootstrap-select > button.btn.dropdown-toggle {
     padding: 1px 6px;
 }
 
-
+.btn-group.bootstrap-select button.btn {
+    background-color: #ffffff;
+    color: #171332;
+    border: 1px solid #cccccc;
+    border-radius: 0px;
+}
 
 .nav_page_sel_limits > span {
     padding-right: 2em;
