@@ -134,11 +134,28 @@ class PageStatsChartsView( BaseListPlasticView ):
                   }
                 }
             });
+            jQuery( "#chart_canvas" ).click(
+                function( evt ) {
+                    console.log( evt );
+                    var point = window.barChart.getElementAtEvent( evt )[0];
+                    var point_label = encodeURIComponent( point._model.label );
+                    console.log( point );
+                    if( point ) {
+                        var page = '/%(app)s/page_stats/index?qv_path_info=%(url)s&' +
+                            'qv_start_ts=' + point_label + 
+                            '&qv_stop_ts=' + point_label + ' 23:59:59';
+                        console.log( page );
+                        window.location.href = page;
+                    }
+                }
+            );
         ''' % dict( label=T( 'Daily page views for page: %(page)s', dict( page=self.url ) ),
-                    day_list=[ '%d' % pv.day for pv in self.pv_list ],
+                    day_list=[ '%d-%02d-%02d' % (pv.year, pv.month, pv.day) for pv in self.pv_list ],
                     count_list=[ int( pv.total ) for pv in self.pv_list ],
                     title=T( 'Daily page views (since %(date)s)',
-                             dict( date=self.pv_list[0].min_ts.strftime( '%Y-%m-%d' ) ) ) )
+                             dict( date=self.pv_list[0].min_ts.strftime( '%Y-%m-%d' ) ) ),
+                    app=current.app_name,
+                    url=self.url )
         return js
 
 
