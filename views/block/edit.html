@@ -1,16 +1,25 @@
-{{response.files.append( URL( 'static', 'css/jquery-te-1.4.0.css' ) ) }}
-{{response.files.append( URL( 'static', 'js/jquery-te-1.4.0.js' ) ) }}
-
 {{left_sidebar_enabled,right_sidebar_enabled=False,False}}
 {{extend 'layout.html'}}
 
-<h3>
-    {{if block:}}
-        {{=T( 'Edit block' )}}
-    {{else:}}
-        {{=T( 'New block' )}}
-    {{pass}}
-</h3>
+<div class="row">
+    <div class="col-md-8">
+        <h3>
+            {{if block:}}
+                {{=T( 'Edit block' )}}
+            {{else:}}
+                {{=T( 'New block' )}}
+            {{pass}}
+            {{=form.custom.widget.id }}
+        </h3>
+    </div>
+    <div class="col-md-4 text-right">
+        {{if block:}}
+            {{=A( T( 'Open in composer' ),
+                  _href = URL( c='block', f='composer', args=[ block.id ] ),
+                  _class='btn btn-success' ) }}
+        {{pass}}
+    </div>
+</div>
 
 {{=form.custom.begin}}
 
@@ -82,10 +91,6 @@
     </div>
     <div class="col-md-4">
         {{=form.custom.widget.html_element_id}}
-    </div>
-    <div class="col-md-2">
-        <label for="is_allow_comments">{{=T( 'Comments' )}}</label>
-        {{=form.custom.widget.is_allow_comments }}
     </div>
 </div>
 <div class="row">
@@ -201,11 +206,4 @@
 {{=form.custom.end}}
 
 
-{{if block and block.body_markup == 'H': }}
-    <script>
-        jQuery(function(){
-            jQuery( '#block_body' ).jqte();
-        } );
-    </script>
-{{pass}}
 

@@ -1,8 +1,5 @@
-{{response.files.append( URL( 'static', 'css/jquery-te-1.4.0.css' ) ) }}
-{{response.files.append( URL( 'static', 'js/jquery-te-1.4.0.js' ) ) }}
-
 {{left_sidebar_enabled,right_sidebar_enabled=False,False}}
-{{extend 'layout.html'}}
+{{extend 'layout_wide.html'}}
 
 <div class="row">
     <div class="col-md-8">
@@ -10,7 +7,7 @@
             {{if page:}}
                 {{=T( 'Edit page' )}}
                 {{=A( ' (', T( 'Preview' ), ')',
-                      _href = URL( c='arquivo', f='ver', args = [ page.id ] ) )
+                      _href = URL( c='page', f='view', args = [ page.id ] ) )
                       }}
             {{else:}}
                 {{=T( 'New page' )}}
@@ -68,14 +65,28 @@
     </div>
 </div>
 {{from m16e import term, htmlcommon}}
+{{from app import db_sets }}
 {{for b in b_list: }}
-    <div class="row block_body_row">
-        <div class="col-md-12">
+    <div class="row block_body_row" id="{{='block_%d' % b.id }}">
+        <div class="col-md-6">
             <label>{{=T( 'Block' )}}:</label>
             {{if b.id:}}
                 {{=A( b.name, _href=URL( c='block', f='composer', args=[ b.id ] ), _class='form_field' ) }}
             {{pass}}
         </div>
+        <div class="col-md-6{{=' text-right' if b.container == db_sets.BLOCK_CONTAINER_ASIDE else '' }}">
+            {{if b.container == db_sets.BLOCK_CONTAINER_ASIDE: }}
+                <span style="color: #666666; font-weight: bold">
+                    {{=T( 'Side panel' ) }} - idx: {{=b.blk_order }}
+                </span>
+            {{else: }}
+                <span style="color: #448844; font-weight: bold">
+                    {{=T( 'Main panel' ) }} - idx: {{=b.blk_order }}
+                </span>
+            {{pass}}
+        </div>
+    </div>
+    <div class="row block_body_row">
         <div class="col-md-2">
             <label>{{=T( 'Body' )}}:</label>
             {{if b.id:}}
@@ -100,11 +111,6 @@
                                             value=b.body,
                                             input_id='body_%d' % b.id,
                                             rows=8 ) }}
-                <script>
-                    jQuery(function(){
-                        jQuery( '#{{="body_%d" % b.id }}' ).css('min-height','400px').jqte();
-                    } );
-                </script>
             {{pass}}
         </div>
     </div>
@@ -154,11 +160,4 @@
 
 {{block right_sidebar}}
 {{end}}
-
-<style>
-    .jqte_editor {
-        height: 240px;
-        max-height: 900px;
-        }
-</style>
 

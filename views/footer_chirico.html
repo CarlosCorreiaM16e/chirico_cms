@@ -1,0 +1,36 @@
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 text-center menu">
+                        <a href="{{=URL( c='about', f='index' ) }}">{{=T( 'About us' ) }}</a> |
+                        <a href="{{=URL( c='contacts', f='index' ) }}">{{=T( 'Contacts' ) }}</a> |
+                        <a href="{{=URL( c='about', f='terms_of_use' ) }}">{{=T( 'Terms of use' ) }}</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        &nbsp;{{=T('Copyright')}} &#169; {{=request.now.year}}
+                        (Carlos Correia)
+                        <br>
+                        <span class="small">
+                            &nbsp;Chirico CMS (v. {{=response.meta.version_id }} &ndash; {{=response.meta.version_date }})
+                        </span>
+                    </div>
+                    <div class="col-md-8 text-right">
+                        <span style="margin-right: 1em;">
+                            <span style="vertical-align: top;">
+                                {{=T( 'Made by' ) }}:
+                            </span>
+                            <a href="http://memoriapersistente.pt"><img src="{{=URL('static','images/m16e-logo-nobg.png')}}" width="90"></a>
+                        </span>
+                        <span>
+                            <span style="vertical-align: top;">
+                                {{=T( 'Engines' ) }}:
+                            </span>
+                            <a href="http://www.postgresql.org/"><img src="{{=URL('static','images/logo_postgresql.png')}}"/></a>
+                            <a href="http://www.web2py.com/"><img src="{{=URL('static','images/logo_w2p-200.png')}}"/></a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </footer>

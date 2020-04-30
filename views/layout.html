@@ -38,8 +38,10 @@
         {{pass}}
         <link rel="stylesheet" href="{{=URL('static','css/jquery.jqplot.css')}}"/>
         <link rel="stylesheet" href="{{=URL('static','css/m16e.css')}}"/>
-        <link rel="stylesheet" href="{{=URL('static','css/cms.css')}}"/>
         <link rel="stylesheet" href="{{=URL('static','css/chirico.css')}}"/>
+        {{if response.meta.app_theme.stylesheet: }}
+            <link rel="stylesheet" href="{{=URL('static','css/' + response.meta.app_theme.stylesheet + '.css' ) }}"/>
+        {{pass}}
 
         <!-- include custom stylesheets : END -->
 
@@ -55,126 +57,18 @@
         <![endif]-->
 
         <div class="w2p_flash alert alert-dismissable">{{=response.flash or ''}}</div>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    {{if auth.is_impersonating(): }}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <a href="{{=URL( c='default', f='user', args=[ 'impersonate', 0 ] ) }}" style="color: magenta">Quit</a>
-                            </div>
-                        </div>
-                    {{pass}}
-                    <div class="page_title row" style="background-color: #1F1F60">
-                        <div class="col-md-10">
-                            <div style="max-width: 80px; overflow: hidden;">
-                                <a href="{{=URL( c='default', f='index' )}}">
-                                    {{=IMG( _src=URL( c='static', f='images/logo-chirico-80x80.png' ),
-                                            _style='float: left; margin: 6px 0px; width: 100%; object-fit: contain;' ) }}</a>
-                            </div>
-                            <div style="position: absolute; top: 0px; left: 110px; color: #ffffff;">
-                                <h1 style="margin-top: 5px;">
-                                    Chirico CMS
-                                </h1>
-                            </div>
-                        </div>
-                        <div class="col-md-2 text-right">
-                            <p style="margin: 10px">
-                                <a href="{{=URL( c='default', f='lang', args=['pt-pt'], vars={ 'url': URL(args=request.args, vars=request.get_vars) } ) }}">
-                                    {{=IMG( _src=URL( r=request, c='static', f='images/flags-pt.png' ), _width='24' ) }}</a>
-                                <a href="{{=URL( c='default', f='lang', args=['en-gb'], vars={ 'url': URL(args=request.args, vars=request.get_vars) } ) }}">
-                                    {{=IMG( _src=URL( r=request, c='static', f='images/flags-en.png' ), _width='24' ) }}</a>
-                            </p>
-                            {{if response.meta.app_theme.login_button_position == 'header': }}
-                                <ul class="nav navbar-nav navbar-right">
-                                    {{='auth' in globals() and auth.navbar('Welcome',mode='dropdown') or ''}}
-                                    {{if auth.is_impersonating(): }}
-                                        <a href="{{=URL( c='default', f='user', args=[ 'impersonate', 0 ] ) }}" style="color: magenta">{{=T( 'Quit' ) }}</a>
-                                    {{pass}}
-                                </ul>
-                            {{pass}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Navbar ======================================= -->
-        <nav class="navbar navbar-default " role="navigation">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    {{=response.logo or ''}}
-                </div>
-                <div class="collapse navbar-collapse navbar-ex1-collapse">
-                    {{if response.meta.app_theme.login_button_position == 'menu': }}
-                        <ul class="nav navbar-nav navbar-right">
-                            {{='auth' in globals() and auth.navbar('Welcome',mode='dropdown') or ''}}
-                            {{if auth.is_impersonating(): }}
-                                <a href="{{=URL( c='default', f='user', args=[ 'impersonate', 0 ] ) }}" style="color: magenta">{{=T( 'Quit' ) }}</a>
-                            {{pass}}
-                        </ul>
-                    {{pass}}
-                    {{if response.menu:}}
-                        {{=MENU(response.menu, _class='nav navbar-nav',li_class='dropdown',ul_class='dropdown-menu')}}
-                    {{pass}}
-                </div>
+        <!-- Header + Navbar ======================================= -->
+        {{include 'header_%s.html' % response.meta.app_theme.meta_name }}
 
-            </div>
-        </nav>
-
-        <!-- Masthead ===================================== -->
-        {{block header}}
-        {{end}}
         <!-- Main ========================================= -->
         <!-- Begin page content -->
         <div class="container-fluid main-container auto_margin">
             {{include 'message_board.html' }}
             {{include}}
-<!--            {{=response.toolbar() if response.show_toolbar else ''}}-->
         </div>
 
         {{block footer}} <!-- this is default footer -->
-        <footer class="footer">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12 text-center menu">
-                        <a href="{{=URL( c='about', f='index' ) }}">{{=T( 'About us' ) }}</a> |
-                        <a href="{{=URL( c='contacts', f='index' ) }}">{{=T( 'Contacts' ) }}</a> |
-                        <a href="{{=URL( c='about', f='terms_of_use' ) }}">{{=T( 'Terms of use' ) }}</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        &nbsp;{{=T('Copyright')}} &#169; {{=request.now.year}}
-                        (Carlos Correia)
-                        <br>
-                        <span class="small">
-                            &nbsp;Chirico CMS (v. {{=response.meta.version_id }} &ndash; {{=response.meta.version_date }})
-                        </span>
-                    </div>
-                    <div class="col-md-8 text-right">
-                        <span style="margin-right: 1em;">
-                            <span style="vertical-align: top;">
-                                {{=T( 'Made by' ) }}:
-                            </span>
-                            <a href="http://memoriapersistente.pt"><img src="{{=URL('static','images/m16e-logo-nobg.png')}}" width="90"></a>
-                        </span>
-                        <span>
-                            <span style="vertical-align: top;">
-                                {{=T( 'Engines' ) }}:
-                            </span>
-                            <a href="http://www.postgresql.org/"><img src="{{=URL('static','images/logo_postgresql.png')}}"/></a>
-                            <a href="http://www.web2py.com/"><img src="{{=URL('static','images/logo_w2p-200.png')}}"/></a>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </footer>
+            {{include 'footer_%s.html' % response.meta.app_theme.meta_name }}
         {{end}}
         <!-- The javascript =============================== -->
         <script src="{{=URL('static','js/jquery-ui.js')}}"></script>

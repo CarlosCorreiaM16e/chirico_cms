@@ -104,7 +104,7 @@
                             </div>
                         </div>
                         {{if next_c: }}
-                            {{from app import db_sets }}
+                            {{from m16e.db import attach_factory }}
                             <div class="row">
                                 <div class="col-md-12">
                                     <span style="padding: 0 0.5em">
@@ -114,10 +114,10 @@
                                                    vars={ 'action': 'act_new_image',
                                                           'attach_id': records[ idx ].id,
                                                           'target': target,
-                                                          'size': db_sets.IMG_SIZE_ORIGINAL } ) }}
+                                                          'size': attach_factory.IMG_SIZE_ORIGINAL } ) }}
                                         <a href="{{=url }}"><b>{{=records[ idx ].img_width }}px</b></a>
                                     </span>
-                                    {{if db_sets.IMG_SIZE_MEDIUM in records[ idx ].resize_options: }}
+                                    {{if attach_factory.IMG_SIZE_MEDIUM in records[ idx ].resize_options: }}
                                         <span style="padding: 0 0.5em">
                                             {{url=URL( c=next_c,
                                                        f=next_f,
@@ -125,11 +125,11 @@
                                                        vars={ 'action': 'act_new_image',
                                                               'attach_id': records[ idx ].id,
                                                               'target': target,
-                                                              'size': db_sets.IMG_SIZE_MEDIUM } ) }}
-                                            <a href="{{=url }}"><b>{{=isizes[ db_sets.IMG_SIZE_MEDIUM ] }}px</b></a>
+                                                              'size': attach_factory.IMG_SIZE_MEDIUM } ) }}
+                                            <a href="{{=url }}"><b>{{=isizes[ attach_factory.IMG_SIZE_MEDIUM ] }}px</b></a>
                                         </span>
                                     {{pass}}
-                                    {{if db_sets.IMG_SIZE_SMALL in records[ idx ].resize_options: }}
+                                    {{if attach_factory.IMG_SIZE_SMALL in records[ idx ].resize_options: }}
                                         <span style="padding: 0 0.5em">
                                             {{url=URL( c=next_c,
                                                        f=next_f,
@@ -137,8 +137,8 @@
                                                        vars={ 'action': 'act_new_image',
                                                               'attach_id': records[ idx ].id,
                                                               'target': target,
-                                                              'size': db_sets.IMG_SIZE_SMALL } ) }}
-                                            <a href="{{=url }}"><b>{{=isizes[ db_sets.IMG_SIZE_SMALL ] }}px</b></a>
+                                                              'size': attach_factory.IMG_SIZE_SMALL } ) }}
+                                            <a href="{{=url }}"><b>{{=isizes[ attach_factory.IMG_SIZE_SMALL ] }}px</b></a>
                                         </span>
                                     {{pass}}
                                 </div>

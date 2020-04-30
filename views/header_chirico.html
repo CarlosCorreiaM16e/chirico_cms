@@ -1,0 +1,75 @@
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    {{if auth.is_impersonating(): }}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="{{=URL( c='default', f='user', args=[ 'impersonate', 0 ] ) }}" style="color: magenta">Quit</a>
+                            </div>
+                        </div>
+                    {{pass}}
+                    <div class="page_title row" style="background-color: #1F1F60">
+                        <div class="col-md-10">
+                            <div style="max-width: 80px; overflow: hidden;">
+                                <a href="{{=URL( c='default', f='index' )}}">
+                                    {{=IMG( _src=URL( c='static', f='images/logo-chirico-80x80.png' ),
+                                            _style='float: left; margin: 6px 0px; width: 100%; object-fit: contain;' ) }}</a>
+                            </div>
+                            <div style="position: absolute; top: 0px; left: 110px; color: #ffffff;">
+                                <h2 style="margin-top: 5px;">
+                                    Chirico CMS
+                                </h2>
+                                <h5>
+                                    Content Management System
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <p style="margin: 10px">
+                                <a href="{{=URL( c='default', f='lang', args=['pt-pt'], vars={ 'url': URL(args=request.args, vars=request.get_vars) } ) }}">
+                                    {{=IMG( _src=URL( r=request, c='static', f='images/flags-pt.png' ), _width='24' ) }}</a>
+                                <a href="{{=URL( c='default', f='lang', args=['en-gb'], vars={ 'url': URL(args=request.args, vars=request.get_vars) } ) }}">
+                                    {{=IMG( _src=URL( r=request, c='static', f='images/flags-en.png' ), _width='24' ) }}</a>
+                            </p>
+                            {{if response.meta.app_theme.login_button_position == 'header': }}
+                                <ul class="nav navbar-nav navbar-right">
+                                    {{='auth' in globals() and auth.navbar('Welcome',mode='dropdown') or ''}}
+                                    {{if auth.is_impersonating(): }}
+                                        <a href="{{=URL( c='default', f='user', args=[ 'impersonate', 0 ] ) }}" style="color: magenta">{{=T( 'Quit' ) }}</a>
+                                    {{pass}}
+                                </ul>
+                            {{pass}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Navbar ======================================= -->
+        <nav class="navbar navbar-default " role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    {{=response.logo or ''}}
+                </div>
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    {{if response.meta.app_theme.login_button_position == 'menu': }}
+                        <ul class="nav navbar-nav navbar-right">
+                            {{='auth' in globals() and auth.navbar('Welcome',mode='dropdown') or ''}}
+                            {{if auth.is_impersonating(): }}
+                                <a href="{{=URL( c='default', f='user', args=[ 'impersonate', 0 ] ) }}" style="color: magenta">{{=T( 'Quit' ) }}</a>
+                            {{pass}}
+                        </ul>
+                    {{pass}}
+                    {{if response.menu:}}
+                        {{=MENU(response.menu, _class='nav navbar-nav',li_class='dropdown',ul_class='dropdown-menu')}}
+                    {{pass}}
+                </div>
+
+            </div>
+        </nav>
+

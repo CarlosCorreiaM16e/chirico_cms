@@ -1,0 +1,190 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
+{{extend 'layout.html'}}
+
+{{=menu_path }}
+
+<h3>
+    {{if user_message:}}
+        {{=T( 'Edit user_message' )}}
+    {{else:}}
+        {{=T( 'New user_message' )}}
+    {{pass}}
+</h3>
+
+{{=form.custom.begin}}
+
+{{if user_message:}}
+    {{for f in db.user_message.fields:}}
+        {{fld = 'org__' + f}}
+        <input name="{{=fld}}" type="hidden" value="{{=user_message[f]}}">
+    {{pass}}
+{{pass}}
+
+<div class="row">
+    <div class="col-md-2">
+        <label for="id">
+            {{=T( 'Id' )}}:
+        </label>
+    </div>
+    <div class="col-md-2">
+        {{=form.custom.widget.id }}
+    </div>
+</div>
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="notify_user_id">
+                {{=T( 'Notify user id' )}}:
+            </label>
+        </td>
+        <td>
+            <span class="input_wrap">
+                {{=form.custom.widget.notify_user_id }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="msg_org">
+                {{=T( 'Msg org' )}}:
+            </label>
+        </td>
+        <td>
+            <span class="input_wrap">
+                {{=form.custom.widget.msg_org }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="msg_type">
+                {{=T( 'Msg type' )}}:
+            </label>
+        </td>
+        <td>
+            <span class="input_wrap">
+                {{=form.custom.widget.msg_type }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="msg_title">
+                {{=T( 'Msg title' )}}:
+            </label>
+        </td>
+        <td>
+            <span class="input_wrap">
+                {{=form.custom.widget.msg_title }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="msg_text">
+                {{=T( 'Msg text' )}}:
+            </label>
+        </td>
+        <td>
+            <span class="input_wrap">
+                {{=form.custom.widget.msg_text }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="times_viewed">
+                {{=T( 'Times viewed' )}}:
+            </label>
+        </td>
+        <td>
+            <span class="input_wrap">
+                {{=form.custom.widget.times_viewed }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="period_start">
+                {{=T( 'Period start' )}}:
+            </label>
+        </td>
+        <td>
+            <span class="input_wrap">
+                {{=form.custom.widget.period_start }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="period_stop">
+                {{=T( 'Period stop' )}}:
+            </label>
+        </td>
+        <td>
+            <span class="input_wrap">
+                {{=form.custom.widget.period_stop }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="ack_when">
+                {{=T( 'Ack when' )}}:
+            </label>
+        </td>
+        <td>
+            <span class="input_wrap">
+                {{=form.custom.widget.ack_when }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="answer">
+                {{=T( 'Answer' )}}:
+            </label>
+        </td>
+        <td>
+            <span class="input_wrap">
+                {{=form.custom.widget.answer }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="delete_if_past">
+                {{=T( 'Delete if past' )}}:
+            </label>
+        </td>
+        <td>
+            <span class="input_wrap">
+                {{=form.custom.widget.delete_if_past }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="center_align">
+            <table class="table_border">
+                <tr>
+                    <td class="center_align">
+                        <button
+                            name="action" title="{{=T( 'Save' )}}" type="submit"
+                            value="act_submit">
+                            {{=T( 'Save' )}}
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+</table>
+
+{{=form.custom.end}}
+
+{{block right_sidebar}}
+{{end}}
+

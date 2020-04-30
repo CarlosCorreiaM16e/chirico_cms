@@ -16,6 +16,14 @@
 
 <div class="container">
     <div class="row">
+        <div class="col-md-12" style="font-size: 16px; margin-bottom: 10px;">
+            {{=T( "If you haven't yet registered, please follow this " ) }}
+            <a href="{{=URL( args='register',
+                             vars={ '_next': request.vars._next } if request.vars._next else None ) }}">link</a>
+            {{=T( "to create an account" ) }}.
+        </div>
+    </div>
+    <div class="row">
         <div id="web2py_user_form" class="col-lg-6">
         {{
         if request.args(0)=='login':
