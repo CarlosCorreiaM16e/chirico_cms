@@ -133,11 +133,11 @@ def mydata():
     term.printLog( 'request.args: ' + repr( request.args ) )
     term.printLog( 'request.vars: ' + repr( request.vars ) )
 
-    e_model = db_tables.get_table_model( 'ent', db=db )
-    q_sql = (db.ent.auth_user_id == auth.user.id)
-    ent = e_model.select( q_sql ).first()
-    if not ent:
-        e_model.insert( dict( name=auth.user.first_name,
+    ud_model = db_tables.get_table_model( 'user_data', db=db )
+    q_sql = (db.user_data.auth_user_id == auth.user.id)
+    ud = ud_model.select( q_sql ).first()
+    if not ud:
+        ud_model.insert( dict( name=auth.user.first_name,
                               auth_user_id=auth.user.id ) )
 
     view = CmsUserMydataView( db )
