@@ -30,26 +30,5 @@ if 0:
     from gluon.http import redirect
 
 
-# class Config( object ):
-#     def __init__( self, config_filename ):
-#         super( Config, self ).__init__()
-#         f = open( config_filename )
-#         text = f.read()
-#         f.close()
-#         self.config_data = ast.literal_eval( text )
-#
-#
-#     def get( self, key ):
-#         return self.config_data.get( key )
-#
-#
-# def init_app( cfg_file=None ):
-#     if not cfg_file:
-#         cfg_file = 'applications/%(app)s/resources/config/init/cfg_%(app)s' % request.app_name
-#     cfg = Config( cfg_file )
-#     for k in cfg.config_data:
-#
-
-
 from app import initdb
 initdb.initdb()

@@ -8,8 +8,8 @@ The paths are relative to installed applications directory (``.../web2py/applica
 
 - Drop the application tree inside Web2Py ``applications`` folder.
 - Copy config file ``./resources/config/init/appconfig.ini`` to 
-  ``./private/appconfig.ini`` and replace the values between double 
-  brackets to match your system configuration.
+  ``./private/appconfig.ini``, replace the values between double 
+  brackets to match your system configuration and copy it to ``private`` folder.
 - From Web2py folder, run the script ``applications/www/resources/scripts/init_app.sh`` to create the database objects.
  
 
