@@ -909,7 +909,7 @@ def populate_users():
         Please fill the main user (administrator) data below.
     ''')
     request = current.request
-    cfg_file = request.env.web2py_path + '/applications/%(app)s/resources/config/init/cfg_%(app)s.py' % dict( app=current.app_name )
+    cfg_file = request.env.web2py_path + '/applications/%(app)s/private/cfg_%(app)s.py' % dict( app=current.app_name )
     term.printDebug( 'cfg_file: ' + cfg_file )
     from m16e.files import fileutils
     if fileutils.file_exists( cfg_file ):
